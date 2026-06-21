@@ -20,11 +20,33 @@ pnpm dev                 # dev server :3000 (admin at /admin)
 pnpm build && pnpm start # production-style run (build self-hosts fonts)
 pnpm generate:types      # after ANY collection/global field change -> src/payload-types.ts
 pnpm generate:importmap  # after adding admin UI components / plugins
-set -a && . ./.env && set +a && pnpm exec tsx src/seed/index.ts   # seed
-docker compose up -d --build                                       # full prod stack
+set -a && . ./.env && set +a && pnpm exec tsx src/seed/index.ts   # seed (local dev DB)
 ```
 
 A local Postgres must be running (see README). Env in `.env` (copy from `.env.example`).
+Local dev `.env` has a hardcoded `DATABASE_URI`; the Docker stack builds it from
+`POSTGRES_PASSWORD` instead.
+
+## Deploy & update (server, Docker)
+
+```bash
+git pull
+docker compose up -d --build              # app (127.0.0.1:3000) + Postgres; data in volumes
+docker compose --profile seed run --rm seed   # ONE-OFF seed, first deploy only
+```
+
+- **The update workflow is just `git pull && docker compose up -d --build`** for 95% of
+  changes. Data (DB + uploads) lives in the `db-data` / `media-data` volumes and survives.
+- **Schema auto-syncs** on boot (`push: true` in the postgres adapter), so new/changed CMS
+  fields apply on rebuild — no manual migrations. For *destructive* schema changes
+  (rename/drop a field), back up first: `docker compose exec db pg_dump -U karijera karijera > b.sql`.
+- **Seeding in Docker:** the running `app` image is a stripped standalone build (no `tsx`,
+  no `src/`), so you can't seed through it. The `seed` compose service (profile `seed`) is a
+  one-off built from the `builder` target; run it ONCE before content editing (it re-applies
+  English page text each run). Default admin: jelena.rajkovic.coach@gmail.com /
+  KarijernoIskreno2026 (override via `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`).
+- nginx reverse-proxies to `127.0.0.1:3000`; needs `client_max_body_size 25m` (uploads) and
+  `proxy_set_header X-Forwarded-Proto $scheme`. TLS via certbot.
 
 ## Architecture
 
@@ -44,7 +66,9 @@ A local Postgres must be running (see README). Env in `.env` (copy from `.env.ex
   `src/globals/` (SiteSettings + one content global per page: Home/About/Work/Blog/Contact).
   Page content lives in typed globals (not a page-builder) to match the fixed editorial design.
 - **SEO** — `src/lib/seo.ts` (`buildMetadata`, `alternates`, `SITE_URL` from
-  `NEXT_PUBLIC_SERVER_URL`). `src/app/sitemap.ts` + `robots.ts`. JSON-LD is inline per page.
+  `NEXT_PUBLIC_SERVER_URL`, fallback `https://jelena.dgudovic.dev`). `src/app/sitemap.ts` +
+  `robots.ts`. JSON-LD is inline per page. `NEXT_PUBLIC_SERVER_URL` is baked at build via a
+  Docker build ARG (compose passes it) — **changing the domain needs a rebuild**.
 
 ## Conventions
 
@@ -73,12 +97,18 @@ the full bodies via the CMS (she holds the rights).
 
 ## Gotchas
 
+- `src/payload-types.ts` is **committed** AND regenerated during the Docker build
+  (`generate:types` + `generate:importmap` run before `pnpm build`). After a schema change,
+  run `pnpm generate:types` locally so dev type-checking matches.
 - `pnpm dev` overwrites `.next`, so run `pnpm build` again before `pnpm start`.
-- In dev, `next/font/google` fetches fonts at runtime — first paint is slow on a poor
-  network. Production self-hosts them; not a real issue.
+- In dev, `next/font/google` fetches fonts at runtime — the FIRST page load can hang ~30–60s
+  on a constrained network, then it caches. Production self-hosts fonts; not a real issue.
+  (If "localhost:3000 is just spinning", it's almost always this or Postgres not running.)
 - pnpm build-script approval lives in `pnpm-workspace.yaml` (`allowBuilds: esbuild, sharp`),
   NOT in package.json. The Dockerfile must COPY it before `pnpm install`.
 - `sitemap.ts` is `force-dynamic` so the image can build without a DB.
+- Production runner image = Next standalone; it does NOT contain `tsx` or `src/`. Run
+  one-off scripts (seed) via the `seed` compose service (builder target), not the app image.
 - The official `create-payload-app` CLI needs a TTY; this project was scaffolded by hand.
 
 ## Decisions already made

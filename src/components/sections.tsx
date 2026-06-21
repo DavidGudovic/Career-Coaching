@@ -64,7 +64,8 @@ export function CtaBand({
           style={{
             position: 'absolute',
             inset: '-20%',
-            background: 'radial-gradient(50% 60% at 50% 0%, rgba(44,99,106,.7), transparent 60%)',
+            background:
+              'radial-gradient(70% 80% at 50% 0%, rgba(44,99,106,.45), rgba(44,99,106,.12) 50%, transparent 85%)',
           }}
         />
       )}

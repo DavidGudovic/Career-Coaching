@@ -1,11 +1,13 @@
 'use client'
 import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 // One IntersectionObserver for all [data-reveal] elements on the current page.
-// Re-scans on client navigation (pathname dep). Honors reduced-motion.
+// Re-scans on client navigation — including search-param changes (e.g. blog
+// filters), which keep the same pathname. Honors reduced-motion.
 export default function RevealManager() {
   const pathname = usePathname()
+  const search = useSearchParams().toString()
   useEffect(() => {
     const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)'))
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -35,6 +37,6 @@ export default function RevealManager() {
       })
     })
     return () => io.disconnect()
-  }, [pathname])
+  }, [pathname, search])
   return null
 }

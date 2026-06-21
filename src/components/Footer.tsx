@@ -90,9 +90,34 @@ export default function Footer({
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'space-between', paddingTop: 28 }}>
-          <span style={{ fontSize: 13, color: 'rgba(242,239,232,.5)' }}>{copyright}</span>
-          <span style={{ fontSize: 13, color: 'rgba(242,239,232,.5)' }}>{tagline}</span>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            gap: 14,
+            alignItems: 'center',
+            paddingTop: 28,
+          }}
+          className="foot-bottom"
+        >
+          <span style={{ fontSize: 13, color: 'rgba(242,239,232,.5)', textAlign: 'left' }}>{copyright}</span>
+          <span style={{ fontSize: 13, color: 'rgba(242,239,232,.5)', textAlign: 'center' }}>
+            Built with{' '}
+            <span style={{ color: '#e7796b' }} aria-hidden>
+              ♥
+            </span>{' '}
+            by{' '}
+            <a
+              href="https://www.linkedin.com/in/david-gudovic/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="foot-credit"
+              style={{ color: 'rgba(242,239,232,.7)', textDecoration: 'none' }}
+            >
+              David Gudović
+            </a>
+          </span>
+          <span style={{ fontSize: 13, color: 'rgba(242,239,232,.5)', textAlign: 'right' }}>{tagline}</span>
         </div>
       </div>
     </footer>

@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -55,7 +56,9 @@ export default async function LocaleLayout({
         copyright={settings?.footerCopyright || '© 2026 Jelena Rajković'}
         tagline={settings?.footerTagline || 'Karijerno iskreno · Crna Gora'}
       />
-      <RevealManager />
+      <Suspense fallback={null}>
+        <RevealManager />
+      </Suspense>
     </>
   )
 }

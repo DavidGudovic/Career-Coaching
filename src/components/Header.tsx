@@ -57,10 +57,6 @@ export default function Header({
           left: 0,
           right: 0,
           zIndex: 120,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 24,
           paddingTop: scrolled ? 13 : 22,
           paddingBottom: scrolled ? 13 : 22,
           transition: 'padding .4s cubic-bezier(.2,.7,.2,1), background .4s ease, box-shadow .4s ease',
@@ -70,6 +66,10 @@ export default function Header({
           boxShadow: scrolled ? '0 1px 0 rgba(20,41,43,.08)' : 'none',
         }}
       >
+        <div
+          className="wrap"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}
+        >
         <Link
           href={nav[0]?.href || '/'}
           style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', lineHeight: 1 }}
@@ -122,6 +122,7 @@ export default function Header({
             <span style={{ width: 24, height: 2, background: 'var(--ink)', display: 'block', borderRadius: 2 }} />
             <span style={{ width: 24, height: 2, background: 'var(--ink)', display: 'block', borderRadius: 2 }} />
           </button>
+        </div>
         </div>
       </header>
 

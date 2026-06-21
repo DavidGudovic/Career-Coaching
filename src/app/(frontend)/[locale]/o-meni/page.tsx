@@ -38,7 +38,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
       <section className="bg-paper section-sm">
         <div className="wrap-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px,1fr))', gap: 'clamp(40px,6vw,70px)', alignItems: 'start' }}>
-          <div data-reveal style={{ position: 'sticky', top: 110 }}>
+          <div data-reveal className="about-portrait">
             <MediaImage
               media={page?.portrait}
               ratio="4 / 5"

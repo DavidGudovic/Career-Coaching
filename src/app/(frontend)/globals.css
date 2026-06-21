@@ -410,3 +410,32 @@ h3 {
     display: flex;
   }
 }
+
+/* ---------- footer credit ---------- */
+.foot-credit:hover {
+  color: rgba(242, 239, 232, 0.95);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 620px) {
+  .foot-bottom {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .foot-bottom > span {
+    text-align: center !important;
+  }
+}
+
+/* ---------- about portrait (sticky on desktop only) ---------- */
+.about-portrait {
+  position: sticky;
+  top: 110px;
+}
+@media (max-width: 760px) {
+  .about-portrait {
+    position: static;
+  }
+}
