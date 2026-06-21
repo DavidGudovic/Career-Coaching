@@ -459,7 +459,7 @@ h3 {
 }
 @media (max-width: 620px) {
   .foot-bottom {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     justify-items: center;
     gap: 10px;
     text-align: center;
