@@ -1,0 +1,98 @@
+export const locales = ['me', 'en'] as const
+export type Locale = (typeof locales)[number]
+export const defaultLocale: Locale = 'me'
+
+export const isLocale = (v: string): v is Locale => (locales as readonly string[]).includes(v)
+
+// HTML lang / hreflang tags. Montenegrin has no ISO 639-1 code; sr-ME is the
+// widely recognized locale tag for it.
+export const htmlLang: Record<Locale, string> = { me: 'sr-ME', en: 'en' }
+
+// Static UI strings (everything not authored in the CMS).
+type Dict = Record<string, string>
+export const ui: Record<Locale, Dict> = {
+  me: {
+    nav_home: 'Početna',
+    nav_about: 'O meni',
+    nav_work: 'Rad sa mnom',
+    nav_blog: 'Karijerne bjeleške',
+    nav_contact: 'Kontakt',
+    cta_short: 'Zakaži razgovor',
+    cta_book: 'Zakaži besplatan uvodni razgovor',
+    cta_more: 'Saznaj više',
+    story_link: 'Pročitaj moju priču',
+    work_link: 'Kako izgleda rad sa mnom',
+    blog_all: 'Sve bjeleške',
+    read_more: 'Pročitaj još',
+    art_back: 'Sve bjeleške',
+    read_suffix: 'min čitanja',
+    source_lz: 'Ljepota i zdravlje',
+    read_original: 'Pročitaj original',
+    published_in: 'Objavljeno u magazinu',
+    filter_all: 'Sve',
+    price_cta: 'Pošalji upit',
+    form_name: 'Ime',
+    form_email: 'Email',
+    form_msg: 'Poruka',
+    form_send: 'Pošalji poruku',
+    form_name_ph: 'Tvoje ime',
+    form_email_ph: 'ime@email.com',
+    form_msg_ph: 'Gdje si sada i šta te muči?',
+    form_sending: 'Šaljem…',
+    form_ok: 'Hvala! Javiću ti se uskoro.',
+    form_err: 'Nešto nije u redu. Pokušaj ponovo ili mi piši direktno na email.',
+    menu_open: 'Otvori meni',
+    menu_close: 'Zatvori meni',
+    skip: 'Pređi na sadržaj',
+    foot_nav: 'Stranice',
+    foot_reach: 'Javi se',
+    foot_lang: 'Jezik',
+    email_label: 'Email',
+    instagram_label: 'Instagram',
+    lang_switch: 'Promijeni jezik na engleski',
+    no_posts: 'Uskoro stižu nove bjeleške.',
+  },
+  en: {
+    nav_home: 'Home',
+    nav_about: 'About',
+    nav_work: 'Work with me',
+    nav_blog: 'Career notes',
+    nav_contact: 'Contact',
+    cta_short: 'Book a call',
+    cta_book: 'Book a free intro call',
+    cta_more: 'Learn more',
+    story_link: 'Read my story',
+    work_link: 'How working together looks',
+    blog_all: 'All notes',
+    read_more: 'Read more',
+    art_back: 'All notes',
+    read_suffix: 'min read',
+    source_lz: 'Ljepota i zdravlje',
+    read_original: 'Read the original',
+    published_in: 'Published in the magazine',
+    filter_all: 'All',
+    price_cta: 'Send an inquiry',
+    form_name: 'Name',
+    form_email: 'Email',
+    form_msg: 'Message',
+    form_send: 'Send message',
+    form_name_ph: 'Your name',
+    form_email_ph: 'name@email.com',
+    form_msg_ph: 'Where are you now, and what is on your mind?',
+    form_sending: 'Sending…',
+    form_ok: 'Thank you! I will be in touch soon.',
+    form_err: 'Something went wrong. Please try again or email me directly.',
+    menu_open: 'Open menu',
+    menu_close: 'Close menu',
+    skip: 'Skip to content',
+    foot_nav: 'Pages',
+    foot_reach: 'Reach out',
+    foot_lang: 'Language',
+    email_label: 'Email',
+    instagram_label: 'Instagram',
+    lang_switch: 'Switch language to Montenegrin',
+    no_posts: 'New notes are coming soon.',
+  },
+}
+
+export const t = (locale: Locale, key: string): string => ui[locale][key] ?? ui.me[key] ?? key

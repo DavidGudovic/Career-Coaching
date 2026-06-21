@@ -1,0 +1,47 @@
+# Production stack for Jelena's server.
+# nginx on the host reverse-proxies to 127.0.0.1:3000 (app binds to localhost only).
+#
+# Content (DB rows + uploaded images) lives in named volumes — NOT in the image —
+# so rebuilding/updating the app image never wipes her blog posts or photos.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: karijera
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-karijera}
+      POSTGRES_DB: karijera
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U karijera -d karijera']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URI: postgres://karijera:${POSTGRES_PASSWORD:-karijera}@db:5432/karijera
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:?set your public URL in .env}
+      MEDIA_DIR: /app/media
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    ports:
+      # Bind to localhost only; nginx terminates TLS and proxies in.
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - media-data:/app/media
+
+volumes:
+  db-data:
+  media-data:
