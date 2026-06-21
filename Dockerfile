@@ -20,10 +20,12 @@ ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
 # A dummy DB URI lets `next build` collect the page tree without a live DB.
 ENV DATABASE_URI=postgres://build:build@localhost:5432/build
 ENV PAYLOAD_SECRET=build-only-secret
-# Generate Payload types + admin import map so the build never depends on
-# committed generated files (works on a fresh clone).
-RUN pnpm generate:types && pnpm generate:importmap
-RUN pnpm build
+# NOTE: Payload types (src/payload-types.ts) and the admin import map
+# (src/app/(payload)/admin/importMap.js) are committed and copied in above, so we
+# do NOT regenerate them here (saves ~10-25s/build). After ANY schema change run
+# `pnpm generate:types && pnpm generate:importmap` locally and commit the result.
+# Cache mount keeps .next/cache (SWC/webpack) across builds → incremental rebuilds.
+RUN --mount=type=cache,target=/app/.next/cache pnpm build
 
 # ---- runner: minimal production image ----
 FROM node:22-alpine AS runner
