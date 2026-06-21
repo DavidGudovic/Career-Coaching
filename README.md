@@ -79,15 +79,16 @@ Edit both via the locale switcher at the top of the admin.
    The app listens on **127.0.0.1:3000** (localhost only). Postgres + uploads persist
    in the `db-data` and `media-data` volumes.
 
-3. Seed once (first deploy):
+3. Seed once (first deploy) — admin user, photos, categories, EN translations, her 3 columns:
 
    ```bash
-   docker compose exec app node -e "require('child_process')" # (see note)
-   # or run the seed against the running DB from a one-off:
-   docker compose run --rm app sh -c "node --import tsx src/seed/index.ts"
+   docker compose --profile seed run --rm seed
    ```
 
-   Or simply open `/admin` — Payload prompts you to create the first admin user.
+   Run this ONCE, before editing content (it re-applies the English page text each run).
+   Optionally set `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` in `.env` first to choose the
+   first admin login. Or skip seeding entirely and open `/admin` — Payload then prompts you
+   to create the first admin user, and the site shows its Montenegrin default text.
 
 4. **nginx reverse proxy** (add to the existing site config):
 

@@ -45,6 +45,29 @@ services:
     volumes:
       - media-data:/app/media
 
+  # One-off seeding job. Uses the builder image (which has tsx + the seed script
+  # + the assets/ photos) and the same DB/volume as the app.
+  # Run once after first deploy:  docker compose --profile seed run --rm seed
+  seed:
+    profiles: ['seed']
+    build:
+      context: .
+      target: builder
+      args:
+        NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://jelena.dgudovic.dev}
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URI: postgres://karijera:${POSTGRES_PASSWORD:-karijera}@db:5432/karijera
+      PAYLOAD_SECRET: ${PAYLOAD_SECRET:?set PAYLOAD_SECRET in .env}
+      MEDIA_DIR: /app/media
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+    volumes:
+      - media-data:/app/media
+    command: ['node', '--import', 'tsx', 'src/seed/index.ts']
+
 volumes:
   db-data:
   media-data:
