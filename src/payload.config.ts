@@ -45,6 +45,9 @@ export default buildConfig({
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI || '' },
+    // Auto-sync the DB schema on boot so a code update (with new/changed CMS
+    // fields) applies on `docker compose up --build` — no manual migrations.
+    push: true,
   }),
   sharp,
   plugins: [
