@@ -64,8 +64,10 @@ export function CtaBand({
           style={{
             position: 'absolute',
             inset: '-20%',
+            // Soft top-down glow. Same RGB, alpha → 0 (not `transparent`, which
+            // interpolates through grey and leaves a visible band/line).
             background:
-              'radial-gradient(70% 80% at 50% 0%, rgba(44,99,106,.45), rgba(44,99,106,.12) 50%, transparent 85%)',
+              'linear-gradient(180deg, rgba(44,99,106,.55) 0%, rgba(44,99,106,.2) 38%, rgba(44,99,106,0) 72%)',
           }}
         />
       )}

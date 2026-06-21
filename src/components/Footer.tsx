@@ -41,9 +41,8 @@ export default function Footer({
     <footer className="bg-footer px" style={{ padding: 'clamp(60px,8vw,90px) var(--pad-x) 40px' }}>
       <div className="wrap">
         <div
+          className="footer-cols"
           style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
             gap: 'clamp(36px,5vw,60px)',
             paddingBottom: 'clamp(40px,5vw,56px)',
             borderBottom: '1px solid rgba(242,239,232,.14)',

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import RevealManager from '@/components/RevealManager'
+import MobileCta from '@/components/MobileCta'
 import { isLocale, t, locales } from '@/lib/i18n'
 import { NAV, ROUTES, href } from '@/lib/routes'
 import { getSettings } from '@/lib/payload'
@@ -56,6 +57,7 @@ export default async function LocaleLayout({
         copyright={settings?.footerCopyright || '© 2026 Jelena Rajković'}
         tagline={settings?.footerTagline || 'Karijerno iskreno · Crna Gora'}
       />
+      <MobileCta href={href(locale, ROUTES.contact)} label={t(locale, 'cta_short')} />
       <Suspense fallback={null}>
         <RevealManager />
       </Suspense>

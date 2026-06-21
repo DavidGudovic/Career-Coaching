@@ -411,6 +411,46 @@ h3 {
   }
 }
 
+/* ---------- footer columns ---------- */
+.footer-cols {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+}
+@media (max-width: 900px) {
+  .footer-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 520px) {
+  .footer-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- mobile floating CTA (shown only < 1000px, like the burger) ---------- */
+.mobile-cta {
+  display: none;
+}
+@media (max-width: 999px) {
+  .mobile-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    right: 16px;
+    bottom: 18px;
+    z-index: 115;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: var(--teal-deep);
+    color: var(--offwhite);
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 600;
+    box-shadow: 0 12px 30px -8px rgba(20, 41, 43, 0.55);
+  }
+}
+
 /* ---------- footer credit ---------- */
 .foot-credit:hover {
   color: rgba(242, 239, 232, 0.95);
