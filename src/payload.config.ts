@@ -11,6 +11,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Posts } from './collections/Posts'
+import { migrations } from './migrations'
 import { SiteSettings } from './globals/SiteSettings'
 import { HomePage } from './globals/HomePage'
 import { AboutPage } from './globals/AboutPage'
@@ -56,9 +57,13 @@ export default buildConfig({
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
     pool: { connectionString: process.env.DATABASE_URI || '' },
-    // Auto-sync the DB schema on boot so a code update (with new/changed CMS
-    // fields) applies on `docker compose up --build` — no manual migrations.
+    // Dev: auto-sync the schema on boot (push). Push is DISABLED in production by
+    // Payload (the standalone runner has no drizzle-kit), so production instead runs
+    // `prodMigrations` on boot — that's how schema changes reach prod. After ANY
+    // schema change: run `pnpm payload migrate:create <name>` and commit the file.
     push: true,
+    migrationDir: path.resolve(dirname, 'migrations'),
+    prodMigrations: migrations,
   }),
   sharp,
   plugins: [
