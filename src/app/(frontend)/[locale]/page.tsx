@@ -8,6 +8,7 @@ import { buildMetadata, abs, SITE_URL } from '@/lib/seo'
 import { Emphasis, plain } from '@/lib/emphasis'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
+import HeroFlow from '@/components/HeroFlow'
 import { CtaBand } from '@/components/sections'
 import { ArrowRight } from '@/components/icons'
 
@@ -69,7 +70,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             pointerEvents: 'none',
           }}
         />
-        <div className="wrap" style={{ position: 'relative', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))', gap: 'clamp(40px,5vw,80px)', alignItems: 'center' }}>
+        <HeroFlow />
+        <div className="wrap" style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))', gap: 'clamp(40px,5vw,80px)', alignItems: 'center' }}>
           <div>
             <div data-reveal style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
               <span style={{ width: 26, height: 1, background: 'var(--mint)', display: 'block' }} />
