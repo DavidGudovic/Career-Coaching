@@ -555,6 +555,30 @@ export interface SiteSetting {
   footerBio?: string | null;
   footerCopyright?: string | null;
   footerTagline?: string | null;
+  /**
+   * Kombinacija fontova (naslovi + tekst).
+   */
+  fontPairing?: ('fraunces-hanken' | 'playfair-inter' | 'lora-sourcesans' | 'cormorant-worksans') | null;
+  /**
+   * Glavna tamna teal boja (dugmad, naslovi na svijetloj pozadini).
+   */
+  colorTealDeep?: string | null;
+  /**
+   * Sekundarna teal boja (sekcije, akcenti).
+   */
+  colorTeal?: string | null;
+  /**
+   * Pozadina (topli papir).
+   */
+  colorPaper?: string | null;
+  /**
+   * Boja teksta.
+   */
+  colorInk?: string | null;
+  /**
+   * Akcent na tamnoj pozadini (npr. linkovi u footeru).
+   */
+  colorMint?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -743,6 +767,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   footerBio?: T;
   footerCopyright?: T;
   footerTagline?: T;
+  fontPairing?: T;
+  colorTealDeep?: T;
+  colorTeal?: T;
+  colorPaper?: T;
+  colorInk?: T;
+  colorMint?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

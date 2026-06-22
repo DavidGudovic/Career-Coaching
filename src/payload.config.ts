@@ -25,9 +25,20 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
+    // Brand is warm/paper — force the admin to light so we don't maintain a dark teal theme.
+    theme: 'light',
+    components: {
+      // White-label: replace the Payload login graphic + nav mark with Jelena's branding.
+      graphics: {
+        Logo: '/components/admin/Logo#Logo',
+        Icon: '/components/admin/Icon#Icon',
+      },
+    },
     meta: {
       title: 'Jelena Rajković — Admin',
       titleSuffix: ' · Karijerno iskreno',
+      icons: [{ rel: 'icon', type: 'image/svg+xml', url: '/favicon.svg' }],
+      openGraph: { title: 'Karijerno iskreno — Admin', siteName: 'Jelena Rajković' },
     },
   },
   localization: {

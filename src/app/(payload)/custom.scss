@@ -1,1 +1,29 @@
-/* Custom admin styling can go here. */
+/* White-label admin accent — recolor only the visible accent to the site's teal.
+ * We deliberately do NOT remap --theme-elevation-800 globally: that var also drives
+ * --theme-text, so overriding it would tint the body text teal. Instead we target the
+ * primary button, active nav link and focus ring directly. */
+
+:root,
+:root[data-theme='light'] {
+  /* Payload's blue active/focus accent -> teal */
+  --theme-success-500: #2c636a;
+  --theme-success-550: #1c4e52;
+}
+
+.btn--style-primary {
+  --bg-color: #1c4e52;
+  --color: #fff;
+}
+.btn--style-primary:hover,
+.btn--style-primary:focus {
+  --hover-bg: #163e41;
+}
+
+.nav__link--active,
+.nav__link.active {
+  color: #1c4e52;
+}
+
+:focus-visible {
+  outline-color: #2c636a;
+}
