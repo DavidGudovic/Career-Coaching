@@ -1,11 +1,9 @@
 name: CI
 
 # Fast feedback: make sure the app actually builds before it can reach main.
-# Runs on every push to develop and on PRs targeting main.
+# Runs on PRs targeting main (and manual dispatch) — not on develop pushes.
 
 on:
-  push:
-    branches: [develop]
   pull_request:
     branches: [main]
   workflow_dispatch: {}
