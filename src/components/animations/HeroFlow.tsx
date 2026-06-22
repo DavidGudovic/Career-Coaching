@@ -15,6 +15,9 @@ export default function HeroFlow() {
     if (!ctx) return
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // Coarse pointer (phones/tablets) can't hover, so the lines react to scroll
+    // instead: they lean in the scroll direction and settle back at rest.
+    const touch = window.matchMedia('(pointer: coarse)').matches
 
     let width = 0
     let height = 0
@@ -66,7 +69,10 @@ export default function HeroFlow() {
         // Gentle local bend toward the eased pointer (gaussian falloff).
         if (eased.strength > 0.001) {
           const dm = m - pointerMain
-          const falloff = Math.exp(-(dm * dm) / (2 * 150 * 150))
+          // Touch/scroll uses a broad falloff so the whole ribbon leans gently
+          // rather than getting a sharp local poke like the desktop pointer.
+          const bw = touch ? mainLen * 0.6 : 150
+          const falloff = Math.exp(-(dm * dm) / (2 * bw * bw))
           const pull = (pointerCross - c) * 0.4 * falloff * eased.strength
           c += pull
         }
@@ -116,6 +122,39 @@ export default function HeroFlow() {
       pointer.active = false
     }
 
+    // Scroll-driven reaction for touch devices: scroll velocity decides which
+    // way (and how hard) the ribbons lean; they ease back to drift when idle.
+    let lastScrollY = window.scrollY
+    let scrollIdle = 0
+    function onScroll() {
+      const y = window.scrollY
+      const dy = y - lastScrollY
+      lastScrollY = y
+      const mainLen = vertical ? height : width
+      const crossLen = vertical ? width : height
+      // Lean amount from scroll velocity (clamped), centered on the cross axis.
+      const lean = Math.max(-1, Math.min(1, dy / 200)) * crossLen * 0.3
+      const main = mainLen / 2
+      const cross = crossLen / 2 + lean
+      if (vertical) {
+        pointer.y = main
+        pointer.x = cross
+      } else {
+        pointer.x = main
+        pointer.y = cross
+      }
+      if (!pointer.active) {
+        eased.x = pointer.x
+        eased.y = pointer.y
+      }
+      pointer.active = true
+      // Drop activity shortly after scrolling stops so the lines settle.
+      clearTimeout(scrollIdle)
+      scrollIdle = window.setTimeout(() => {
+        pointer.active = false
+      }, 140)
+    }
+
     resize()
     const ro = new ResizeObserver(() => {
       resize()
@@ -125,6 +164,15 @@ export default function HeroFlow() {
 
     if (reduce) {
       renderStatic()
+    } else if (touch) {
+      window.addEventListener('scroll', onScroll, { passive: true })
+      raf = requestAnimationFrame(frame)
+      return () => {
+        cancelAnimationFrame(raf)
+        ro.disconnect()
+        clearTimeout(scrollIdle)
+        window.removeEventListener('scroll', onScroll)
+      }
     } else {
       const parent = canvas.parentElement || canvas
       parent.addEventListener('pointermove', onPointerMove)
