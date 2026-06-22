@@ -24,11 +24,13 @@ export default function HeroFlow() {
     // Eased pointer the lines actually follow, so motion stays smooth.
     const eased = { x: 0, y: 0, strength: 0 }
 
+    const factor = 1.5;
+
     // Three drifting ribbons at different heights/speeds for a layered feel.
     const LINES = [
-      { y: 0.32, amp: 0.05, len: 1.7, speed: 0.06, phase: 0.0, alpha: 0.16, w: 1 },
-      { y: 0.52, amp: 0.07, len: 1.3, speed: -0.045, phase: 2.1, alpha: 0.1, w: 1 },
-      { y: 0.7, amp: 0.045, len: 2.2, speed: 0.03, phase: 4.2, alpha: 0.07, w: 1 },
+      { y: 0.32, amp: 0.05, len: 1.7, speed: 0.06 * factor, phase: 0.0, alpha: 0.16, w: 1 },
+      { y: 0.52, amp: 0.07, len: 1.3, speed: -0.045 * factor, phase: 2.1, alpha: 0.1, w: 1 },
+      { y: 0.7, amp: 0.045, len: 2.2, speed: 0.03 * factor, phase: 4.2, alpha: 0.07, w: 1 },
     ]
 
     function resize() {
