@@ -11,7 +11,15 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 echo "==> Pulling latest image from registry"
-docker compose pull app
+# `docker compose pull` exits 0 even when the pull is DENIED (it falls back to the
+# build: section with a warning). Pull the image ref directly so a real registry
+# failure aborts the deploy instead of silently running a stale image.
+APP_IMAGE="$(docker compose config --images app 2>/dev/null | head -1)"
+if [ -n "$APP_IMAGE" ]; then
+  docker pull "$APP_IMAGE"
+else
+  docker compose pull app
+fi
 
 echo "==> Recreating containers (no build)"
 # --no-build guarantees we use the pulled image even though compose has a build: section.
