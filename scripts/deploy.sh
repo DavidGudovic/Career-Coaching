@@ -14,7 +14,12 @@ echo "==> Pulling latest image from registry"
 # `docker compose pull` exits 0 even when the pull is DENIED (it falls back to the
 # build: section with a warning). Pull the image ref directly so a real registry
 # failure aborts the deploy instead of silently running a stale image.
-APP_IMAGE="$(docker compose config --images app 2>/dev/null | head -1)"
+#
+# NOTE: `docker compose config --images app` does NOT honor the service-name filter
+# on Compose v5 — it lists every service image, so `head -1` used to grab
+# postgres:16-alpine and we'd pull the DB instead of the app, leaving the running
+# app image stale on a "green" deploy. Match the GHCR ref explicitly instead.
+APP_IMAGE="$(docker compose config --images 2>/dev/null | grep '^ghcr.io/' | head -1)"
 if [ -n "$APP_IMAGE" ]; then
   docker pull "$APP_IMAGE"
 else

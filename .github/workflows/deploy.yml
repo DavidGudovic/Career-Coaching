@@ -70,7 +70,6 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          script_stop: true
           # GHCR_PAT is only needed if the package is PRIVATE. If the package is
           # public, leave the secret unset and the login is skipped.
           envs: GHCR_PAT
