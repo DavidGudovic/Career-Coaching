@@ -185,6 +185,18 @@ const run = async () => {
       footerTagline: 'Career, honestly · Montenegro',
     },
   })
+  // Theme defaults (not localized) so the "Izgled sajta" fields start populated.
+  await payload.updateGlobal({
+    slug: 'site-settings',
+    data: {
+      fontPairing: 'fraunces-hanken',
+      colorTealDeep: '#1c4e52',
+      colorTeal: '#2c636a',
+      colorPaper: '#f6f2ea',
+      colorInk: '#14292b',
+      colorMint: '#9dc3b6',
+    },
+  })
   log('globals translated (EN) + images assigned')
 
   /* ---------- her columns (Ljepota i zdravlje) ----------

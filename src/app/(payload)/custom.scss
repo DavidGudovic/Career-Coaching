@@ -1,29 +1,33 @@
-/* White-label admin accent — recolor only the visible accent to the site's teal.
- * We deliberately do NOT remap --theme-elevation-800 globally: that var also drives
- * --theme-text, so overriding it would tint the body text teal. Instead we target the
- * primary button, active nav link and focus ring directly. */
+/* White-label admin theming. The admin runs in dark mode (admin.theme: 'dark').
+ * Goal: keep Payload's comfortable dark surfaces (no scorching white), just HINT at
+ * the brand — a faint teal-tinted canvas + teal/mint accents. We deliberately don't
+ * remap --theme-elevation-* globally (that drives --theme-text); we only touch the
+ * canvas background and the visible accents, to preserve contrast/readability. */
 
-:root,
-:root[data-theme='light'] {
-  /* Payload's blue active/focus accent -> teal */
-  --theme-success-500: #2c636a;
-  --theme-success-550: #1c4e52;
+[data-theme='dark'] {
+  /* faint teal tint on the page canvas — a hint, not a wash (cards stay neutral) */
+  --theme-bg: #131c1c;
+
+  /* Payload's blue active/focus accent -> brand mint (reads well on dark) */
+  --theme-success-500: #9dc3b6;
+  --theme-success-550: #b9d6cc;
 }
 
+/* primary action buttons in brand teal with readable light text */
 .btn--style-primary {
-  --bg-color: #1c4e52;
-  --color: #fff;
+  --bg-color: #2c636a;
+  --color: #f2efe8;
 }
 .btn--style-primary:hover,
 .btn--style-primary:focus {
-  --hover-bg: #163e41;
+  --hover-bg: #357c85;
 }
 
+/* active nav link + focus ring -> mint, visible on dark */
 .nav__link--active,
 .nav__link.active {
-  color: #1c4e52;
+  color: #9dc3b6;
 }
-
 :focus-visible {
-  outline-color: #2c636a;
+  outline-color: #9dc3b6;
 }
