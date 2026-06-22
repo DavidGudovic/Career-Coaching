@@ -1,0 +1,49 @@
+name: CI
+
+# Fast feedback: make sure the app actually builds before it can reach main.
+# Runs on every push to develop and on PRs targeting main.
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      # Dummy values so `next build` can collect the page tree without a live DB.
+      DATABASE_URI: postgres://build:build@localhost:5432/build
+      PAYLOAD_SECRET: build-only-secret
+      NEXT_PUBLIC_SERVER_URL: https://jelena.dgudovic.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Verify generated files are committed and up to date
+        run: |
+          pnpm generate:types
+          pnpm generate:importmap
+          if ! git diff --quiet; then
+            echo "::error::payload-types.ts or importMap.js is stale. Run 'pnpm generate:types && pnpm generate:importmap' and commit."
+            git diff --stat
+            exit 1
+          fi
+
+      - name: Build
+        run: pnpm build

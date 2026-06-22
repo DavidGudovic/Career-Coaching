@@ -21,6 +21,10 @@ services:
       retries: 5
 
   app:
+    # In production the server PULLS this pre-built image from GHCR (built by CI on
+    # merge to main) — it does not build. `build:` is kept for local dev convenience:
+    # `docker compose build app` still works and tags the same image name.
+    image: ghcr.io/davidgudovic/career-coaching:latest
     build:
       context: .
       args:

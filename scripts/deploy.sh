@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# Server-side deploy. Pulls the pre-built image from GHCR and restarts the stack.
+# The server does NOT build — that already happened in GitHub Actions.
+# Invoked by .github/workflows/deploy.yml over SSH; also safe to run by hand.
+#
+#   cd /var/www/html/Career-Coaching && ./scripts/deploy.sh
+#
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+echo "==> Pulling latest image from registry"
+docker compose pull app
+
+echo "==> Recreating containers (no build)"
+# --no-build guarantees we use the pulled image even though compose has a build: section.
+docker compose up -d --no-build --remove-orphans
+
+echo "==> Waiting for app health"
+for i in $(seq 1 30); do
+  if curl -fsS -o /dev/null http://127.0.0.1:3000/; then
+    echo "==> App is up"
+    break
+  fi
+  if [ "$i" -eq 30 ]; then
+    echo "!! App did not respond on :3000 within 30s — check 'docker compose logs app'" >&2
+    exit 1
+  fi
+  sleep 1
+done
+
+echo "==> Pruning dangling images"
+docker image prune -f >/dev/null
+
+echo "==> Deploy complete: $(docker compose images app --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | head -1)"
