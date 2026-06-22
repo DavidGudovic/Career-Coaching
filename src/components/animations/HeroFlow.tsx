@@ -19,6 +19,9 @@ export default function HeroFlow() {
     let width = 0
     let height = 0
     let dpr = 1
+    // On narrow (phone) viewports the ribbons run top-to-bottom and drift
+    // horizontally instead of left-to-right.
+    let vertical = false
     // Pointer in CSS px relative to the canvas; null until the user moves it.
     const pointer = { x: 0, y: 0, active: false }
     // Eased pointer the lines actually follow, so motion stays smooth.
@@ -41,25 +44,35 @@ export default function HeroFlow() {
       canvas!.width = Math.round(width * dpr)
       canvas!.height = Math.round(height * dpr)
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
+      vertical = width < 768
     }
 
     function drawLine(line: (typeof LINES)[number], time: number) {
-      const baseY = line.y * height
-      const amp = line.amp * height
-      const k = (Math.PI * 2 * line.len) / width
-      const step = Math.max(6, width / 120)
+      // `main` is the travel axis (the line's length), `cross` is the drift
+      // axis. Horizontal: main=x/width, cross=y/height. Vertical (phone):
+      // main=y/height, cross=x/width.
+      const mainLen = vertical ? height : width
+      const crossLen = vertical ? width : height
+      const base = line.y * crossLen
+      const amp = line.amp * crossLen
+      const k = (Math.PI * 2 * line.len) / mainLen
+      const step = Math.max(6, mainLen / 120)
+      const pointerMain = vertical ? eased.y : eased.x
+      const pointerCross = vertical ? eased.x : eased.y
 
       ctx!.beginPath()
-      for (let x = -step; x <= width + step; x += step) {
-        let y = baseY + Math.sin(x * k + time * line.speed + line.phase) * amp
+      for (let m = -step; m <= mainLen + step; m += step) {
+        let c = base + Math.sin(m * k + time * line.speed + line.phase) * amp
         // Gentle local bend toward the eased pointer (gaussian falloff).
         if (eased.strength > 0.001) {
-          const dx = x - eased.x
-          const falloff = Math.exp(-(dx * dx) / (2 * 150 * 150))
-          const pull = (eased.y - y) * 0.4 * falloff * eased.strength
-          y += pull
+          const dm = m - pointerMain
+          const falloff = Math.exp(-(dm * dm) / (2 * 150 * 150))
+          const pull = (pointerCross - c) * 0.4 * falloff * eased.strength
+          c += pull
         }
-        if (x <= -step) ctx!.moveTo(x, y)
+        const x = vertical ? c : m
+        const y = vertical ? m : c
+        if (m <= -step) ctx!.moveTo(x, y)
         else ctx!.lineTo(x, y)
       }
       ctx!.strokeStyle = `rgba(242, 239, 232, ${line.alpha})`

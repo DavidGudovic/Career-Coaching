@@ -8,7 +8,7 @@ import { buildMetadata, abs, SITE_URL } from '@/lib/seo'
 import { Emphasis, plain } from '@/lib/emphasis'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
-import HeroFlow from '@/components/HeroFlow'
+import HeroFlow from '@/components/animations/HeroFlow'
 import { CtaBand } from '@/components/sections'
 import { ArrowRight } from '@/components/icons'
 
