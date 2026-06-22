@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { lexicalEditor, HeadingFeature, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
 import { slugField } from '../fields/slug'
 
 export const Posts: CollectionConfig = {
@@ -29,7 +30,23 @@ export const Posts: CollectionConfig = {
             { name: 'title', type: 'text', required: true, localized: true },
             { name: 'excerpt', type: 'textarea', localized: true, admin: { description: 'Kratak opis za karticu i SEO.' } },
             { name: 'coverImage', type: 'upload', relationTo: 'media' },
-            { name: 'content', type: 'richText', localized: true },
+            {
+              name: 'content',
+              type: 'richText',
+              localized: true,
+              // The default Lexical editor already ships rich text (bold/italic, lists,
+              // checklist, blockquote, links, inline images, hr, align, inline code) AND
+              // markdown typing shortcuts (## , **bold**, - , > , ---). We only tweak it for
+              // blogging: a persistent toolbar (easier for a non-technical writer) and limit
+              // headings to h2–h4 (h1 is reserved for the post title).
+              editor: lexicalEditor({
+                features: ({ defaultFeatures }) => [
+                  ...defaultFeatures,
+                  HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                  FixedToolbarFeature(),
+                ],
+              }),
+            },
           ],
         },
         {

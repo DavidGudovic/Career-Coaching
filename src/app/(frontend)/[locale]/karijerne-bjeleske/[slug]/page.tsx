@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { RichText } from '@payloadcms/richtext-lexical/react'
+import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPostBySlug, getRelatedPosts } from '@/lib/payload'
@@ -13,6 +13,42 @@ import { CtaBand } from '@/components/sections'
 import type { Category, Media } from '@/payload-types'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
+
+// Render inline images (Lexical "upload" nodes) at their natural aspect ratio using Payload's
+// pre-generated WebP sizes — MediaImage is not used here because it force-crops to a fixed ratio.
+const contentConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
+  ...defaultConverters,
+  upload: ({ node }) => {
+    const m = node.value as Media
+    if (!m || typeof m !== 'object' || !m.url) return null
+    const sizeMap = (m.sizes || {}) as Record<string, { url?: string | null; width?: number | null }>
+    const srcset = ['card', 'feature']
+      .map((k) => sizeMap[k])
+      .filter((s): s is { url: string; width: number } => Boolean(s?.url && s?.width))
+      .map((s) => `${s.url} ${s.width}w`)
+      .join(', ')
+    return (
+      <figure style={{ margin: '32px 0' }}>
+        <img
+          src={sizeMap.feature?.url || m.url || undefined}
+          srcSet={srcset || undefined}
+          sizes="(max-width: 800px) 100vw, 760px"
+          alt={m.alt || ''}
+          width={m.width || undefined}
+          height={m.height || undefined}
+          loading="lazy"
+          decoding="async"
+          style={{ width: '100%', height: 'auto', borderRadius: 4 }}
+        />
+        {m.credit ? (
+          <figcaption style={{ marginTop: 10, fontSize: 14, color: 'rgba(20,41,43,.6)' }}>
+            {m.credit}
+          </figcaption>
+        ) : null}
+      </figure>
+    )
+  },
+})
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale, slug } = await params
@@ -100,7 +136,7 @@ export default async function ArticlePage({ params }: Params) {
             </div>
           )}
           <div data-reveal className="prose" style={{ paddingTop: cover ? 0 : 'clamp(40px,6vw,60px)' }}>
-            {post.content ? <RichText data={post.content as never} /> : null}
+            {post.content ? <RichText data={post.content as never} converters={contentConverters} /> : null}
           </div>
 
           {fromLZ && post.sourceUrl && (

@@ -160,6 +160,59 @@ h3 {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.prose h3 {
+  font-size: clamp(20px, 2.4vw, 26px);
+  margin: 32px 0 14px;
+}
+.prose h4 {
+  font-size: clamp(18px, 2vw, 21px);
+  margin: 28px 0 12px;
+}
+.prose ul,
+.prose ol {
+  margin: 0 0 24px;
+  padding-left: 1.4em;
+  font-size: clamp(17px, 1.5vw, 19.5px);
+  line-height: 1.8;
+}
+.prose li {
+  margin: 0 0 8px;
+}
+.prose ul {
+  list-style: disc;
+}
+.prose ol {
+  list-style: decimal;
+}
+/* Lexical checklist renders as a <ul> with per-item checkbox markup */
+.prose ul[class*='checklist'] {
+  list-style: none;
+  padding-left: 0;
+}
+.prose ul[class*='checklist'] li {
+  position: relative;
+  padding-left: 1.7em;
+}
+.prose figure {
+  margin: 32px 0;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid rgba(20, 41, 43, 0.15);
+  margin: 40px 0;
+}
+.prose code {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  background: rgba(28, 78, 82, 0.08);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
 
 /* ---------- buttons ---------- */
 .btn {
