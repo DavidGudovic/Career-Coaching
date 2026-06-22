@@ -1,7 +1,9 @@
 node_modules
 .next
 .git
+.github
 .idea
+.local
 media
 .env
 .env*.local
