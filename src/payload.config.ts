@@ -26,10 +26,8 @@ export default buildConfig({
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
-    // Dark admin, easy on the eyes, with subtle brand hints (see custom.scss).
     theme: 'dark',
     components: {
-      // White-label: replace the Payload login graphic + nav mark with Jelena's branding.
       graphics: {
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',

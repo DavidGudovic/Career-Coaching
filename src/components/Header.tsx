@@ -74,7 +74,7 @@ export default function Header({
           href={nav[0]?.href || '/'}
           style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', lineHeight: 1 }}
         >
-          <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 21, color: 'var(--ink)' }}>
+          <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 21, color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', transition: 'color .4s ease' }}>
             {brandName}
           </span>
           <span
@@ -82,9 +82,10 @@ export default function Header({
               fontSize: 10.5,
               letterSpacing: '.22em',
               textTransform: 'uppercase',
-              color: 'var(--teal)',
+              color: scrolled ? 'var(--teal)' : 'rgba(255,255,255,.65)',
               marginTop: 5,
               fontWeight: 600,
+              transition: 'color .4s ease',
             }}
           >
             {brandRole}
@@ -93,7 +94,7 @@ export default function Header({
 
         <nav className="desk-nav" style={{ alignItems: 'center', gap: 30 }}>
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="link-underline" style={{ color: 'var(--ink)', fontSize: 15 }}>
+            <Link key={item.href} href={item.href} className="link-underline" style={{ color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', fontSize: 15, transition: 'color .4s ease' }}>
               {item.label}
             </Link>
           ))}
@@ -119,8 +120,8 @@ export default function Header({
               padding: '8px 4px',
             }}
           >
-            <span style={{ width: 24, height: 2, background: 'var(--ink)', display: 'block', borderRadius: 2 }} />
-            <span style={{ width: 24, height: 2, background: 'var(--ink)', display: 'block', borderRadius: 2 }} />
+            <span style={{ width: 24, height: 2, background: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', display: 'block', borderRadius: 2, transition: 'background .4s ease' }} />
+            <span style={{ width: 24, height: 2, background: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', display: 'block', borderRadius: 2, transition: 'background .4s ease' }} />
           </button>
         </div>
         </div>
