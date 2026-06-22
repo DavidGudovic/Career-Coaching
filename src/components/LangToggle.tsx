@@ -2,6 +2,7 @@
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import type { Locale } from '@/lib/i18n'
+import { GlobeIcon } from './icons'
 
 export default function LangToggle({
   locale,
@@ -26,6 +27,7 @@ export default function LangToggle({
     <Link
       href={target}
       aria-label={ariaLabel}
+      className="lang-toggle"
       style={{
         border: `1px solid ${border}`,
         background: 'transparent',
@@ -43,6 +45,7 @@ export default function LangToggle({
         transition: 'all .3s ease',
       }}
     >
+      <GlobeIcon />
       {a}&nbsp;·&nbsp;<span style={{ opacity: 0.45 }}>{b}</span>
     </Link>
   )

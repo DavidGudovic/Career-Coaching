@@ -101,7 +101,7 @@ export default function Header({
         </nav>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <LangToggle locale={locale} ariaLabel={langAria} />
+          <LangToggle locale={locale} ariaLabel={langAria} variant={scrolled ? 'light' : 'dark'} />
           <Link href={ctaHref} className="btn btn-solid head-cta" style={{ padding: '11px 20px', fontSize: 14 }}>
             {ctaLabel}
           </Link>
