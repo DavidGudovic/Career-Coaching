@@ -73,7 +73,10 @@ export default async function FrontendLayout({ children }: { children: React.Rea
         />
         <style dangerouslySetInnerHTML={{ __html: themeCss }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <div className="grain" aria-hidden />
+      </body>
     </html>
   )
 }
