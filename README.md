@@ -61,13 +61,13 @@ Edit both via the locale switcher at the top of the admin.
    ```env
    POSTGRES_PASSWORD=<strong-password>
    PAYLOAD_SECRET=<openssl rand -hex 32>
-   NEXT_PUBLIC_SERVER_URL=https://jelena.dgudovic.dev
+   NEXT_PUBLIC_SERVER_URL=https://jelena.rajkovic.coach
    # contact form email (optional but recommended):
    SMTP_HOST=...
    SMTP_PORT=587
    SMTP_USER=...
    SMTP_PASS=...
-   SMTP_FROM=no-reply@jelena.dgudovic.dev
+   SMTP_FROM=no-reply@jelena.rajkovic.coach
    ```
 
 2. Build & start:
@@ -94,7 +94,7 @@ Edit both via the locale switcher at the top of the admin.
 
    ```nginx
    server {
-     server_name jelena.dgudovic.dev;
+     server_name jelena.rajkovic.coach;
 
      client_max_body_size 25m;   # allow photo uploads
 
