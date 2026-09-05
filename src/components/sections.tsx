@@ -67,7 +67,7 @@ export async function CtaBand({
       <ContourArt className="conversation-contours conversation-contours-right" />
       <div data-reveal style={{ position: 'relative', maxWidth: 760, margin: centered ? '0 auto' : 0 }}>
         <svg className="conversation-mark" viewBox="0 0 100 70" fill="none" aria-hidden="true" focusable="false" style={{ marginLeft: centered ? 'auto' : 0, marginRight: centered ? 'auto' : 0 }}>
-          <path d="M50 14C27-2 2 17 14 39C22 52 40 47 50 35C60 23 78 18 86 31C98 53 73 72 50 56" />
+          <path pathLength="1" d="M50 14C27-2 2 17 14 39C22 52 40 47 50 35C60 23 78 18 86 31C98 53 73 72 50 56" />
           <circle cx="50" cy="35" r="3" fill="currentColor" stroke="none" />
         </svg>
         <h2 className="display-3" style={{ color: dark ? 'var(--offwhite)' : 'var(--ink)', margin: '0 0 22px' }}>

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import LangToggle from './LangToggle'
-import type { Locale } from '@/lib/i18n'
+import { htmlLang, type Locale } from '@/lib/i18n'
 
 export type NavItem = { label: string; href: string }
 
@@ -32,6 +32,11 @@ export default function Header({
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
+  // The root layout persists during client navigation between languages.
+  useEffect(() => {
+    document.documentElement.lang = htmlLang[locale]
+  }, [locale])
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -49,7 +54,7 @@ export default function Header({
   return (
     <>
       <header
-        className="px"
+        className="px site-header"
         data-scrolled={scrolled}
         style={{
           position: 'fixed',
@@ -71,6 +76,7 @@ export default function Header({
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}
         >
         <Link
+          className="site-brand"
           href={nav[0]?.href || '/'}
           style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', lineHeight: 1 }}
         >
@@ -101,7 +107,7 @@ export default function Header({
           ))}
         </nav>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="site-header-controls" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <LangToggle locale={locale} ariaLabel={langAria} variant={scrolled ? 'light' : 'dark'} />
           <Link href={ctaHref} className="btn btn-solid head-cta" style={{ padding: '11px 20px', fontSize: 14 }}>
             {ctaLabel}

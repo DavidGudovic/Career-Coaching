@@ -41,6 +41,15 @@ export default function ContourArt({ className = '' }: { className?: string }) {
       target.y = ((event.clientY - box.top) / box.height - 0.5) * 46
       start()
     }
+    // On a phone, the drawing follows the section's passage through the viewport.
+    const scroll = () => {
+      if (fine.matches || motion.matches || !visible || document.hidden) return
+      const box = surface.getBoundingClientRect()
+      const progress = Math.max(-1, Math.min(1, (window.innerHeight / 2 - box.top - box.height / 2) / window.innerHeight))
+      target.x = progress * 24
+      target.y = progress * -18
+      start()
+    }
     const reset = () => { target.x = 0; target.y = 0; start() }
     const sync = () => {
       cancelAnimationFrame(frame)
@@ -52,12 +61,13 @@ export default function ContourArt({ className = '' }: { className?: string }) {
     }
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
-      if (visible) start()
+      if (visible) { scroll(); start() }
       else { cancelAnimationFrame(frame); frame = 0 }
     })
     observer.observe(svg)
     surface.addEventListener('pointermove', move, { passive: true })
     surface.addEventListener('pointerleave', reset)
+    window.addEventListener('scroll', scroll, { passive: true })
     motion.addEventListener('change', sync)
     document.addEventListener('visibilitychange', sync)
     return () => {
@@ -65,6 +75,7 @@ export default function ContourArt({ className = '' }: { className?: string }) {
       observer.disconnect()
       surface.removeEventListener('pointermove', move)
       surface.removeEventListener('pointerleave', reset)
+      window.removeEventListener('scroll', scroll)
       motion.removeEventListener('change', sync)
       document.removeEventListener('visibilitychange', sync)
     }
