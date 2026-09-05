@@ -26,13 +26,27 @@ export default function WebinarInvitation({ title, text, url, buttonLabel, close
     setExpanded(false)
     if (contactPage || !target) return
     setReady(true)
-    // Older dismissals now minimise the invitation rather than losing it.
-    try { if (sessionStorage.getItem(storageKey)) return } catch { /* Storage may be disabled. */ }
+    // Match the compact CSS treatment, including a phone held sideways.
+    const compact = window.matchMedia('(max-width: 767px), (pointer: coarse) and (max-height: 600px)')
+    const onLayoutChange = () => {
+      if (!compact.matches) return
+      window.clearTimeout(timer.current)
+      if (panel.current?.contains(document.activeElement)) focusNext.current = 'teaser'
+      setExpanded(false)
+    }
+    compact.addEventListener('change', onLayoutChange)
+    const cleanup = () => {
+      window.clearTimeout(timer.current)
+      compact.removeEventListener('change', onLayoutChange)
+    }
+    // Phones open the invitation only after a tap. Desktop keeps its timed welcome.
+    if (compact.matches) return cleanup
+    try { if (sessionStorage.getItem(storageKey)) return cleanup } catch { /* Storage may be disabled. */ }
     timer.current = window.setTimeout(() => {
       // Do not remove a control while someone is reaching it with the keyboard.
-      if (document.activeElement !== teaser.current) setExpanded(true)
+      if (!compact.matches && document.activeElement !== teaser.current) setExpanded(true)
     }, 3000)
-    return () => window.clearTimeout(timer.current)
+    return cleanup
   }, [storageKey, contactPage, target])
 
   function minimise() {
@@ -70,7 +84,7 @@ export default function WebinarInvitation({ title, text, url, buttonLabel, close
   // Non-modal: automatic opening never moves focus or blocks the page.
   if (!ready || !target || contactPage) return null
   return (
-    <div className="webinar-widget">
+    <div className="webinar-widget" data-expanded={expanded}>
       {expanded ? (
         <aside ref={panel} className="webinar-invitation" id={`${id}-panel`} aria-labelledby={`${id}-title`}>
           <div className="webinar-topline">
