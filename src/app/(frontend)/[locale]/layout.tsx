@@ -62,7 +62,7 @@ export default async function LocaleLayout({
         </section>
       )}
       {settings?.webinarEnabled && settings.webinarTitle && webinarUrl && (
-        <WebinarInvitation title={settings.webinarTitle} text={settings.webinarText} url={webinarUrl} buttonLabel={settings.webinarButtonLabel || t(locale, 'webinar_cta')} closeLabel={t(locale, 'webinar_close')} eyebrow={locale === 'en' ? 'Webinar' : 'Vebinar'} />
+        <WebinarInvitation title={settings.webinarTitle} text={settings.webinarText} url={webinarUrl} buttonLabel={settings.webinarButtonLabel || t(locale, 'webinar_cta')} closeLabel={t(locale, 'webinar_close')} laterLabel={t(locale, 'webinar_later')} openLabel={t(locale, 'webinar_open')} eyebrow={locale === 'en' ? 'Webinar' : 'Vebinar'} />
       )}
       <Footer
         locale={locale}

@@ -37,6 +37,62 @@
   .audience-section .thread-study { opacity: .35; mask-image: linear-gradient(180deg, transparent, #0002 20%, #0002 65%, #000); }
 }
 
+/* A small library of paper guides, with the first resource given more room. */
+.resources-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+.resource-card, .resources-empty { min-width: 0; overflow: hidden; background: color-mix(in srgb, var(--offwhite), white 40%); border: 1px solid color-mix(in srgb, var(--teal), transparent 83%); border-radius: 3px; }
+.resource-card { display: flex; flex-direction: column; }
+.resource-card:first-child, .resources-empty { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-column: 1 / -1; }
+.resource-visual { display: grid; place-items: center; position: relative; overflow: hidden; min-height: 350px; padding: 42px; background: color-mix(in srgb, var(--sage), var(--paper) 40%); }
+.resource-card:first-child .resource-visual, .resources-empty .resource-visual { min-height: 470px; padding: 48px; }
+.resource-visual::after { content: ''; position: absolute; inset: auto 12% 22px; height: 28px; background: radial-gradient(ellipse, color-mix(in srgb, var(--teal-deep), transparent 85%), transparent 70%); pointer-events: none; }
+.resource-folio { position: relative; width: min(100%, 220px); isolation: isolate; transform: rotate(-6deg); transition: transform .85s cubic-bezier(.2,.7,.2,1); }
+.resource-card:first-child .resource-folio, .resources-empty .resource-folio { width: min(100%, 280px); }
+.resource-folio::before, .resource-folio::after { content: ''; position: absolute; inset: 0; border: 1px solid color-mix(in srgb, var(--teal), transparent 75%); background: var(--offwhite); z-index: -1; }
+.resource-folio::before { transform: translate(11px, 8px) rotate(3deg); }
+.resource-folio::after { transform: translate(5px, 4px) rotate(1deg); }
+.resource-folio-cover { position: relative; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 4 / 5; padding: 26px 22px 18px 30px; overflow: hidden; background: var(--teal-deep); color: var(--mint-light); box-shadow: 0 16px 26px -16px color-mix(in srgb, var(--teal-deep), transparent 48%); }
+.resource-folio-cover::before { content: ''; position: absolute; inset: 0 auto 0 11px; width: 1px; background: currentColor; opacity: .25; }
+.resource-folio-label { position: relative; z-index: 1; font-family: var(--serif); font-size: 23px; font-weight: 400; line-height: 1.12; max-width: 10ch; overflow-wrap: anywhere; }
+.resource-routes { position: absolute; inset: 23% -3% auto; width: 106%; height: 64%; stroke: currentColor; stroke-width: .8; opacity: .65; }
+.resource-folio-bottom { position: relative; display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.resource-folio-bottom > :first-child { font-family: var(--serif); font-size: 50px; font-style: italic; font-weight: 340; line-height: 1; }
+.resource-folio-bottom > :last-child { font-size: 10px; letter-spacing: .18em; }
+.resource-visual-1 { background: color-mix(in srgb, var(--paper), var(--teal) 12%); }
+.resource-visual-1 .resource-folio-cover { background: var(--paper); color: var(--teal); }
+.resource-visual-2 .resource-folio-cover { background: var(--mint); color: var(--teal-deep); }
+.resource-copy { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(30px, 4vw, 54px); }
+.resource-card h2 { margin: 19px 0 22px; font-family: var(--serif); font-size: clamp(28px, 3.2vw, 42px); font-weight: 340; line-height: 1.12; overflow-wrap: anywhere; text-wrap: pretty; }
+.resource-card .formatted-text { font-size: 16px; line-height: 1.7; margin-bottom: 30px; overflow-wrap: anywhere; }
+.resource-card:first-child h2 { font-size: clamp(32px, 3.6vw, 48px); }
+.resource-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px 24px; margin-top: auto; padding-top: 5px; }
+.resource-actions .btn { padding: 14px 22px; font-size: 14px; white-space: normal; text-align: left; overflow-wrap: anywhere; }
+.resource-download-icon { width: 19px; height: 19px; flex-shrink: 0; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.resource-preview { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: var(--teal-deep); font-size: 14px; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+.resource-preview > span { display: inline-block; transition: transform .4s ease; }
+.resource-preview:is(:hover, :focus-visible) > span { transform: translate(2px, -2px); }
+.resource-card:has(a:is(:hover, :focus-visible)) .resource-folio { transform: translateY(-5px) rotate(-2deg); }
+.resource-card a:focus-visible, .resources-empty a:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 5px; }
+.resources-empty .formatted-text { font-family: var(--serif); font-size: clamp(26px, 3vw, 38px); line-height: 1.3; margin-bottom: 30px; }
+.js .resource-routes path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s ease .25s; }
+.js .is-visible .resource-routes path { stroke-dashoffset: 0; }
+@media (min-width: 761px) {
+  .resource-card:first-child .resource-actions { margin-top: 10px; }
+}
+@media (max-width: 760px) {
+  .resources-grid { grid-template-columns: 1fr; gap: 28px; }
+  .resource-card:first-child, .resources-empty { display: flex; flex-direction: column; }
+  .resource-card .resource-visual, .resource-card:first-child .resource-visual, .resources-empty .resource-visual { min-height: 340px; padding: 38px; }
+  .resource-card .resource-folio, .resource-card:first-child .resource-folio, .resources-empty .resource-folio { width: min(100%, 220px); }
+  .resource-copy { padding: 30px 26px 34px; }
+  .resource-card h2 { font-size: 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .resource-folio, .resource-preview > span { transition: none; }
+  .resource-card:has(a:is(:hover, :focus-visible)) .resource-folio { transform: rotate(-6deg); }
+  .resource-preview:is(:hover, :focus-visible) > span { transform: none; }
+  .js .resource-routes path { stroke-dashoffset: 0; transition: none; }
+}
+
 /* Each drawing has its own small response, like marks in a sketchbook. */
 .path-glyph-0 circle:nth-of-type(2) { transform-origin: 60px 50px; transition: transform .8s ease; }
 .path-glyph-1 > path { transform-origin: 60px 50px; transition: transform .9s cubic-bezier(.2,.7,.2,1); }
@@ -72,4 +128,40 @@
   .mentoring-card:is(:hover, :focus-visible) .path-glyph-1 > path { transform: none; }
   .mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse { translate: none; }
   .js .about-pullquote path { stroke-dashoffset: 0; transition: none; }
+}
+
+
+/* An invitation that can be put aside and picked up again. */
+.webinar-widget { position: fixed; right: 24px; bottom: 24px; z-index: 125; width: min(400px, calc(100vw - 32px)); }
+.webinar-invitation, .webinar-teaser { background: var(--paper); color: var(--ink); border: 1px solid color-mix(in srgb, var(--teal), transparent 55%); border-radius: 6px; box-shadow: 0 16px 60px -24px color-mix(in srgb, var(--ink), transparent 35%); }
+.webinar-invitation { max-height: calc(100dvh - 128px); overflow-y: auto; overscroll-behavior: contain; padding: 22px 28px 28px; border-top: 4px solid var(--teal); animation: webinar-enter .5s cubic-bezier(.2,.7,.2,1) both; }
+.webinar-topline { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.webinar-topline .eyebrow { font-size: 11px; }
+.webinar-minimise { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 10px; margin-right: -10px; background: transparent; border: 0; border-radius: 4px; color: var(--teal-deep); font-family: var(--sans); font-size: 13px; cursor: pointer; }
+.webinar-minimise span { font-size: 23px; line-height: 1; }
+.webinar-minimise:hover { background: var(--sage); }
+.webinar-invitation h2 { margin: 10px 0 16px; font-size: 32px; font-weight: 340; line-height: 1.12; overflow-wrap: anywhere; }
+.webinar-invitation p { margin: 0 0 24px; font-size: 15px; line-height: 1.65; overflow-wrap: anywhere; }
+.webinar-invitation .btn { padding: 14px 22px; font-size: 14px; white-space: normal; overflow-wrap: anywhere; }
+.webinar-teaser { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 18px; width: 100%; padding: 17px 20px; border-left: 4px solid var(--teal); font-family: var(--sans); text-align: left; cursor: pointer; }
+.webinar-teaser .eyebrow { margin-bottom: 5px; font-size: 10px; }
+.webinar-teaser-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-family: var(--serif); font-size: 22px; font-weight: 400; line-height: 1.15; overflow-wrap: anywhere; }
+.webinar-teaser-arrow { display: grid; place-items: center; width: 35px; height: 35px; border: 1px solid color-mix(in srgb, var(--teal), transparent 60%); border-radius: 50%; font-size: 18px; color: var(--teal); transition: background .3s ease, color .3s ease; }
+.webinar-teaser:hover .webinar-teaser-arrow { background: var(--teal-deep); color: var(--paper); }
+.webinar-widget :is(a, button):focus-visible, .webinar-invitation h2:focus-visible { outline: 2px solid var(--teal-deep); outline-offset: 4px; }
+body:has(.burger[aria-expanded="true"]) .webinar-widget { visibility: hidden; }
+@keyframes webinar-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (max-width: 1199px) {
+  .webinar-widget { right: 16px; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .webinar-invitation { max-height: calc(100dvh - 184px - env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width: 640px) {
+  .webinar-invitation { padding: 16px 22px 24px; }
+  .webinar-invitation h2 { font-size: 29px; }
+  .webinar-teaser { padding: 14px 18px; }
+  .webinar-teaser-title { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .webinar-invitation { animation: none; }
+  .webinar-teaser-arrow { transition: none; }
 }

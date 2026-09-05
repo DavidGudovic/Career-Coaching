@@ -88,6 +88,11 @@
 
 /* ---------- A path through the inner pages, and a final meeting point ---------- */
 .page-contours { position: absolute; width: clamp(420px, 52vw, 780px); right: -8%; top: 50%; transform: translateY(-50%); color: var(--mint-light); opacity: .22; }
+/* On desktop, let the contours extend beyond the hero as open, widely spaced
+   arcs. The compact drawing on mobile keeps its original scale and position. */
+@media (min-width: 768px) {
+  .page-contours { width: min(112vw, 1700px); max-width: none; right: max(-56vw, -850px); top: 58%; opacity: .19; }
+}
 .conversation-band { isolation: isolate; }
 .conversation-band.bg-teal { background: radial-gradient(ellipse at 50% 45%, var(--teal), var(--teal-deep) 75%); }
 .conversation-contours { position: absolute; width: clamp(480px, 58vw, 850px); top: 50%; opacity: .25; }
