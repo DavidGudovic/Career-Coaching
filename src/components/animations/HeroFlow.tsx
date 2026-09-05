@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 // Thin white lines that drift/loop across the hero background and gently bend
 // toward the pointer. Canvas-based, DPR-aware, self-cleaning. Honors
-// prefers-reduced-motion (renders a single static line, no animation loop).
+// prefers-reduced-motion (renders static lines, no animation loop).
 // Purely decorative: pointer-events none, sits behind the hero content.
 export default function HeroFlow() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -14,7 +14,7 @@ export default function HeroFlow() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     // Coarse pointer (phones/tablets) can't hover, so the lines react to scroll
     // instead: they lean in the scroll direction and settle back at rest.
     const touch = window.matchMedia('(pointer: coarse)').matches
@@ -30,7 +30,7 @@ export default function HeroFlow() {
     // Eased pointer the lines actually follow, so motion stays smooth.
     const eased = { x: 0, y: 0, strength: 0 }
 
-    const factor = 1.5;
+    const factor = 1.5
 
     // Three drifting ribbons at different heights/speeds for a layered feel.
     const LINES = [
@@ -89,10 +89,12 @@ export default function HeroFlow() {
     }
 
     let raf = 0
-    let start = 0
+    let time = 0
+    let previous = 0
+    let visible = false
     function frame(now: number) {
-      if (!start) start = now
-      const time = (now - start) / 1000
+      if (previous) time += Math.min((now - previous) / 1000, 0.05)
+      previous = now
       // Ease the pointer influence in/out.
       const targetStrength = pointer.active ? 1 : 0
       eased.strength += (targetStrength - eased.strength) * 0.06
@@ -138,46 +140,57 @@ export default function HeroFlow() {
       pointer.active = false
     }
 
-    resize()
-    const ro = new ResizeObserver(() => {
-      resize()
-      if (reduce) renderStatic()
-    })
-    ro.observe(canvas)
-
-    if (reduce) {
-      renderStatic()
-    } else if (touch) {
-      // touchstart snaps the bend to the finger on contact; touchmove follows
-      // it (fires on any movement, so slow scrolls keep reacting); touchend
-      // releases. A held-still finger keeps its last bend until lift.
-      window.addEventListener('touchstart', onTouchMove, { passive: true })
-      window.addEventListener('touchmove', onTouchMove, { passive: true })
-      window.addEventListener('touchend', onTouchEnd, { passive: true })
-      window.addEventListener('touchcancel', onTouchEnd, { passive: true })
-      raf = requestAnimationFrame(frame)
-      return () => {
-        cancelAnimationFrame(raf)
-        ro.disconnect()
-        window.removeEventListener('touchstart', onTouchMove)
-        window.removeEventListener('touchmove', onTouchMove)
-        window.removeEventListener('touchend', onTouchEnd)
-        window.removeEventListener('touchcancel', onTouchEnd)
-      }
-    } else {
-      const parent = canvas.parentElement || canvas
-      parent.addEventListener('pointermove', onPointerMove)
-      parent.addEventListener('pointerleave', onPointerLeave)
-      raf = requestAnimationFrame(frame)
-      return () => {
-        cancelAnimationFrame(raf)
-        ro.disconnect()
-        parent.removeEventListener('pointermove', onPointerMove)
-        parent.removeEventListener('pointerleave', onPointerLeave)
+    const sync = () => {
+      cancelAnimationFrame(raf)
+      raf = 0
+      previous = 0
+      if (motion.matches) {
+        pointer.active = false
+        eased.strength = 0
+        renderStatic()
+      } else if (visible && !document.hidden) {
+        raf = requestAnimationFrame(frame)
       }
     }
+    resize()
+    renderStatic()
+    const ro = new ResizeObserver(() => {
+      resize()
+      if (motion.matches || !visible || document.hidden) renderStatic()
+    })
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      sync()
+    })
+    ro.observe(canvas)
+    io.observe(canvas)
 
-    return () => ro.disconnect()
+    const parent = canvas.parentElement || canvas
+    // Passive, section-local touch listeners preserve natural page scrolling.
+    if (touch) {
+      parent.addEventListener('touchstart', onTouchMove, { passive: true })
+      parent.addEventListener('touchmove', onTouchMove, { passive: true })
+      parent.addEventListener('touchend', onTouchEnd, { passive: true })
+      parent.addEventListener('touchcancel', onTouchEnd, { passive: true })
+    } else {
+      parent.addEventListener('pointermove', onPointerMove, { passive: true })
+      parent.addEventListener('pointerleave', onPointerLeave)
+    }
+    motion.addEventListener('change', sync)
+    document.addEventListener('visibilitychange', sync)
+    return () => {
+      cancelAnimationFrame(raf)
+      ro.disconnect()
+      io.disconnect()
+      parent.removeEventListener('touchstart', onTouchMove)
+      parent.removeEventListener('touchmove', onTouchMove)
+      parent.removeEventListener('touchend', onTouchEnd)
+      parent.removeEventListener('touchcancel', onTouchEnd)
+      parent.removeEventListener('pointermove', onPointerMove)
+      parent.removeEventListener('pointerleave', onPointerLeave)
+      motion.removeEventListener('change', sync)
+      document.removeEventListener('visibilitychange', sync)
+    }
   }, [])
 
   return (

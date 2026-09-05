@@ -45,9 +45,17 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             {(page?.body || []).map((p, i) => (
               <p key={p.id || i}><Emphasis text={p.text} /></p>
             ))}
-            {page?.quote && <blockquote>{page.quote}</blockquote>}
           </div>
         </div>
+        {page?.quote && (
+          <blockquote className="about-pullquote wrap-text" data-reveal>
+            <span className="about-quote-symbol" aria-hidden="true">“</span>
+            <p><Emphasis text={page.quote} /></p>
+            <svg viewBox="0 0 340 30" fill="none" aria-hidden="true" focusable="false">
+              <path pathLength="1" d="M8 20C72 7 224 4 330 12M73 25C148 16 208 17 264 20" />
+            </svg>
+          </blockquote>
+        )}
       </section>
 
       <CtaBand locale={locale} headline={page?.ctaHeadline || ''} background="sage" />

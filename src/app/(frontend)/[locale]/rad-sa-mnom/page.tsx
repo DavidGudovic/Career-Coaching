@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPageGlobal } from '@/lib/payload'
 import { buildMetadata, abs } from '@/lib/seo'
-import { Emphasis, FormattedText, plain } from '@/lib/emphasis'
+import { Emphasis, plain } from '@/lib/emphasis'
 import { CtaBand, PageHero } from '@/components/sections'
+import AudienceSection from '@/components/AudienceSection'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
@@ -45,14 +47,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
       <PageHero eyebrow={page?.eyebrow} headline={page?.headline} sub={page?.sub} />
 
       {/* FOR WHOM */}
-      <section className="bg-paper section-sm">
-        <div className="wrap-narrow audience-layout">
-          <h2 data-reveal style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(24px,3vw,34px)', margin: 0 }}>
-            {page?.forWhomHeading}
-          </h2>
-          <div data-reveal data-reveal-delay="80"><FormattedText text={page?.forWhomText} /></div>
-        </div>
-      </section>
+      <AudienceSection heading={page?.forWhomHeading} text={page?.forWhomText} />
 
       {/* JOURNEY */}
       <section className="bg-sage section-sm">
@@ -60,10 +55,10 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
           <h2 data-reveal className="display-3" style={{ margin: '0 0 clamp(36px,5vw,56px)', maxWidth: '18ch' }}>
             <Emphasis text={page?.journeyHeading} />
           </h2>
-          <div className="journey-grid">
+          <div className="journey-grid journey-path" style={{ '--journey-columns': Math.min(page?.journeySteps?.length || 1, 4) } as CSSProperties}>
             {(page?.journeySteps || []).map((step, i) => (
-              <div key={step.id || i} data-reveal data-reveal-delay={i * 90} style={{ background: 'var(--paper)', borderRadius: 4, padding: '26px 22px', border: '1px solid rgba(20,41,43,.07)' }}>
-                <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 30, color: 'var(--teal)' }}>{i + 1}</span>
+              <div key={step.id || i} className="journey-step" data-reveal data-reveal-delay={i * 90}>
+                <span className="journey-step-number">{String(i + 1).padStart(2, '0')}</span>
                 <h3 style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 22, margin: '14px 0 10px' }}>{step.title}</h3>
                 <p style={{ fontSize: 15.5, lineHeight: 1.65, color: 'rgba(20,41,43,.72)', margin: 0 }}><Emphasis text={step.text} /></p>
               </div>

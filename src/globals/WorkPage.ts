@@ -14,7 +14,7 @@ export const WorkPage: GlobalConfig = {
       label: 'Za koga je',
       fields: [
         { name: 'forWhomHeading', type: 'text', localized: true, defaultValue: 'Za koga je ovo?' },
-        { name: 'forWhomText', type: 'textarea', admin: { description: emphasisDescription }, localized: true, defaultValue: 'Za tebe koja osjećaš da si prerasla svoj posao, da želiš nešto svoje, ili da je vrijeme za promjenu — bez obzira na to da li već znaš šta tačno želiš. Ne moraš imati plan. Dovoljno je da osjećaš da može bolje.' },
+        { name: 'forWhomText', type: 'textarea', admin: { description: 'Stavke piši u zasebnim redovima, bez praznog reda između njih. Dva puta Enter odvaja uvodni ili završni pasus od liste. Možeš upisati i samo običan pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.' }, localized: true, defaultValue: 'Za tebe koja osjećaš da si prerasla svoj posao, da želiš nešto svoje, ili da je vrijeme za promjenu — bez obzira na to da li već znaš šta tačno želiš. Ne moraš imati plan. Dovoljno je da osjećaš da može bolje.' },
       ],
     },
     {
