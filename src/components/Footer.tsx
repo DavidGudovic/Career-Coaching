@@ -40,6 +40,13 @@ export default function Footer({
   return (
     <footer className="bg-footer px" style={{ padding: 'clamp(60px,8vw,90px) var(--pad-x) 40px' }}>
       <div className="wrap">
+        <div className="footer-masthead" data-reveal>
+          <Link href={nav[0]?.href || '/'} className="footer-signature">{brandName}</Link>
+          <svg className="footer-flourish" viewBox="0 0 120 100" fill="none" aria-hidden="true" focusable="false">
+            {Array.from({ length: 7 }, (_, i) => <ellipse key={i} cx="60" cy="50" rx="39" ry="15" transform={`rotate(${i * 25.7} 60 50)`} />)}
+            <circle cx="60" cy="50" r="3" fill="currentColor" />
+          </svg>
+        </div>
         <div
           className="footer-cols"
           style={{
@@ -49,9 +56,6 @@ export default function Footer({
           }}
         >
           <div style={{ maxWidth: '30ch' }}>
-            <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 24, display: 'block', marginBottom: 14 }}>
-              {brandName}
-            </span>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: 'rgba(242,239,232,.72)', margin: 0 }}>{bio}</p>
           </div>
 

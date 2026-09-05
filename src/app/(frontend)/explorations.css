@@ -1,0 +1,47 @@
+/* Second creative pass; checkpoint/frontend-v1 preserves the first version. */
+.thread-interlude { margin-top: 54px; margin-bottom: -42px; }
+.thread-study { width: 100%; height: clamp(130px, 18vw, 220px); color: var(--teal); overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.thread-study svg { display: block; width: 100%; height: 100%; pointer-events: none; }
+
+/* Each drawing has its own small response, like marks in a sketchbook. */
+.path-glyph-0 circle:nth-of-type(2) { transform-origin: 60px 50px; transition: transform .8s ease; }
+.path-glyph-1 > path { transform-origin: 60px 50px; transition: transform .9s cubic-bezier(.2,.7,.2,1); }
+.path-glyph-2 path[stroke-dasharray] { transition: stroke-dashoffset 1s ease; }
+.path-glyph-3 ellipse { transition: translate .8s ease; }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-0 circle:nth-of-type(2) { transform: scale(1.25); }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-1 > path { transform: rotate(25deg); }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-2 path[stroke-dasharray] { stroke-dashoffset: -24; }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse:first-of-type { translate: 4px 0; }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse:last-of-type { translate: -4px 0; }
+
+/* Give the personal statement room to read as a statement. */
+.about-pullquote { margin-top: clamp(60px, 8vw, 100px); margin-bottom: 0; padding-top: clamp(44px, 6vw, 72px); text-align: center; border-top: 1px solid color-mix(in srgb, var(--teal), transparent 70%); }
+.about-quote-symbol { display: block; font-family: var(--serif); font-size: 96px; line-height: .8; color: var(--teal); opacity: .45; }
+.about-pullquote p { max-width: 28ch; margin: 0 auto; font-family: var(--serif); font-size: clamp(29px, 4vw, 48px); font-weight: 340; line-height: 1.25; text-wrap: balance; }
+.about-pullquote svg { display: block; width: min(60%, 340px); height: 30px; margin: 24px auto 0; stroke: var(--teal); stroke-width: 1; }
+.js .about-pullquote path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s ease .4s; }
+.js .about-pullquote.is-visible path { stroke-dashoffset: 0; }
+
+/* A large typographic signature and a small botanical line study. */
+.footer-masthead { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 32px; padding-bottom: clamp(38px, 5vw, 64px); margin-bottom: clamp(38px, 5vw, 64px); border-bottom: 1px solid color-mix(in srgb, var(--mint), transparent 70%); }
+.footer-signature { justify-self: start; font-family: var(--serif); font-weight: 300; font-style: italic; font-size: clamp(42px, 8vw, 112px); line-height: 1.05; letter-spacing: -.04em; color: var(--offwhite); text-decoration: none; text-wrap: balance; transition: color .5s ease; }
+.footer-signature:hover { color: var(--mint-light); }
+.footer-flourish { width: 100px; height: 90px; color: var(--mint); stroke: currentColor; stroke-width: .75; transition: transform 1.4s cubic-bezier(.2,.7,.2,1); }
+.footer-masthead:has(.footer-signature:is(:hover, :focus-visible)) .footer-flourish { transform: rotate(26deg); }
+.footer-cols { align-items: start; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) minmax(0, 1.6fr) auto; }
+@media (max-width: 1000px) { .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (max-width: 640px) {
+  .footer-cols { grid-template-columns: 1fr; }
+  .thread-interlude { margin-top: 34px; margin-bottom: -30px; }
+  .footer-masthead { gap: 16px; }
+  .footer-flourish { width: 56px; height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .path-glyph *, .footer-flourish, .footer-signature { transition: none !important; }
+  .mentoring-card:is(:hover, :focus-visible) .path-glyph-0 circle:nth-of-type(2),
+  .mentoring-card:is(:hover, :focus-visible) .path-glyph-1 > path,
+  .footer-masthead:has(.footer-signature:is(:hover, :focus-visible)) .footer-flourish { transform: none; }
+  .mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse { translate: none; }
+  .js .about-pullquote path { stroke-dashoffset: 0; transition: none; }
+}

@@ -2,7 +2,7 @@
 // Decorative SVG keeps the artwork sharp and inherits the editable brand colors.
 export default function PathGlyph({ index }: { index: number }) {
   return (
-    <svg className="path-glyph" viewBox="0 0 120 100" fill="none" aria-hidden="true" focusable="false">
+    <svg className={`path-glyph path-glyph-${index % 4}`} viewBox="0 0 120 100" fill="none" aria-hidden="true" focusable="false">
       {index % 4 === 0 && <>
         <circle cx="60" cy="50" r="34" /><circle cx="60" cy="50" r="22" /><circle cx="60" cy="50" r="9" />
         <path d="M60 5V20M60 80V95M15 50H30M90 50H105" />
