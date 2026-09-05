@@ -6,6 +6,8 @@ Branch: `experimental/frontend`, based on the `main` release at `c128c94`.
 
 **Saved second version:** tag `checkpoint/frontend-v2`, pointing to `e1b5424`, preserves round two before the footer and homepage-thread removals. Those requested removals are separate at `4b111ef`.
 
+**Saved published version:** tag `checkpoint/frontend-v3`, pointing to `d33b58d`, preserves the approved round-three release before the inner-hero, resources, and webinar refinements.
+
 The design uses the idea of finding a personal path: contours, small navigation drawings, and lines that meet. It keeps the site's existing palette, typefaces, CMS copy, and uploaded photography.
 
 ## What to try
@@ -14,7 +16,9 @@ The design uses the idea of finding a personal path: contours, small navigation 
 - **Audience section, on Rad sa mnom:** the existing statements now form a spacious two-column list, with line markers that move gently on hover. The closing paragraph sits over a faint ribbon background. Move the pointer across this section to reshape it; on phones it responds to scrolling. English prose keeps a paragraph composition.
 - **Mentoring cards:** hover or keyboard-focus a card. The paper surface becomes teal, each illustration makes its own small movement, and the arrow leads to the mentoring page.
 - **Journal:** posts without cover photos get one of three original SVG cover studies, selected consistently from the post slug. Hover to move the drawing. Uploaded covers still take priority.
-- **Inner pages:** contour artwork sits behind the existing hero ribbons. The mentoring journey connects its numbered steps horizontally on desktop and vertically on phones.
+- **Inner pages:** on desktop, the hero ribbons form long, separated sweeps and the contours extend beyond the page edge as broader arcs. The homepage and mobile hero drawings keep their original geometry. The mentoring journey connects its numbered steps horizontally on desktop and vertically on phones.
+- **Resources:** the first PDF becomes an illustrated booklet with its description, file size, download, and preview actions. Additional resources form a two-column library, and an empty library keeps the authored message and a link to the notes.
+- **Webinar:** an immediate title teaser expands after three seconds. “Later” or Escape minimises it without losing the invitation; the teaser can reopen it throughout the session.
 - **About page:** the existing personal statement becomes a larger pull quote with a drawn underline.
 - **Footer:** a compact name and navigation layout. The oversized signature and orbit ornament have been removed.
 - **Closing invitations:** two contour fields respond around the text, and a small meeting-point illustration draws itself as the section enters view.
@@ -42,6 +46,6 @@ The first groups share `artistry.css`, imported by the frontend layout. The seco
 
 No new packages, CMS fields, migrations, or content updates are required. In the existing audience textarea, blank lines separate paragraphs and consecutive individual lines form list items. An introductory or closing paragraph stays separate from the list; ordinary prose also works. The editor help now explains this formatting. New artwork is inline SVG and inherits theme colors. The existing canvas ribbons now pause offscreen and in hidden tabs. The contours render only while settling after interaction. Both respond to reduced-motion preference changes without a reload, and the page remains readable without JavaScript.
 
-Verification covers TypeScript, the existing five regression tests, a production build, responsive checks at 320 / 390 / 768 / 1024 / 1440 pixels, keyboard navigation, the mobile menu, language switching, pointer and touch-scroll reactions, no-JavaScript rendering, and reduced motion in headless Chromium. Visual review includes the currently published photographs and alternative supplied portrait images.
+Verification covers TypeScript, the seven regression tests, a production build, responsive checks at 320 / 390 / 768 / 1024 / 1440 pixels, keyboard navigation, the mobile menu, language switching, pointer and touch-scroll reactions, no-JavaScript rendering, and reduced motion in headless Chromium. Visual review includes the currently published photographs and alternative supplied portrait images.
 
 Local preview used an isolated database with copies of public page content. Review this branch before choosing changes to merge into `develop` or `main`.

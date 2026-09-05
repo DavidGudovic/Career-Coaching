@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 // toward the pointer. Canvas-based, DPR-aware, self-cleaning. Honors
 // prefers-reduced-motion (renders static lines, no animation loop).
 // Purely decorative: pointer-events none, sits behind the hero content.
-export default function HeroFlow() {
+export default function HeroFlow({ layout = 'home' }: { layout?: 'home' | 'page' }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -39,6 +39,15 @@ export default function HeroFlow() {
       { y: 0.7, amp: 0.045, len: 2.2, speed: 0.03 * factor, phase: 4.2, alpha: 0.07, w: 1 },
     ]
 
+    // A shallow inner hero needs longer sweeps and more separation. The
+    // homepage and the established vertical composition on phones stay as-is.
+    const PAGE_LINES = [
+      { ...LINES[0], y: 0.16, amp: 0.09, len: 0.65, alpha: 0.13 },
+      { ...LINES[1], y: 0.52, amp: 0.1, len: 0.5, alpha: 0.085 },
+      { ...LINES[2], y: 0.88, amp: 0.07, len: 0.8, alpha: 0.06 },
+    ]
+    const lines = () => layout === 'page' && !vertical ? PAGE_LINES : LINES
+
     function resize() {
       const rect = canvas!.getBoundingClientRect()
       width = rect.width
@@ -69,7 +78,8 @@ export default function HeroFlow() {
         // Gentle local bend toward the eased pointer (gaussian falloff).
         if (eased.strength > 0.001) {
           const dm = m - pointerMain
-          const falloff = Math.exp(-(dm * dm) / (2 * 150 * 150))
+          const radius = layout === 'page' && !vertical ? 260 : 150
+          const falloff = Math.exp(-(dm * dm) / (2 * radius * radius))
           const pull = (pointerCross - c) * 0.4 * falloff * eased.strength
           c += pull
         }
@@ -85,7 +95,7 @@ export default function HeroFlow() {
 
     function renderStatic() {
       ctx!.clearRect(0, 0, width, height)
-      LINES.forEach((line) => drawLine(line, 0))
+      lines().forEach((line) => drawLine(line, 0))
     }
 
     let raf = 0
@@ -102,7 +112,7 @@ export default function HeroFlow() {
       eased.y += (pointer.y - eased.y) * 0.08
 
       ctx!.clearRect(0, 0, width, height)
-      LINES.forEach((line) => drawLine(line, time))
+      lines().forEach((line) => drawLine(line, time))
       raf = requestAnimationFrame(frame)
     }
 
@@ -191,7 +201,7 @@ export default function HeroFlow() {
       motion.removeEventListener('change', sync)
       document.removeEventListener('visibilitychange', sync)
     }
-  }, [])
+  }, [layout])
 
   return (
     <canvas
