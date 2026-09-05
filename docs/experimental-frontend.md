@@ -18,7 +18,7 @@ The design uses the idea of finding a personal path: contours, small navigation 
 - **Journal:** posts without cover photos get one of three original SVG cover studies, selected consistently from the post slug. Hover to move the drawing. Uploaded covers still take priority.
 - **Inner pages:** on desktop, the hero ribbons form long, separated sweeps and the contours extend beyond the page edge as broader arcs. The homepage and mobile hero drawings keep their original geometry. The mentoring journey connects its numbered steps horizontally on desktop and vertically on phones.
 - **Resources:** the first PDF becomes an illustrated booklet with its description, file size, download, and preview actions. Additional resources form a two-column library, and an empty library keeps the authored message and a link to the notes.
-- **Webinar:** an immediate title teaser expands after three seconds. “Later” or Escape minimises it without losing the invitation; the teaser can reopen it throughout the session.
+- **Webinar:** on laptops, an immediate title teaser expands after three seconds. Phones use a small tap-to-open button without automatic expansion. “Later” or Escape minimises it without losing the invitation; the teaser can reopen it throughout the session.
 - **About page:** the existing personal statement becomes a larger pull quote with a drawn underline.
 - **Footer:** a compact name and navigation layout. The oversized signature and orbit ornament have been removed.
 - **Closing invitations:** two contour fields respond around the text, and a small meeting-point illustration draws itself as the section enters view.
