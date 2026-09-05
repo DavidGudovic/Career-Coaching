@@ -13,12 +13,19 @@ All page content is editable at `/admin`. Switch between **Crnogorski** and
   description, and PDF. Choose an existing PDF from Media or upload a new one.
   Drag rows to reorder; uncheck **Prikaži** to hide an item. A resources link is
   included in the desktop/mobile menus and footer. No email is required to download.
+  The first resource gets a larger illustrated booklet layout; subsequent resources
+  form a two-column library on desktop. The decorative covers are automatic, and
+  **Pogledaj PDF / Preview PDF** opens the actual uploaded document in a new tab.
 - **Webinar:** in **Podešavanja sajta → Vebinar — iskačući poziv**, enter the title,
   description/date, button label, and Google Form HTTPS URL, then enable it. The
-  invitation appears after six seconds, stays out of the contact page, and closes
-  with **×** or Escape. Dismissal lasts for that browser tab's session, across pages
-  and languages. A new registration URL identifies a new invitation. It is hidden
-  when disabled or when the title/URL is missing.
+  title appears immediately in a compact teaser, with the full invitation opening
+  after three seconds on a first visit. **Kasnije / Later** or Escape minimises it
+  back to that teaser; visitors can reopen it at any time. Minimising persists for
+  the browser tab's session across pages and languages, including older dismissals.
+  Automatic opening does not move keyboard focus or remove a focused teaser.
+  The invitation stays out of the contact page and mobile navigation, and a new
+  registration URL identifies a new invitation. It is hidden when disabled or when
+  the title/URL is missing.
 - **Booking:** **Navigacija i zakazivanje → Link za zakazivanje razgovora** accepts
   the existing Google Form URL. All booking buttons use it; leave it empty to use
   the contact page. The contact page also exposes the booking link when configured.

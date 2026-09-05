@@ -23,7 +23,7 @@ export function PageHero({
       className="bg-teal px page-hero"
       style={{ padding: 'clamp(130px,16vh,190px) var(--pad-x) clamp(56px,8vw,90px)' }}
     >
-      <HeroFlow />
+      <HeroFlow layout="page" />
       <ContourArt className="page-contours" />
       <div className="wrap-text page-hero-content">
         <span data-reveal className="eyebrow on-dark" style={{ marginBottom: 24 }}>
