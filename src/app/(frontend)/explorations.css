@@ -165,3 +165,13 @@ body:has(.burger[aria-expanded="true"]) .webinar-widget { visibility: hidden; }
   .webinar-invitation { animation: none; }
   .webinar-teaser-arrow { transition: none; }
 }
+
+
+/* On phones the invitation is a small, tap-to-open control, not a banner. */
+@media (max-width: 767px), (pointer: coarse) and (max-height: 600px) {
+  .webinar-widget[data-expanded="false"] { width: auto; }
+  .webinar-teaser { display: inline-flex; width: auto; min-height: 44px; padding: 9px 15px; gap: 10px; border-width: 1px; border-radius: 999px; box-shadow: 0 8px 24px -16px color-mix(in srgb, var(--ink), transparent 35%); }
+  .webinar-teaser .eyebrow { margin: 0; font-size: 11px; letter-spacing: .08em; }
+  .webinar-teaser-title { display: none; }
+  .webinar-teaser-arrow { width: 18px; height: 18px; border: 0; font-size: 17px; }
+}

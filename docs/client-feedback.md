@@ -18,8 +18,9 @@ All page content is editable at `/admin`. Switch between **Crnogorski** and
   **Pogledaj PDF / Preview PDF** opens the actual uploaded document in a new tab.
 - **Webinar:** in **Podešavanja sajta → Vebinar — iskačući poziv**, enter the title,
   description/date, button label, and Google Form HTTPS URL, then enable it. The
-  title appears immediately in a compact teaser, with the full invitation opening
-  after three seconds on a first visit. **Kasnije / Later** or Escape minimises it
+  title appears immediately in a teaser on laptops, with the full invitation opening
+  after three seconds on a first visit. Phones show a small **Vebinar / Webinar**
+  button instead; details open only when tapped, including in landscape. **Kasnije / Later** or Escape minimises it
   back to that teaser; visitors can reopen it at any time. Minimising persists for
   the browser tab's session across pages and languages, including older dismissals.
   Automatic opening does not move keyboard focus or remove a focused teaser.
