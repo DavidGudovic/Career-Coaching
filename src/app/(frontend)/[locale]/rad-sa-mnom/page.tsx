@@ -6,8 +6,9 @@ import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPageGlobal } from '@/lib/payload'
 import { buildMetadata, abs } from '@/lib/seo'
-import { Emphasis, FormattedText, plain } from '@/lib/emphasis'
+import { Emphasis, plain } from '@/lib/emphasis'
 import { CtaBand, PageHero } from '@/components/sections'
+import AudienceSection from '@/components/AudienceSection'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
@@ -46,14 +47,7 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
       <PageHero eyebrow={page?.eyebrow} headline={page?.headline} sub={page?.sub} />
 
       {/* FOR WHOM */}
-      <section className="bg-paper section-sm">
-        <div className="wrap-narrow audience-layout">
-          <h2 data-reveal style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(24px,3vw,34px)', margin: 0 }}>
-            {page?.forWhomHeading}
-          </h2>
-          <div data-reveal data-reveal-delay="80"><FormattedText text={page?.forWhomText} /></div>
-        </div>
-      </section>
+      <AudienceSection heading={page?.forWhomHeading} text={page?.forWhomText} />
 
       {/* JOURNEY */}
       <section className="bg-sage section-sm">

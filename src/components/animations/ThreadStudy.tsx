@@ -15,10 +15,11 @@ export default function ThreadStudy() {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const surface = ref.current
-    if (!surface) return
-    const paths = Array.from(surface.querySelectorAll<SVGPathElement>('[data-thread]'))
-    const point = surface.querySelector<SVGGElement>('[data-thread-point]')
+    const drawing = ref.current
+    if (!drawing) return
+    const surface = drawing.closest('section') || drawing
+    const paths = Array.from(drawing.querySelectorAll<SVGPathElement>('[data-thread]'))
+    const point = drawing.querySelector<SVGGElement>('[data-thread-point]')
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const fine = window.matchMedia('(pointer: fine)')
     const target = { ...restingPoint }
@@ -69,7 +70,7 @@ export default function ThreadStudy() {
       visible = entry.isIntersecting
       sync()
     })
-    observer.observe(surface)
+    observer.observe(drawing)
     surface.addEventListener('pointermove', move, { passive: true })
     surface.addEventListener('pointerleave', reset)
     window.addEventListener('scroll', scroll, { passive: true })
