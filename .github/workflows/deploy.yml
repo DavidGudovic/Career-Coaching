@@ -54,7 +54,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL || 'https://jelena.dgudovic.dev' }}
+            NEXT_PUBLIC_SERVER_URL=${{ vars.NEXT_PUBLIC_SERVER_URL || 'https://jelena.rajkovic.coach' }}
           # Persist build cache between CI runs so pnpm install + next build stay incremental.
           cache-from: type=gha
           cache-to: type=gha,mode=max

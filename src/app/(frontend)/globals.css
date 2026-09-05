@@ -42,7 +42,6 @@ body {
   font-family: var(--sans);
   font-size: 16px;
   line-height: 1.6;
-  /* positioning context for the .grain overlay (absolute, full page height) */
   position: relative;
 }
 
@@ -420,7 +419,7 @@ h3 {
 .grid-2 {
   display: grid;
   gap: clamp(40px, 6vw, 80px);
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
   align-items: center;
 }
 
@@ -558,7 +557,7 @@ h3 {
 .burger {
   display: none;
 }
-@media (max-width: 999px) {
+@media (max-width: 1199px) {
   .desk-nav {
     display: none;
   }
@@ -586,11 +585,11 @@ h3 {
   }
 }
 
-/* ---------- mobile floating CTA (shown only < 1000px, like the burger) ---------- */
+/* ---------- mobile floating CTA (shown only < 1200px, like the burger) ---------- */
 .mobile-cta {
   display: none;
 }
-@media (max-width: 999px) {
+@media (max-width: 1199px) {
   .mobile-cta {
     display: inline-flex;
     align-items: center;
@@ -640,16 +639,51 @@ h3 {
 }
 
 
-.grain {
-  /* absolute (not fixed) so the texture scrolls with the page like printed
-     grain, instead of staying pinned to the viewport and "swimming" over
-     scrolling content. Spans the full page via body's positioning context. */
+/* Each background owns its texture, below its content and photographs. */
+.bg-paper, .bg-sage, .bg-teal, .bg-footer {
+  position: relative;
+  isolation: isolate;
+}
+.bg-paper::before, .bg-sage::before, .bg-teal::before, .bg-footer::before {
+  content: "";
+  border-radius: inherit;
   position: absolute;
   inset: 0;
-  z-index: 100;
+  z-index: -1;
   pointer-events: none;
   mix-blend-mode: multiply;
   opacity: var(--grain-opacity, 0.08);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='2' intercept='-0.55'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
+}
+
+
+.page-hero { overflow: hidden; }
+.page-hero-content { position: relative; z-index: 1; }
+.audience-layout { display: grid; grid-template-columns: 1fr 2fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+.formatted-text { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.8; }
+.formatted-text p { margin: 0 0 1.2em; }
+.formatted-text p:last-child { margin-bottom: 0; }
+.journey-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.resources-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr)); gap: 24px; }
+.resource-card { display: flex; flex-direction: column; align-items: flex-start; padding: clamp(26px, 4vw, 42px); background: #fff; border: 1px solid rgba(20,41,43,.1); border-radius: 5px; }
+.resource-card h2 { font-size: clamp(25px, 3vw, 34px); margin: 20px 0 18px; }
+.resource-card .formatted-text { font-size: 16px; margin-bottom: 28px; }
+.resource-card .btn { margin-top: auto; }
+.webinar-invitation { position: fixed; right: 24px; bottom: 24px; z-index: 125; width: min(390px, calc(100vw - 32px)); max-height: calc(100dvh - 120px); overflow-y: auto; background: var(--paper); color: var(--ink); border: 1px solid var(--mint); border-radius: 8px; padding: 28px; box-shadow: 0 18px 70px -20px rgba(20,41,43,.4); }
+.webinar-invitation h2 { font-size: 29px; line-height: 1.2; margin: 12px 26px 14px 0; }
+.webinar-invitation p { font-size: 15px; line-height: 1.65; margin: 0 0 20px; white-space: pre-line; }
+.webinar-close { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; color: var(--teal-deep); font-size: 28px; cursor: pointer; }
+.webinar-close:hover { background: var(--sage); }
+.webinar-invitation .btn { font-size: 14px; padding: 13px 20px; }
+@media (max-width: 1199px) {
+  .webinar-invitation { right: 16px; bottom: 78px; }
+}
+@media (max-width: 950px) {
+  .journey-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .audience-layout { grid-template-columns: 1fr; }
+  .journey-grid { grid-template-columns: 1fr; }
+  .webinar-invitation { padding: 24px; }
 }

@@ -7,26 +7,27 @@ export const WorkPage: GlobalConfig = {
   access: { read: () => true },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'Rad sa mnom · 1:1 mentorstvo' },
-    { name: 'headline', type: 'text', localized: true, defaultValue: 'Zajedno do tvog _sljedećeg realnog_ koraka.', admin: { description: emphasisDescription } },
+    { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Zajedno do tvog _sljedećeg realnog_ koraka.', admin: { description: emphasisDescription } },
     { name: 'sub', type: 'textarea', localized: true, defaultValue: 'Individualno mentorstvo za žene u sredini karijere koje žele promjenu — sa jasnoćom umjesto pritiska.' },
     {
       type: 'collapsible',
       label: 'Za koga je',
       fields: [
         { name: 'forWhomHeading', type: 'text', localized: true, defaultValue: 'Za koga je ovo?' },
-        { name: 'forWhomText', type: 'textarea', localized: true, defaultValue: 'Za tebe koja osjećaš da si prerasla svoj posao, da želiš nešto svoje, ili da je vrijeme za promjenu — bez obzira na to da li već znaš šta tačno želiš. Ne moraš imati plan. Dovoljno je da osjećaš da može bolje.' },
+        { name: 'forWhomText', type: 'textarea', admin: { description: emphasisDescription }, localized: true, defaultValue: 'Za tebe koja osjećaš da si prerasla svoj posao, da želiš nešto svoje, ili da je vrijeme za promjenu — bez obzira na to da li već znaš šta tačno želiš. Ne moraš imati plan. Dovoljno je da osjećaš da može bolje.' },
       ],
     },
     {
       type: 'collapsible',
       label: 'Put (koraci)',
       fields: [
-        { name: 'journeyHeading', type: 'text', localized: true, defaultValue: 'Kako izgleda _put_ sa mnom.', admin: { description: emphasisDescription } },
+        { name: 'journeyHeading', type: 'textarea', localized: true, defaultValue: 'Kako izgleda _put_ sa mnom.', admin: { description: emphasisDescription } },
         {
           name: 'journeySteps',
           type: 'array',
           localized: true,
           labels: { singular: 'Korak', plural: 'Koraci' },
+          admin: { description: 'Dodaj četvrti ili naredni korak i prevuci ga na željeno mjesto. Numeracija na sajtu prati redosljed.' },
           defaultValue: [
             { title: 'Besplatan uvodni razgovor', text: 'Upoznamo se, ispričaš mi gdje si sada. Bez obaveze — vidimo da li smo pravi par za rad.' },
             { title: 'Radimo zajedno', text: 'Kroz niz 1:1 susreta gradimo jasnoću, smjer i realan plan — prilagođen tvojoj situaciji.' },
@@ -34,7 +35,7 @@ export const WorkPage: GlobalConfig = {
           ],
           fields: [
             { name: 'title', type: 'text', required: true },
-            { name: 'text', type: 'textarea', required: true },
+            { name: 'text', type: 'textarea', required: true, admin: { description: emphasisDescription } },
           ],
         },
         { name: 'journeyQuote', type: 'textarea', localized: true, defaultValue: '„Zajedno možemo da pogledamo šta već imaš, šta želiš, i koji je tvoj sljedeći realan korak.”' },
@@ -44,7 +45,7 @@ export const WorkPage: GlobalConfig = {
       type: 'collapsible',
       label: 'Cijena',
       fields: [
-        { name: 'priceHeading', type: 'text', localized: true, defaultValue: 'Cijena _na upit_.', admin: { description: emphasisDescription } },
+        { name: 'priceHeading', type: 'textarea', localized: true, defaultValue: 'Cijena _na upit_.', admin: { description: emphasisDescription } },
         { name: 'priceText', type: 'textarea', localized: true, defaultValue: 'Svaki rad je individualan, pa i uslove dogovaramo lično. Javi se i ispričaj mi gdje si — predložiću ti format koji ti najviše odgovara.' },
       ],
     },
@@ -76,6 +77,6 @@ export const WorkPage: GlobalConfig = {
       defaultValue: false,
       admin: { description: 'Uključi sekciju sa preporukama (kasnije, bez redizajna).' },
     },
-    { name: 'ctaHeadline', type: 'text', localized: true, defaultValue: 'Počnimo _razgovorom_.', admin: { description: emphasisDescription } },
+    { name: 'ctaHeadline', type: 'textarea', localized: true, defaultValue: 'Počnimo _razgovorom_.', admin: { description: emphasisDescription } },
   ],
 }

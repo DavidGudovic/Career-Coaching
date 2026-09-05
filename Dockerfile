@@ -15,7 +15,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 # Public site URL is baked into the build (used for canonical / OG / hreflang / sitemap).
-ARG NEXT_PUBLIC_SERVER_URL=https://jelena.dgudovic.dev
+ARG NEXT_PUBLIC_SERVER_URL=https://jelena.rajkovic.coach
 ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
 # A dummy DB URI lets `next build` collect the page tree without a live DB.
 ENV DATABASE_URI=postgres://build:build@localhost:5432/build

@@ -4,7 +4,7 @@ import { htmlLang } from './i18n'
 import { href } from './routes'
 
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SERVER_URL || 'https://jelena.dgudovic.dev'
+  process.env.NEXT_PUBLIC_SERVER_URL || 'https://jelena.rajkovic.coach'
 ).replace(/\/$/, '')
 
 export const abs = (path: string): string => `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`

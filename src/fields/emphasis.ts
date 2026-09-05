@@ -4,4 +4,4 @@
 //   **riječ** → bold
 // The frontend (see src/lib/emphasis.tsx) renders these into the serif headline.
 export const emphasisDescription =
-  'Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.'
+  'Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.'

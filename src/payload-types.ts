@@ -98,6 +98,7 @@ export interface Config {
     'work-page': WorkPage;
     'blog-page': BlogPage;
     'contact-page': ContactPage;
+    'resources-page': ResourcesPage;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
@@ -106,6 +107,7 @@ export interface Config {
     'work-page': WorkPageSelect<false> | WorkPageSelect<true>;
     'blog-page': BlogPageSelect<false> | BlogPageSelect<true>;
     'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
+    'resources-page': ResourcesPageSelect<false> | ResourcesPageSelect<true>;
   };
   locale: 'me' | 'en';
   widgets: {
@@ -162,6 +164,8 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Fotografije i PDF resursi. Već otpremljene fajlove možeš ponovo koristiti na stranicama.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -236,7 +240,7 @@ export interface Category {
   createdAt: string;
 }
 /**
- * Karijerne bjeleške — blog. Svaki tekst postoji na oba jezika.
+ * Karijerne bilješke — blog. Svaki tekst postoji na oba jezika.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "posts".
@@ -248,6 +252,9 @@ export interface Post {
    * Kratak opis za karticu i SEO.
    */
   excerpt?: string | null;
+  /**
+   * Izaberi postojeću sliku iz Media biblioteke ili otpremi novu.
+   */
   coverImage?: (number | null) | Media;
   content?: {
     root: {
@@ -543,6 +550,29 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface SiteSetting {
   id: number;
+  navBlogLabel?: string | null;
+  blogAllLabel?: string | null;
+  navResourcesLabel?: string | null;
+  /**
+   * Opcioni HTTPS link ka Google formi. Kada je unesen, sva dugmad „Zakaži razgovor” vode tamo. Prazno = kontakt stranica.
+   */
+  bookingUrl?: string | null;
+  webinarEnabled?: boolean | null;
+  webinarTitle?: string | null;
+  webinarText?: string | null;
+  webinarButtonLabel?: string | null;
+  /**
+   * HTTPS link ka Google formi za prijavu. Poziv se prikazuje samo kada su uneseni i naslov i link; posjetilac ga može zatvoriti.
+   */
+  webinarUrl?: string | null;
+  newsletterEnabled?: boolean | null;
+  newsletterTitle?: string | null;
+  newsletterText?: string | null;
+  newsletterButtonLabel?: string | null;
+  /**
+   * Link ka MailerLite stranici za prijavu. Uključi tek kada newsletter bude spreman; MailerLite vodi prijavu i potvrdu saglasnosti.
+   */
+  newsletterUrl?: string | null;
   brandName?: string | null;
   brandRole?: string | null;
   email?: string | null;
@@ -558,7 +588,9 @@ export interface SiteSetting {
   /**
    * Kombinacija fontova (naslovi + tekst).
    */
-  fontPairing?: ('fraunces-hanken' | 'playfair-inter' | 'lora-sourcesans' | 'cormorant-worksans') | null;
+  fontPairing?:
+    | ('fraunces-hanken' | 'playfair-inter' | 'playfair-montserrat' | 'lora-sourcesans' | 'cormorant-worksans')
+    | null;
   /**
    * Glavna tamna teal boja (dugmad, naslovi na svijetloj pozadini).
    */
@@ -590,41 +622,50 @@ export interface HomePage {
   id: number;
   heroEyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   heroHeadline?: string | null;
   heroSub?: string | null;
   heroBadge?: string | null;
   /**
-   * Portret u hero sekciji.
+   * Izaberi postojeću sliku iz Media biblioteke ili otpremi novu.
    */
   heroPortrait?: (number | null) | Media;
   empathyEyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   empathyHeadline?: string | null;
   empathyItems?:
     | {
+        /**
+         * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+         */
         text: string;
         id?: string | null;
       }[]
     | null;
   storyEyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   storyLine?: string | null;
   storyLinkLabel?: string | null;
+  /**
+   * Izaberi postojeću sliku iz Media biblioteke ili otpremi novu.
+   */
   storyImage?: (number | null) | Media;
   workEyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   workHeadline?: string | null;
   workCards?:
     | {
         title: string;
+        /**
+         * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+         */
         text: string;
         id?: string | null;
       }[]
@@ -632,11 +673,11 @@ export interface HomePage {
   workLinkLabel?: string | null;
   blogEyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   blogHeadline?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   ctaHeadline?: string | null;
   ctaSub?: string | null;
@@ -651,19 +692,25 @@ export interface AboutPage {
   id: number;
   eyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   headline?: string | null;
+  /**
+   * Izaberi postojeću sliku iz Media biblioteke ili otpremi novu.
+   */
   portrait?: (number | null) | Media;
   body?:
     | {
+        /**
+         * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+         */
         text: string;
         id?: string | null;
       }[]
     | null;
   quote?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   ctaHeadline?: string | null;
   updatedAt?: string | null;
@@ -677,26 +724,35 @@ export interface WorkPage {
   id: number;
   eyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   headline?: string | null;
   sub?: string | null;
   forWhomHeading?: string | null;
+  /**
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+   */
   forWhomText?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   journeyHeading?: string | null;
+  /**
+   * Dodaj četvrti ili naredni korak i prevuci ga na željeno mjesto. Numeracija na sajtu prati redosljed.
+   */
   journeySteps?:
     | {
         title: string;
+        /**
+         * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+         */
         text: string;
         id?: string | null;
       }[]
     | null;
   journeyQuote?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   priceHeading?: string | null;
   priceText?: string | null;
@@ -713,7 +769,7 @@ export interface WorkPage {
    */
   showTestimonials?: boolean | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   ctaHeadline?: string | null;
   updatedAt?: string | null;
@@ -727,7 +783,7 @@ export interface BlogPage {
   id: number;
   eyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   headline?: string | null;
   sub?: string | null;
@@ -742,7 +798,7 @@ export interface ContactPage {
   id: number;
   eyebrow?: string | null;
   /**
-   * Naglasak: _kurziv_ za naglašenu riječ, **podebljano** za jaku riječ.
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   headline?: string | null;
   sub?: string | null;
@@ -755,9 +811,58 @@ export interface ContactPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources-page".
+ */
+export interface ResourcesPage {
+  id: number;
+  eyebrow?: string | null;
+  /**
+   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+   */
+  headline?: string | null;
+  sub?: string | null;
+  emptyText?: string | null;
+  /**
+   * Dodaj PDF vodič ili checklistu. Redosljed mijenjaš prevlačenjem; isključi „Prikaži” da privremeno sakriješ resurs.
+   */
+  resources?:
+    | {
+        enabled?: boolean | null;
+        title: string;
+        /**
+         * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+         */
+        description?: string | null;
+        /**
+         * Otpremi PDF ili izaberi već otpremljeni dokument iz Media biblioteke.
+         */
+        file: number | Media;
+        buttonLabel?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
+  navBlogLabel?: T;
+  blogAllLabel?: T;
+  navResourcesLabel?: T;
+  bookingUrl?: T;
+  webinarEnabled?: T;
+  webinarTitle?: T;
+  webinarText?: T;
+  webinarButtonLabel?: T;
+  webinarUrl?: T;
+  newsletterEnabled?: T;
+  newsletterTitle?: T;
+  newsletterText?: T;
+  newsletterButtonLabel?: T;
+  newsletterUrl?: T;
   brandName?: T;
   brandRole?: T;
   email?: T;
@@ -896,6 +1001,29 @@ export interface ContactPageSelect<T extends boolean = true> {
   directText?: T;
   formHeading?: T;
   formNote?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources-page_select".
+ */
+export interface ResourcesPageSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headline?: T;
+  sub?: T;
+  emptyText?: T;
+  resources?:
+    | T
+    | {
+        enabled?: T;
+        title?: T;
+        description?: T;
+        file?: T;
+        buttonLabel?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -58,7 +58,7 @@ services:
       context: .
       target: builder
       args:
-        NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://jelena.dgudovic.dev}
+        NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://jelena.rajkovic.coach}
     depends_on:
       db:
         condition: service_healthy

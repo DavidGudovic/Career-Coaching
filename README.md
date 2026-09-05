@@ -11,7 +11,7 @@ no developer needed.
 - **Next.js 15** (App Router) — fast static-style rendering, SEO, the public site
 - **Payload CMS 3** — admin panel + content API, runs inside the same Next.js app
 - **PostgreSQL 16** — content database
-- **Sharp** — uploads auto-convert to responsive **WebP**
+- **Sharp** — preserves originals and creates responsive **WebP** variants
 
 Public site and the CMS admin are one app / one Docker image. Content (DB + uploaded
 images) lives in Docker **volumes**, so updating the image never wipes Jelena's work.
@@ -44,7 +44,7 @@ pnpm dev                    # http://localhost:3000  (admin at /admin)
 - **Posts** (Karijerne bjeleške): title, excerpt, cover, rich-text body, category,
   date — with a **source tag**. Set source = *Ljepota i zdravlje* and a link to show
   the magazine badge + “Pročitaj original”.
-- **Media**: any upload → responsive WebP automatically.
+- **Media**: reusable original images, high-quality responsive WebP variants, and PDF downloads.
 
 ### Headline emphasis
 Headlines use a light markup instead of HTML:
@@ -54,6 +54,15 @@ Headlines use a light markup instead of HTML:
 Every text field is per-language (MNE default, EN under the `/en` URL prefix).
 Edit both via the locale switcher at the top of the admin.
 
+## Client editing and mail setup
+
+See [the editing guide](docs/client-feedback.md) for resources, webinar invitations,
+booking links, text formatting, photos, and the newsletter switch.
+
+The contact form requires real SMTP credentials. The simplest free option is
+**Brevo SMTP** (300 emails/day on the free plan). Setup instructions are in
+[the mail guide](docs/client-feedback.md#contact-email).
+
 ## Production deploy (Jelena's server, behind nginx)
 
 1. Copy the repo to the server and create `.env`:
@@ -61,13 +70,13 @@ Edit both via the locale switcher at the top of the admin.
    ```env
    POSTGRES_PASSWORD=<strong-password>
    PAYLOAD_SECRET=<openssl rand -hex 32>
-   NEXT_PUBLIC_SERVER_URL=https://jelena.dgudovic.dev
+   NEXT_PUBLIC_SERVER_URL=https://jelena.rajkovic.coach
    # contact form email (optional but recommended):
    SMTP_HOST=...
    SMTP_PORT=587
    SMTP_USER=...
    SMTP_PASS=...
-   SMTP_FROM=no-reply@jelena.dgudovic.dev
+   SMTP_FROM=no-reply@jelena.rajkovic.coach
    ```
 
 2. Build & start:
@@ -94,7 +103,7 @@ Edit both via the locale switcher at the top of the admin.
 
    ```nginx
    server {
-     server_name jelena.dgudovic.dev;
+     server_name jelena.rajkovic.coach;
 
      client_max_body_size 25m;   # allow photo uploads
 

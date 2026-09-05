@@ -17,6 +17,7 @@ export function MediaImage({
   priority = false,
   placeholderLabel,
   rounded = 3,
+  natural = false,
 }: {
   media: MaybeMedia
   ratio: string
@@ -26,10 +27,11 @@ export function MediaImage({
   priority?: boolean
   placeholderLabel?: string
   rounded?: number
+  natural?: boolean
 }) {
   const box: React.CSSProperties = {
     position: 'relative',
-    aspectRatio: ratio,
+    aspectRatio: natural && media && typeof media === 'object' && media.width && media.height ? `${media.width} / ${media.height}` : ratio,
     borderRadius: rounded,
     overflow: 'hidden',
     ...style,
@@ -44,13 +46,13 @@ export function MediaImage({
   }
 
   const sizeMap = (media.sizes || {}) as Record<string, SizeEntry>
-  const srcset = ['thumbnail', 'card', 'feature']
-    .map((k) => sizeMap[k])
-    .filter((s): s is SizeEntry => Boolean(s?.url && s?.width))
-    .map((s) => `${s.url} ${s.width}w`)
-    .join(', ')
-
-  const src = sizeMap.feature?.url || media.url
+  const candidates = ['thumbnail', 'card', 'feature'].map((key) => sizeMap[key])
+  // Include the original for large / high-DPI screens instead of capping at 1400px.
+  candidates.push({ url: media.url, width: media.width })
+  const widths = new Map<number, string>()
+  for (const size of candidates) if (size?.url && size.width) widths.set(size.width, size.url)
+  const srcset = [...widths].sort(([a], [b]) => a - b).map(([width, url]) => `${url} ${width}w`).join(', ')
+  const src = media.url
 
   return (
     <div className={className} style={box}>
@@ -64,7 +66,7 @@ export function MediaImage({
         loading={priority ? 'eager' : 'lazy'}
         decoding="async"
         fetchPriority={priority ? 'high' : 'auto'}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: `${media.focalX ?? 50}% ${media.focalY ?? 50}%` }}
       />
     </div>
   )

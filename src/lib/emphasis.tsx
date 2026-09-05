@@ -12,7 +12,7 @@ export function Emphasis({
   if (!text) return <></>
   const italicColor = tone === 'dark' ? 'var(--mint-light)' : 'var(--teal)'
   const nodes: React.ReactNode[] = []
-  const regex = /(\*\*([^*]+)\*\*|_([^_]+)_)/g
+  const regex = /(\*\*([^*\r\n]+)\*\*|_([^_\r\n]+)_|\r?\n)/g
   let last = 0
   let m: RegExpExecArray | null
   let i = 0
@@ -31,6 +31,7 @@ export function Emphasis({
         </em>,
       )
     }
+    if (m[0] === "\n" || m[0] === "\r\n") nodes.push(<br key={i++} />)
     last = regex.lastIndex
   }
   if (last < text.length) nodes.push(text.slice(last))
@@ -39,4 +40,12 @@ export function Emphasis({
 
 // Strip markup to plain text (for <title>, meta descriptions, alt text).
 export const plain = (text: string | null | undefined): string =>
-  (text || '').replace(/\*\*([^*]+)\*\*/g, '$1').replace(/_([^_]+)_/g, '$1')
+  (text || '').replace(/\*\*([^*]+)\*\*/g, '$1').replace(/_([^_]+)_/g, '$1').replace(/\s+/g, ' ').trim()
+
+
+export function FormattedText({ text, className = 'formatted-text' }: { text?: string | null; className?: string }) {
+  if (!text) return null
+  return <div className={className}>{text.split(/\r?\n\s*\r?\n/).filter(Boolean).map((paragraph, i) => (
+    <p key={i}><Emphasis text={paragraph} /></p>
+  ))}</div>
+}

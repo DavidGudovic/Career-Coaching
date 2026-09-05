@@ -1,3 +1,6 @@
+import WebinarInvitation from '@/components/WebinarInvitation'
+import { bookingHref, externalUrl } from '@/lib/links'
+import { Emphasis } from '@/lib/emphasis'
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import Header from '@/components/Header'
@@ -26,7 +29,10 @@ export default async function LocaleLayout({
   if (!isLocale(locale)) notFound()
 
   const settings = await getSettings(locale)
-  const nav = NAV.map((n) => ({ label: t(locale, n.uiKey), href: href(locale, ROUTES[n.key]) }))
+  const nav = NAV.map((n) => ({ label: (n.key === 'blog' ? settings?.navBlogLabel : n.key === 'resources' ? settings?.navResourcesLabel : null) || t(locale, n.uiKey), href: href(locale, ROUTES[n.key]) }))
+  const bookUrl = bookingHref(locale, settings?.bookingUrl)
+  const newsletterUrl = externalUrl(settings?.newsletterUrl)
+  const webinarUrl = externalUrl(settings?.webinarUrl)
 
   return (
     <>
@@ -40,12 +46,24 @@ export default async function LocaleLayout({
         nav={nav}
         ctaLabel={t(locale, 'cta_short')}
         ctaBookLabel={t(locale, 'cta_book')}
-        ctaHref={href(locale, ROUTES.contact)}
+        ctaHref={bookUrl}
         langAria={t(locale, 'lang_switch')}
         menuOpenLabel={t(locale, 'menu_open')}
         menuCloseLabel={t(locale, 'menu_close')}
       />
       <main id="main">{children}</main>
+      {settings?.newsletterEnabled && newsletterUrl && (
+        <section className="bg-sage section-sm">
+          <div className="wrap-read" style={{ textAlign: 'center' }}>
+            <h2 className="display-3"><Emphasis text={settings.newsletterTitle || t(locale, 'newsletter_title')} /></h2>
+            {settings.newsletterText && <p className="lead"><Emphasis text={settings.newsletterText} /></p>}
+            <a className="btn btn-solid" style={{ marginTop: 24 }} href={newsletterUrl} target="_blank" rel="noopener noreferrer">{settings.newsletterButtonLabel || t(locale, 'newsletter_cta')} ↗</a>
+          </div>
+        </section>
+      )}
+      {settings?.webinarEnabled && settings.webinarTitle && webinarUrl && (
+        <WebinarInvitation title={settings.webinarTitle} text={settings.webinarText} url={webinarUrl} buttonLabel={settings.webinarButtonLabel || t(locale, 'webinar_cta')} closeLabel={t(locale, 'webinar_close')} eyebrow={locale === 'en' ? 'Webinar' : 'Vebinar'} />
+      )}
       <Footer
         locale={locale}
         brandName={settings?.brandName || 'Jelena Rajković'}
@@ -57,7 +75,7 @@ export default async function LocaleLayout({
         copyright={settings?.footerCopyright || '© 2026 Jelena Rajković'}
         tagline={settings?.footerTagline || 'Karijerno iskreno · Crna Gora'}
       />
-      <MobileCta href={href(locale, ROUTES.contact)} label={t(locale, 'cta_short')} />
+      <MobileCta href={bookUrl} label={t(locale, 'cta_short')} />
       <Suspense fallback={null}>
         <RevealManager />
       </Suspense>

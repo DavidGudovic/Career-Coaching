@@ -1,3 +1,4 @@
+import { imageField } from '../fields/image'
 import type { GlobalConfig } from 'payload'
 import { emphasisDescription } from '../fields/emphasis'
 
@@ -11,10 +12,10 @@ export const HomePage: GlobalConfig = {
       label: 'Hero',
       fields: [
         { name: 'heroEyebrow', type: 'text', localized: true, defaultValue: 'Karijerno iskreno' },
-        { name: 'heroHeadline', type: 'text', localized: true, defaultValue: 'Karijera _može_ da bude **usklađena** _sa tobom._', admin: { description: emphasisDescription } },
+        { name: 'heroHeadline', type: 'textarea', localized: true, defaultValue: 'Karijera _može_ da bude **usklađena** _sa tobom._', admin: { description: emphasisDescription } },
         { name: 'heroSub', type: 'textarea', localized: true, defaultValue: 'Za žene koje su prerasle svoj posao i osjećaju da može bolje — ali ne znaju odakle. Zajedno pronalazimo tvoj sljedeći realan korak.' },
         { name: 'heroBadge', type: 'text', localized: true, defaultValue: '„Vidim te.”' },
-        { name: 'heroPortrait', type: 'upload', relationTo: 'media', admin: { description: 'Portret u hero sekciji.' } },
+        imageField('heroPortrait'),
       ],
     },
     {
@@ -22,7 +23,7 @@ export const HomePage: GlobalConfig = {
       label: 'Vidim te (empatija)',
       fields: [
         { name: 'empathyEyebrow', type: 'text', localized: true, defaultValue: 'Vidim te' },
-        { name: 'empathyHeadline', type: 'text', localized: true, defaultValue: 'Možda se nešto od ovoga _tebi_ dešava.', admin: { description: emphasisDescription } },
+        { name: 'empathyHeadline', type: 'textarea', localized: true, defaultValue: 'Možda se nešto od ovoga _tebi_ dešava.', admin: { description: emphasisDescription } },
         {
           name: 'empathyItems',
           type: 'array',
@@ -34,7 +35,7 @@ export const HomePage: GlobalConfig = {
             { text: 'Ne znaš tačno čime želiš da se baviš, samo znaš da nije ovo.' },
             { text: 'Znaš da može bolje — ali ne znaš odakle da kreneš.' },
           ],
-          fields: [{ name: 'text', type: 'text', required: true }],
+          fields: [{ name: 'text', type: 'textarea', required: true, admin: { description: emphasisDescription } }],
         },
       ],
     },
@@ -45,7 +46,7 @@ export const HomePage: GlobalConfig = {
         { name: 'storyEyebrow', type: 'text', localized: true, defaultValue: 'Moja priča' },
         { name: 'storyLine', type: 'textarea', localized: true, defaultValue: 'Iz _biologije_ u IT — sa 26 godina. Prošla sam tačno onu promjenu kroz koju te sada vodim.', admin: { description: emphasisDescription } },
         { name: 'storyLinkLabel', type: 'text', localized: true, defaultValue: 'Pročitaj moju priču' },
-        { name: 'storyImage', type: 'upload', relationTo: 'media' },
+        imageField('storyImage'),
       ],
     },
     {
@@ -53,7 +54,7 @@ export const HomePage: GlobalConfig = {
       label: 'Rad sa mnom (teaser)',
       fields: [
         { name: 'workEyebrow', type: 'text', localized: true, defaultValue: 'Rad sa mnom' },
-        { name: 'workHeadline', type: 'text', localized: true, defaultValue: 'Šta dobijaš kada _radimo zajedno?_', admin: { description: emphasisDescription } },
+        { name: 'workHeadline', type: 'textarea', localized: true, defaultValue: 'Šta dobijaš kada _radimo zajedno?_', admin: { description: emphasisDescription } },
         {
           name: 'workCards',
           type: 'array',
@@ -67,7 +68,7 @@ export const HomePage: GlobalConfig = {
           ],
           fields: [
             { name: 'title', type: 'text', required: true },
-            { name: 'text', type: 'textarea', required: true },
+            { name: 'text', type: 'textarea', required: true, admin: { description: emphasisDescription } },
           ],
         },
         { name: 'workLinkLabel', type: 'text', localized: true, defaultValue: 'Kako izgleda rad sa mnom' },
@@ -75,17 +76,17 @@ export const HomePage: GlobalConfig = {
     },
     {
       type: 'collapsible',
-      label: 'Bjeleške (teaser)',
+      label: 'Bilješke (teaser)',
       fields: [
-        { name: 'blogEyebrow', type: 'text', localized: true, defaultValue: 'Karijerne bjeleške' },
-        { name: 'blogHeadline', type: 'text', localized: true, defaultValue: 'Iskreno o karijeri — _bjeleške_.', admin: { description: emphasisDescription } },
+        { name: 'blogEyebrow', type: 'text', localized: true, defaultValue: 'Karijerne bilješke' },
+        { name: 'blogHeadline', type: 'textarea', localized: true, defaultValue: 'Iskreno o karijeri — _bilješke_.', admin: { description: emphasisDescription } },
       ],
     },
     {
       type: 'collapsible',
       label: 'Završni poziv (CTA)',
       fields: [
-        { name: 'ctaHeadline', type: 'text', localized: true, defaultValue: 'Ako osjećaš da _može bolje_ — počnimo razgovorom.', admin: { description: emphasisDescription } },
+        { name: 'ctaHeadline', type: 'textarea', localized: true, defaultValue: 'Ako osjećaš da _može bolje_ — počnimo razgovorom.', admin: { description: emphasisDescription } },
         { name: 'ctaSub', type: 'textarea', localized: true, defaultValue: 'Besplatan uvodni razgovor, bez obaveze. Pogledamo šta već imaš, šta želiš, i koji je tvoj sljedeći realan korak.' },
       ],
     },

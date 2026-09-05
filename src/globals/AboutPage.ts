@@ -1,3 +1,4 @@
+import { imageField } from '../fields/image'
 import type { GlobalConfig } from 'payload'
 import { emphasisDescription } from '../fields/emphasis'
 
@@ -7,8 +8,8 @@ export const AboutPage: GlobalConfig = {
   access: { read: () => true },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'O meni' },
-    { name: 'headline', type: 'text', localized: true, defaultValue: 'Mijenjala sam karijeru _i preživjela_ to.', admin: { description: emphasisDescription } },
-    { name: 'portrait', type: 'upload', relationTo: 'media' },
+    { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Mijenjala sam karijeru _i preživjela_ to.', admin: { description: emphasisDescription } },
+    imageField('portrait'),
     {
       name: 'body',
       type: 'array',
@@ -20,9 +21,9 @@ export const AboutPage: GlobalConfig = {
         { text: 'Danas mentorišem žene koje osjećaju isto ono što sam ja osjećala: da su prerasle svoje mjesto, da žele nešto što je njihovo, ali ne znaju odakle da krenu. Ne dajem ti gotove odgovore — pomažem ti da pronađeš svoje.' },
         { text: 'Moj pristup je iskren i bez pritiska. Krećemo od onoga što već imaš, gledamo šta zaista želiš, i zajedno definišemo tvoj sljedeći realan korak. Bez magičnih formula — sa jasnoćom, smjerom i podrškom.' },
       ],
-      fields: [{ name: 'text', type: 'textarea', required: true }],
+      fields: [{ name: 'text', type: 'textarea', required: true, admin: { description: emphasisDescription } }],
     },
     { name: 'quote', type: 'textarea', localized: true, defaultValue: '„Karijera može da bude usklađena sa tobom — ne ti sa njom.”' },
-    { name: 'ctaHeadline', type: 'text', localized: true, defaultValue: 'Spremna da pogledamo _tvoj_ sljedeći korak?', admin: { description: emphasisDescription } },
+    { name: 'ctaHeadline', type: 'textarea', localized: true, defaultValue: 'Spremna da pogledamo _tvoj_ sljedeći korak?', admin: { description: emphasisDescription } },
   ],
 }
