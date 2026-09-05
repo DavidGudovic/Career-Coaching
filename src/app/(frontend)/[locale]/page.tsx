@@ -10,6 +10,8 @@ import { Emphasis, plain } from '@/lib/emphasis'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
 import HeroFlow from '@/components/animations/HeroFlow'
+import ContourArt from '@/components/animations/ContourArt'
+import PathGlyph from '@/components/PathGlyph'
 import { CtaBand } from '@/components/sections'
 import { ArrowRight } from '@/components/icons'
 
@@ -59,7 +61,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* HERO */}
-      <section className="bg-teal px" style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(130px,16vh,200px) var(--pad-x) clamp(70px,10vw,120px)' }}>
+      <section className="bg-teal px home-hero" style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(130px,16vh,200px) var(--pad-x) clamp(70px,10vw,120px)' }}>
         <div
           aria-hidden
           style={{
@@ -94,26 +96,33 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </Link>
             </div>
           </div>
-          <div data-reveal data-reveal-delay="120" style={{ position: 'relative' }}>
+          <div data-reveal data-reveal-delay="120" className="hero-portrait">
+            <span className="portrait-orbit" aria-hidden="true" />
             <MediaImage
               media={home?.heroPortrait}
               ratio="4 / 5"
               sizes="(max-width: 800px) 100vw, 480px"
               priority
+              className="hero-portrait-image"
               placeholderLabel="Portret — zamijeni fotografijom"
               style={{ boxShadow: '0 40px 80px -40px rgba(0,0,0,.6)' }}
             />
             {home?.heroBadge && (
-              <div style={{ position: 'absolute', top: 24, left: -22, background: 'var(--paper)', color: 'var(--ink)', padding: '14px 18px', borderRadius: 3, boxShadow: '0 18px 40px -20px rgba(0,0,0,.5)', maxWidth: 200 }}>
+              <div className="portrait-note">
                 <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18, lineHeight: 1.25 }}>{home.heroBadge}</span>
               </div>
             )}
           </div>
         </div>
+        <a href="#vidim-te" className="hero-scroll">
+          <span className="hero-scroll-line" aria-hidden="true" />
+          <span>{home?.empathyEyebrow || t(l, 'cta_more')}</span>
+          <span aria-hidden="true">↓</span>
+        </a>
       </section>
 
       {/* EMPATHY */}
-      <section className="bg-paper section">
+      <section id="vidim-te" className="bg-paper section empathy-section">
         <div className="wrap-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px),1fr))', gap: 'clamp(40px,6vw,90px)', alignItems: 'start' }}>
           <div>
             <span data-reveal className="eyebrow" style={{ marginBottom: 20 }}>{home?.empathyEyebrow}</span>
@@ -121,18 +130,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <Emphasis text={home?.empathyHeadline} />
             </h2>
           </div>
-          <ul data-reveal data-reveal-delay="100" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
-            {(home?.empathyItems || []).map((item, i, arr) => (
+          <ul className="empathy-list">
+            {(home?.empathyItems || []).map((item, i) => (
               <li
                 key={item.id || i}
-                style={{
-                  fontSize: 'clamp(17px,1.6vw,21px)',
-                  lineHeight: 1.5,
-                  padding: '20px 0',
-                  borderBottom: i < arr.length - 1 ? '1px solid rgba(20,41,43,.12)' : 'none',
-                }}
+                data-reveal
+                data-reveal-delay={i * 55}
               >
-                <Emphasis text={item.text} />
+                <span className="empathy-index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <span><Emphasis text={item.text} /></span>
               </li>
             ))}
           </ul>
@@ -140,14 +146,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* STORY TEASER */}
-      <section className="bg-sage section">
-        <div className="wrap-narrow grid-2">
-          <div data-reveal>
+      <section className="bg-sage section story-section">
+        <ContourArt className="story-contours" />
+        <div className="wrap-narrow grid-2 story-layout">
+          <div data-reveal className="story-photo">
             <MediaImage media={home?.storyImage} ratio="3 / 4" natural sizes="(max-width: 700px) 100vw, 520px" placeholderLabel="Otvoreni put — placeholder" />
           </div>
           <div data-reveal data-reveal-delay="90">
             <span className="eyebrow" style={{ marginBottom: 22 }}>{home?.storyEyebrow}</span>
-            <p style={{ fontFamily: 'var(--serif)', fontWeight: 340, fontSize: 'clamp(24px,3vw,38px)', lineHeight: 1.18, letterSpacing: '-.01em', margin: '0 0 30px' }}>
+            <span className="story-quote-mark" aria-hidden="true">“</span>
+            <p className="story-quote">
               <Emphasis text={home?.storyLine} />
             </p>
             <Link href={href(l, ROUTES.about)} className="link-underline" style={{ color: 'var(--teal-deep)', fontSize: 15.5, display: 'inline-flex', gap: 9, alignItems: 'center' }}>
@@ -167,13 +175,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <Emphasis text={home?.workHeadline} />
             </h2>
           </div>
-          <div className="grid-auto">
+          <div className="mentoring-grid">
             {(home?.workCards || []).map((card, i) => (
-              <div key={card.id || i} className="card" data-reveal data-reveal-delay={i * 70}>
-                <span className="card-num">{String(i + 1).padStart(2, '0')}</span>
-                <h3>{card.title}</h3>
-                <p><Emphasis text={card.text} /></p>
-              </div>
+              <Link href={href(l, ROUTES.work)} key={card.id || i} className="mentoring-card" data-reveal data-reveal-delay={i * 70}>
+                <div className="mentoring-card-top">
+                  <span className="card-num">{String(i + 1).padStart(2, '0')}</span>
+                  <PathGlyph index={i} />
+                </div>
+                <div className="mentoring-card-copy">
+                  <h3>{card.title}</h3>
+                  <p><Emphasis text={card.text} /></p>
+                </div>
+                <span className="mentoring-card-arrow"><ArrowRight /></span>
+              </Link>
             ))}
           </div>
           <div data-reveal style={{ marginTop: 40 }}>
