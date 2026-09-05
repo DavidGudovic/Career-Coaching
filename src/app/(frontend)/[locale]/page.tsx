@@ -1,3 +1,4 @@
+import { bookingHref } from '@/lib/links'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -71,7 +72,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           }}
         />
         <HeroFlow />
-        <div className="wrap" style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))', gap: 'clamp(40px,5vw,80px)', alignItems: 'center' }}>
+        <div className="wrap" style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px),1fr))', gap: 'clamp(40px,5vw,80px)', alignItems: 'center' }}>
           <div>
             <div data-reveal style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
               <span style={{ width: 26, height: 1, background: 'var(--mint)', display: 'block' }} />
@@ -84,7 +85,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {home?.heroSub}
             </p>
             <div data-reveal data-reveal-delay="180" style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
-              <Link href={href(l, ROUTES.contact)} className="btn btn-paper">
+              <Link href={bookingHref(l, settings?.bookingUrl)} className="btn btn-paper">
                 {t(l, 'cta_book')}
                 <ArrowRight />
               </Link>
@@ -113,7 +114,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       {/* EMPATHY */}
       <section className="bg-paper section">
-        <div className="wrap-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px,1fr))', gap: 'clamp(40px,6vw,90px)', alignItems: 'start' }}>
+        <div className="wrap-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px),1fr))', gap: 'clamp(40px,6vw,90px)', alignItems: 'start' }}>
           <div>
             <span data-reveal className="eyebrow" style={{ marginBottom: 20 }}>{home?.empathyEyebrow}</span>
             <h2 data-reveal className="display-2" style={{ margin: 0 }}>
@@ -131,7 +132,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   borderBottom: i < arr.length - 1 ? '1px solid rgba(20,41,43,.12)' : 'none',
                 }}
               >
-                {item.text}
+                <Emphasis text={item.text} />
               </li>
             ))}
           </ul>
@@ -142,7 +143,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="bg-sage section">
         <div className="wrap-narrow grid-2">
           <div data-reveal>
-            <MediaImage media={home?.storyImage} ratio="5 / 4" sizes="(max-width: 700px) 100vw, 520px" placeholderLabel="Otvoreni put — placeholder" />
+            <MediaImage media={home?.storyImage} ratio="3 / 4" natural sizes="(max-width: 700px) 100vw, 520px" placeholderLabel="Otvoreni put — placeholder" />
           </div>
           <div data-reveal data-reveal-delay="90">
             <span className="eyebrow" style={{ marginBottom: 22 }}>{home?.storyEyebrow}</span>
@@ -171,7 +172,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <div key={card.id || i} className="card" data-reveal data-reveal-delay={i * 70}>
                 <span className="card-num">{String(i + 1).padStart(2, '0')}</span>
                 <h3>{card.title}</h3>
-                <p>{card.text}</p>
+                <p><Emphasis text={card.text} /></p>
               </div>
             ))}
           </div>
@@ -195,11 +196,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </h2>
             </div>
             <Link href={href(l, ROUTES.blog)} className="link-underline" style={{ color: 'var(--teal-deep)', fontSize: 15 }}>
-              {t(l, 'blog_all')} →
+              {settings?.blogAllLabel || t(l, 'blog_all')} →
             </Link>
           </div>
           {posts.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px,1fr))', gap: 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px),1fr))', gap: 24 }}>
               {posts.map((post, i) => (
                 <PostCard key={post.id} post={post} locale={l} delay={i * 90} />
               ))}

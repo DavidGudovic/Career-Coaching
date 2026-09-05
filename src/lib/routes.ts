@@ -8,6 +8,7 @@ export const ROUTES = {
   work: '/rad-sa-mnom',
   blog: '/karijerne-bjeleske',
   contact: '/kontakt',
+  resources: '/besplatni-resursi',
 } as const
 
 export type RouteKey = keyof typeof ROUTES
@@ -17,6 +18,7 @@ export const NAV: { key: RouteKey; uiKey: string }[] = [
   { key: 'about', uiKey: 'nav_about' },
   { key: 'work', uiKey: 'nav_work' },
   { key: 'blog', uiKey: 'nav_blog' },
+  { key: 'resources', uiKey: 'nav_resources' },
   { key: 'contact', uiKey: 'nav_contact' },
 ]
 

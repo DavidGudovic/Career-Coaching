@@ -16,3 +16,10 @@ export function formatDate(date: string | Date | null | undefined, locale: Local
   }
   return `${d.getDate()}. ${MONTHS_ME[d.getMonth()]} ${d.getFullYear()}`
 }
+
+
+export function formatFileSize(bytes: number, locale: Locale): string {
+  const megabytes = bytes >= 1024 * 1024
+  const value = megabytes ? bytes / 1024 / 1024 : Math.max(1, Math.round(bytes / 1024))
+  return `${new Intl.NumberFormat(locale === 'en' ? 'en' : 'sr-Latn-ME', { maximumFractionDigits: megabytes ? 1 : 0 }).format(value)} ${megabytes ? 'MB' : 'KB'}`
+}

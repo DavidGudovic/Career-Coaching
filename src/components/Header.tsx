@@ -74,12 +74,13 @@ export default function Header({
           href={nav[0]?.href || '/'}
           style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', lineHeight: 1 }}
         >
-          <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 21, color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', transition: 'color .4s ease' }}>
+          <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 21, whiteSpace: 'nowrap', color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', transition: 'color .4s ease' }}>
             {brandName}
           </span>
           <span
             style={{
-              fontSize: 10.5,
+              fontSize: 9,
+              whiteSpace: 'nowrap',
               letterSpacing: '.22em',
               textTransform: 'uppercase',
               color: scrolled ? 'var(--teal)' : 'rgba(255,255,255,.65)',
@@ -92,9 +93,9 @@ export default function Header({
           </span>
         </Link>
 
-        <nav className="desk-nav" style={{ alignItems: 'center', gap: 30 }}>
+        <nav className="desk-nav" style={{ alignItems: 'center', gap: 18 }}>
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="link-underline" style={{ color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', fontSize: 15, transition: 'color .4s ease' }}>
+            <Link key={item.href} href={item.href} className="link-underline" style={{ color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', fontSize: 13.5, whiteSpace: 'nowrap', transition: 'color .4s ease' }}>
               {item.label}
             </Link>
           ))}
@@ -137,6 +138,7 @@ export default function Header({
           background: 'var(--teal-deep)',
           flexDirection: 'column',
           padding: '28px clamp(20px,6vw,40px)',
+          overflowY: 'auto',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -160,7 +162,7 @@ export default function Header({
             ×
           </button>
         </div>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 48 }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 24 }}>
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -170,9 +172,9 @@ export default function Header({
                 textDecoration: 'none',
                 color: 'var(--offwhite)',
                 fontFamily: 'var(--serif)',
-                fontSize: 34,
+                fontSize: 'clamp(24px, 4vh, 34px)',
                 fontWeight: 300,
-                padding: '14px 0',
+                padding: '10px 0',
                 borderBottom: '1px solid rgba(242,239,232,.14)',
               }}
             >

@@ -49,20 +49,20 @@ export default function ContactForm({ locale }: { locale: Locale }) {
 
       <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={label}>{t(locale, 'form_name')}</span>
-        <input type="text" name="name" required placeholder={t(locale, 'form_name_ph')} style={input} />
+        <input type="text" name="name" maxLength={120} autoComplete="name" required placeholder={t(locale, 'form_name_ph')} style={input} />
       </label>
       <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={label}>{t(locale, 'form_email')}</span>
-        <input type="email" name="email" required placeholder={t(locale, 'form_email_ph')} style={input} />
+        <input type="email" name="email" maxLength={254} autoComplete="email" required placeholder={t(locale, 'form_email_ph')} style={input} />
       </label>
       <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={label}>{t(locale, 'form_msg')}</span>
-        <textarea name="message" required rows={5} placeholder={t(locale, 'form_msg_ph')} style={{ ...input, resize: 'vertical' }} />
+        <textarea name="message" maxLength={10000} required rows={5} placeholder={t(locale, 'form_msg_ph')} style={{ ...input, resize: 'vertical' }} />
       </label>
 
       {state.status === 'error' && (
         <p role="alert" style={{ color: '#9c3b2e', fontSize: 14.5, margin: 0 }}>
-          {t(locale, 'form_err')}
+          {t(locale, state.message === 'unavailable' ? 'form_unavailable' : 'form_err')}
         </p>
       )}
 

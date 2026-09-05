@@ -18,6 +18,8 @@ import { AboutPage } from './globals/AboutPage'
 import { WorkPage } from './globals/WorkPage'
 import { BlogPage } from './globals/BlogPage'
 import { ContactPage } from './globals/ContactPage'
+import { ResourcesPage } from './globals/ResourcesPage'
+import { isMailConfigured } from './lib/mail'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -49,7 +51,7 @@ export default buildConfig({
     fallback: true,
   },
   collections: [Users, Media, Categories, Posts],
-  globals: [SiteSettings, HomePage, AboutPage, WorkPage, BlogPage, ContactPage],
+  globals: [SiteSettings, HomePage, AboutPage, WorkPage, BlogPage, ContactPage, ResourcesPage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
@@ -59,7 +61,7 @@ export default buildConfig({
     // Payload (the standalone runner has no drizzle-kit), so production instead runs
     // `prodMigrations` on boot — that's how schema changes reach prod. After ANY
     // schema change: run `pnpm payload migrate:create <name>` and commit the file.
-    push: true,
+    push: process.env.PAYLOAD_SCHEMA_PUSH !== 'false',
     migrationDir: path.resolve(dirname, 'migrations'),
     prodMigrations: migrations,
   }),
@@ -69,13 +71,13 @@ export default buildConfig({
       collections: ['posts'],
       uploadsCollection: 'media',
       generateTitle: ({ doc }: { doc?: { title?: string } }) =>
-        doc?.title ? `${doc.title} · Jelena Rajković` : 'Karijerne bjeleške · Jelena Rajković',
+        doc?.title ? `${doc.title} · Jelena Rajković` : 'Karijerne bilješke · Jelena Rajković',
       generateDescription: ({ doc }: { doc?: { excerpt?: string } }) => doc?.excerpt || '',
     }),
   ],
-  email: process.env.SMTP_HOST
+  email: isMailConfigured()
     ? nodemailerAdapter({
-        defaultFromAddress: process.env.SMTP_FROM || 'no-reply@jelenarajkovic.me',
+        defaultFromAddress: process.env.SMTP_FROM!,
         defaultFromName: 'Jelena Rajković',
         transportOptions: {
           host: process.env.SMTP_HOST,

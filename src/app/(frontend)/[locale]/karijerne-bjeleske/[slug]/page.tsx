@@ -1,10 +1,12 @@
+import HeroFlow from '@/components/animations/HeroFlow'
+import { bookingHref } from '@/lib/links'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
-import { getPostBySlug, getRelatedPosts } from '@/lib/payload'
+import { getPostBySlug, getRelatedPosts, getSettings } from '@/lib/payload'
 import { buildMetadata, abs, SITE_URL } from '@/lib/seo'
 import { formatDate } from '@/lib/format'
 import { MediaImage } from '@/components/MediaImage'
@@ -14,32 +16,19 @@ import type { Category, Media } from '@/payload-types'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
 
-// Render inline images (Lexical "upload" nodes) at their natural aspect ratio using Payload's
-// pre-generated WebP sizes — MediaImage is not used here because it force-crops to a fixed ratio.
+// Inline photos use the same original-aware responsive rendering as page portraits.
+// The shared media library also contains downloadable PDF resources.
 const contentConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
   ...defaultConverters,
   upload: ({ node }) => {
     const m = node.value as Media
     if (!m || typeof m !== 'object' || !m.url) return null
-    const sizeMap = (m.sizes || {}) as Record<string, { url?: string | null; width?: number | null }>
-    const srcset = ['card', 'feature']
-      .map((k) => sizeMap[k])
-      .filter((s): s is { url: string; width: number } => Boolean(s?.url && s?.width))
-      .map((s) => `${s.url} ${s.width}w`)
-      .join(', ')
+    if (m.mimeType === 'application/pdf') {
+      return <p><a href={m.url} download={m.filename || true}>{m.alt || m.filename || 'PDF'} ↓</a></p>
+    }
     return (
       <figure style={{ margin: '32px 0' }}>
-        <img
-          src={sizeMap.feature?.url || m.url || undefined}
-          srcSet={srcset || undefined}
-          sizes="(max-width: 800px) 100vw, 760px"
-          alt={m.alt || ''}
-          width={m.width || undefined}
-          height={m.height || undefined}
-          loading="lazy"
-          decoding="async"
-          style={{ width: '100%', height: 'auto', borderRadius: 4 }}
-        />
+        <MediaImage media={m} natural ratio="3 / 2" sizes="(max-width: 800px) 100vw, 760px" />
         {m.credit ? (
           <figcaption style={{ marginTop: 10, fontSize: 14, color: 'rgba(20,41,43,.6)' }}>
             {m.credit}
@@ -77,7 +66,7 @@ export default async function ArticlePage({ params }: Params) {
   const post = await getPostBySlug(slug, l)
   if (!post) notFound()
 
-  const related = await getRelatedPosts(l, post.id, 3)
+  const [related, settings] = await Promise.all([getRelatedPosts(l, post.id, 3), getSettings(l)])
   const category = typeof post.category === 'object' ? (post.category as Category) : null
   const fromLZ = post.source === 'ljepota-i-zdravlje'
   const dateStr = formatDate(post.publishedAt, l)
@@ -102,10 +91,11 @@ export default async function ArticlePage({ params }: Params) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="bg-teal px" style={{ padding: 'clamp(120px,15vh,180px) var(--pad-x) clamp(50px,7vw,80px)' }}>
-        <div className="wrap-read">
+      <section className="bg-teal px page-hero" style={{ padding: 'clamp(120px,15vh,180px) var(--pad-x) clamp(50px,7vw,80px)' }}>
+        <HeroFlow />
+        <div className="wrap-read page-hero-content">
           <Link href={href(l, ROUTES.blog)} style={{ textDecoration: 'none', color: 'var(--mint)', fontSize: 13.5, fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: 7, marginBottom: 26 }}>
-            <span style={{ fontFamily: 'var(--serif)' }}>←</span> {t(l, 'art_back')}
+            <span style={{ fontFamily: 'var(--serif)' }}>←</span> {settings?.blogAllLabel || t(l, 'art_back')}
           </Link>
           {metaLine && (
             <span style={{ fontSize: 12.5, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--mint)', fontWeight: 600, display: 'block', marginBottom: 18 }}>
@@ -152,7 +142,7 @@ export default async function ArticlePage({ params }: Params) {
             <p style={{ fontFamily: 'var(--serif)', fontWeight: 340, fontSize: 'clamp(24px,3vw,34px)', lineHeight: 1.15, margin: '0 0 22px' }}>
               {l === 'en' ? 'See yourself in this?' : 'Prepoznaješ se?'}
             </p>
-            <Link href={href(l, ROUTES.contact)} className="btn btn-paper">
+            <Link href={bookingHref(l, settings?.bookingUrl)} className="btn btn-paper">
               {t(l, 'cta_book')}
             </Link>
           </div>

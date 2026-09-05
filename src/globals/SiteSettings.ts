@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { validateExternalUrl } from '../lib/links'
 
 // Validacija hex boje (#rrggbb) — sprječava da pogrešan unos pokvari stil sajta.
 const hexColor = (val: unknown): true | string =>
@@ -12,6 +13,35 @@ export const SiteSettings: GlobalConfig = {
   access: { read: () => true },
   admin: { description: 'Kontakt podaci, brend i footer — mijenja se bez programera.' },
   fields: [
+    {
+      type: 'collapsible', label: 'Navigacija i zakazivanje',
+      fields: [
+        { name: 'navBlogLabel', label: 'Naziv bilješki u meniju', type: 'text', localized: true, admin: { placeholder: 'Karijerne bilješke' } },
+        { name: 'blogAllLabel', label: 'Link ka svim bilješkama', type: 'text', localized: true, admin: { placeholder: 'Sve bilješke' } },
+        { name: 'navResourcesLabel', label: 'Naziv resursa u meniju', type: 'text', localized: true, admin: { placeholder: 'Besplatni resursi' } },
+        { name: 'bookingUrl', label: 'Link za zakazivanje razgovora', type: 'text', validate: validateExternalUrl, admin: { description: 'Opcioni HTTPS link ka Google formi. Kada je unesen, sva dugmad „Zakaži razgovor” vode tamo. Prazno = kontakt stranica.' } },
+      ],
+    },
+    {
+      type: 'collapsible', label: 'Vebinar — iskačući poziv',
+      fields: [
+        { name: 'webinarEnabled', label: 'Prikaži poziv za vebinar', type: 'checkbox', defaultValue: false },
+        { name: 'webinarTitle', label: 'Naslov', type: 'textarea', localized: true },
+        { name: 'webinarText', label: 'Opis / datum i vrijeme', type: 'textarea', localized: true },
+        { name: 'webinarButtonLabel', label: 'Tekst dugmeta', type: 'text', localized: true, admin: { placeholder: 'Prijavi se za vebinar' } },
+        { name: 'webinarUrl', label: 'Link za prijavu', type: 'text', validate: validateExternalUrl, admin: { description: 'HTTPS link ka Google formi za prijavu. Poziv se prikazuje samo kada su uneseni i naslov i link; posjetilac ga može zatvoriti.' } },
+      ],
+    },
+    {
+      type: 'collapsible', label: 'Newsletter (kada bude spreman)', admin: { initCollapsed: true },
+      fields: [
+        { name: 'newsletterEnabled', label: 'Prikaži prijavu u footeru', type: 'checkbox', defaultValue: false },
+        { name: 'newsletterTitle', label: 'Naslov', type: 'text', localized: true },
+        { name: 'newsletterText', label: 'Opis', type: 'textarea', localized: true },
+        { name: 'newsletterButtonLabel', label: 'Tekst dugmeta', type: 'text', localized: true },
+        { name: 'newsletterUrl', label: 'MailerLite link za prijavu', type: 'text', validate: validateExternalUrl, admin: { description: 'Link ka MailerLite stranici za prijavu. Uključi tek kada newsletter bude spreman; MailerLite vodi prijavu i potvrdu saglasnosti.' } },
+      ],
+    },
     {
       type: 'row',
       fields: [
@@ -62,6 +92,7 @@ export const SiteSettings: GlobalConfig = {
           options: [
             { label: 'Fraunces + Hanken (trenutni)', value: 'fraunces-hanken' },
             { label: 'Playfair + Inter (klasično)', value: 'playfair-inter' },
+            { label: 'Playfair Display + Montserrat (vizuali)', value: 'playfair-montserrat' },
             { label: 'Lora + Source Sans (toplo)', value: 'lora-sourcesans' },
             { label: 'Cormorant + Work Sans (elegantno)', value: 'cormorant-worksans' },
           ],

@@ -11,7 +11,7 @@ export const getSettings = cache(async (locale: Locale) => {
   return payload.findGlobal({ slug: 'site-settings', locale, depth: 1 })
 })
 
-type PageSlug = 'home-page' | 'about-page' | 'work-page' | 'blog-page' | 'contact-page'
+type PageSlug = 'home-page' | 'about-page' | 'work-page' | 'blog-page' | 'contact-page' | 'resources-page'
 
 // Generic over slug so each call resolves to its specific global type.
 export async function getPageGlobal<S extends PageSlug>(slug: S, locale: Locale) {

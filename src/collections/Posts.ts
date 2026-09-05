@@ -1,3 +1,4 @@
+import { imageField } from '../fields/image'
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, HeadingFeature, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
 import { slugField } from '../fields/slug'
@@ -14,7 +15,7 @@ export const Posts: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'publishedAt', 'source', '_status'],
-    description: 'Karijerne bjeleške — blog. Svaki tekst postoji na oba jezika.',
+    description: 'Karijerne bilješke — blog. Svaki tekst postoji na oba jezika.',
   },
   versions: {
     drafts: { autosave: false },
@@ -29,7 +30,7 @@ export const Posts: CollectionConfig = {
           fields: [
             { name: 'title', type: 'text', required: true, localized: true },
             { name: 'excerpt', type: 'textarea', localized: true, admin: { description: 'Kratak opis za karticu i SEO.' } },
-            { name: 'coverImage', type: 'upload', relationTo: 'media' },
+            imageField('coverImage'),
             {
               name: 'content',
               type: 'richText',

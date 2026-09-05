@@ -2,9 +2,11 @@ import Link from 'next/link'
 import { Emphasis } from '@/lib/emphasis'
 import type { Locale } from '@/lib/i18n'
 import { t } from '@/lib/i18n'
-import { href, ROUTES } from '@/lib/routes'
 import { ArrowRight } from './icons'
 import Parallax from './Parallax'
+import HeroFlow from './animations/HeroFlow'
+import { getSettings } from '@/lib/payload'
+import { bookingHref } from '@/lib/links'
 
 // Dark inner-page hero (About / Work / Blog / Contact)
 export function PageHero({
@@ -12,16 +14,17 @@ export function PageHero({
   headline,
   sub,
 }: {
-  eyebrow: string
-  headline: string
-  sub?: string
+  eyebrow?: string | null
+  headline?: string | null
+  sub?: string | null
 }) {
   return (
     <section
-      className="bg-teal px"
+      className="bg-teal px page-hero"
       style={{ padding: 'clamp(130px,16vh,190px) var(--pad-x) clamp(56px,8vw,90px)' }}
     >
-      <div className="wrap-text">
+      <HeroFlow />
+      <div className="wrap-text page-hero-content">
         <span data-reveal className="eyebrow on-dark" style={{ marginBottom: 24 }}>
           {eyebrow}
         </span>
@@ -30,7 +33,7 @@ export function PageHero({
         </h1>
         {sub && (
           <p data-reveal data-reveal-delay="80" className="lead" style={{ color: 'rgba(242,239,232,.82)', maxWidth: '46ch', margin: '22px 0 0' }}>
-            {sub}
+            <Emphasis text={sub} tone="dark" />
           </p>
         )}
       </div>
@@ -39,7 +42,7 @@ export function PageHero({
 }
 
 // Reusable closing CTA band
-export function CtaBand({
+export async function CtaBand({
   locale,
   headline,
   sub,
@@ -52,6 +55,7 @@ export function CtaBand({
   centered?: boolean
   background?: 'teal' | 'sage'
 }) {
+  const settings = await getSettings(locale)
   const dark = background === 'teal'
   return (
     <section
@@ -75,11 +79,11 @@ export function CtaBand({
         </h2>
         {sub && (
           <p className="lead" style={{ color: dark ? 'rgba(242,239,232,.82)' : 'rgba(20,41,43,.8)', margin: '0 0 36px' }}>
-            {sub}
+            <Emphasis text={sub} tone={dark ? 'dark' : 'light'} />
           </p>
         )}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: centered ? 'center' : 'flex-start' }}>
-          <Link href={href(locale, ROUTES.contact)} className={dark ? 'btn btn-paper' : 'btn btn-solid'}>
+          <Link href={bookingHref(locale, settings?.bookingUrl)} className={dark ? 'btn btn-paper' : 'btn btn-solid'}>
             {t(locale, 'cta_book')}
             <ArrowRight />
           </Link>

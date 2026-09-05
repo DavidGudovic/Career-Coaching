@@ -4,6 +4,7 @@ import {
   Hanken_Grotesk,
   Playfair_Display,
   Inter,
+  Montserrat,
   Lora,
   Source_Sans_3,
   Cormorant,
@@ -25,6 +26,7 @@ export const dynamic = 'force-dynamic'
 const fraunces = Fraunces({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], axes: ['opsz'], variable: '--font-fraunces', display: 'swap' })
 const hanken = Hanken_Grotesk({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
 const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap' })
+const montserrat = Montserrat({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-hanken', display: 'swap' })
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
 const lora = Lora({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap' })
 const sourceSans = Source_Sans_3({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
@@ -33,6 +35,7 @@ const workSans = Work_Sans({ subsets: ['latin', 'latin-ext'], variable: '--font-
 
 const PAIRINGS: Record<string, { serif: { variable: string }; sans: { variable: string } }> = {
   'fraunces-hanken': { serif: fraunces, sans: hanken },
+  'playfair-montserrat': { serif: playfair, sans: montserrat },
   'playfair-inter': { serif: playfair, sans: inter },
   'lora-sourcesans': { serif: lora, sans: sourceSans },
   'cormorant-worksans': { serif: cormorant, sans: workSans },
@@ -63,8 +66,9 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   // Override the brand CSS variables from CMS values. html:root wins over globals.css.
   const themeCss = `html:root{--teal-deep:${v(s?.colorTealDeep, '#1c4e52')};--teal:${v(s?.colorTeal, '#2c636a')};--paper:${v(s?.colorPaper, '#f6f2ea')};--ink:${v(s?.colorInk, '#14292b')};--mint:${v(s?.colorMint, '#9dc3b6')};}`
 
+  // The pre-paint reveal script intentionally adds the `js` class before hydration.
   return (
-    <html lang={htmlLang[locale]} className={`${pair.serif.variable} ${pair.sans.variable}`}>
+    <html suppressHydrationWarning lang={htmlLang[locale]} className={`${pair.serif.variable} ${pair.sans.variable}`}>
       <head>
         {/* Add a `js` hook before paint so reveal animations only run with JS,
             and content is never hidden for no-JS / crawlers. */}
@@ -75,7 +79,6 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       </head>
       <body>
         {children}
-        <div className="grain" aria-hidden />
       </body>
     </html>
   )

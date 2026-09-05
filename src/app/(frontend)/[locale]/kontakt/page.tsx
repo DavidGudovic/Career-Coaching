@@ -1,3 +1,6 @@
+import { isMailConfigured } from '@/lib/mail'
+import { externalUrl } from '@/lib/links'
+import { PageHero } from '@/components/sections'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '@/lib/i18n'
@@ -26,6 +29,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const l = locale
   const [page, settings] = await Promise.all([getPageGlobal('contact-page', l), getSettings(l)])
 
+  const bookingUrl = externalUrl(settings?.bookingUrl)
+  const mailConfigured = isMailConfigured()
   const email = settings?.email || 'jelena.rajkovic.coach@gmail.com'
   const instagramUrl = settings?.instagramUrl || 'https://instagram.com/jelena.rajkovic.coach'
   const instagramHandle = settings?.instagramHandle || 'jelena.rajkovic.coach'
@@ -45,20 +50,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
   return (
     <>
-      <section className="bg-teal px" style={{ padding: 'clamp(130px,16vh,190px) var(--pad-x) clamp(56px,8vw,84px)' }}>
-        <div className="wrap-text">
-          <span data-reveal className="eyebrow on-dark" style={{ marginBottom: 24 }}>{page?.eyebrow}</span>
-          <h1 data-reveal className="display-1" style={{ color: 'var(--offwhite)', maxWidth: '16ch', margin: '0 0 22px' }}>
-            <Emphasis text={page?.headline} tone="dark" />
-          </h1>
-          <p data-reveal data-reveal-delay="80" className="lead" style={{ color: 'rgba(242,239,232,.82)', maxWidth: '46ch', margin: 0 }}>
-            {page?.sub}
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow={page?.eyebrow} headline={page?.headline} sub={page?.sub} />
 
       <section className="bg-paper section-sm">
-        <div className="wrap-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px,1fr))', gap: 'clamp(36px,5vw,56px)', alignItems: 'start' }}>
+        <div className="wrap-narrow" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px),1fr))', gap: 'clamp(36px,5vw,56px)', alignItems: 'start' }}>
           {/* direct channels */}
           <div data-reveal>
             <h2 style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(22px,2.6vw,30px)', margin: '0 0 16px' }}>{page?.directHeading}</h2>
@@ -85,7 +80,10 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
           <div data-reveal data-reveal-delay="90">
             <h2 style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(22px,2.6vw,30px)', margin: '0 0 16px' }}>{page?.formHeading}</h2>
             {page?.formNote && <p style={{ fontSize: 15.5, lineHeight: 1.7, color: 'rgba(20,41,43,.72)', margin: '0 0 22px' }}>{page.formNote}</p>}
-            <ContactForm locale={l} />
+            {bookingUrl && <a href={bookingUrl} className="btn btn-solid" style={{ marginBottom: 24 }}>{t(l, 'cta_book')} ↗</a>}
+            {mailConfigured ? <ContactForm locale={l} /> : (
+              <p>{t(l, 'form_unavailable')} <a href={`mailto:${email}`}>{email}</a></p>
+            )}
           </div>
         </div>
       </section>

@@ -1,3 +1,4 @@
+import { PageHero } from '@/components/sections'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({
     locale: l,
     path: ROUTES.blog,
-    title: l === 'en' ? 'Career notes — Jelena Rajković' : 'Karijerne bjeleške — Jelena Rajković',
+    title: l === 'en' ? 'Career notes — Jelena Rajković' : 'Karijerne bilješke — Jelena Rajković',
     description: plain(page?.sub),
   })
 }
@@ -66,17 +67,7 @@ export default async function BlogIndex({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
 
-      <section className="bg-teal px" style={{ padding: 'clamp(130px,16vh,190px) var(--pad-x) clamp(56px,8vw,84px)' }}>
-        <div className="wrap-narrow">
-          <span data-reveal className="eyebrow on-dark" style={{ marginBottom: 24 }}>{page?.eyebrow}</span>
-          <h1 data-reveal className="display-1" style={{ color: 'var(--offwhite)', maxWidth: '16ch', margin: '0 0 22px' }}>
-            <Emphasis text={page?.headline} tone="dark" />
-          </h1>
-          <p data-reveal data-reveal-delay="80" className="lead" style={{ color: 'rgba(242,239,232,.8)', maxWidth: '48ch', margin: 0 }}>
-            {page?.sub}
-          </p>
-        </div>
-      </section>
+      <PageHero eyebrow={page?.eyebrow} headline={page?.headline} sub={page?.sub} />
 
       <section className="bg-paper px" style={{ padding: 'clamp(40px,6vw,64px) var(--pad-x) clamp(70px,10vw,120px)' }}>
         <div className="wrap">

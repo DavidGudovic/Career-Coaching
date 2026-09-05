@@ -9,7 +9,7 @@ export const ContactPage: GlobalConfig = {
   access: { read: () => true },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'Kontakt' },
-    { name: 'headline', type: 'text', localized: true, defaultValue: 'Počnimo sa _jednim razgovorom_.', admin: { description: emphasisDescription } },
+    { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Počnimo sa _jednim razgovorom_.', admin: { description: emphasisDescription } },
     { name: 'sub', type: 'textarea', localized: true, defaultValue: 'Izaberi način koji ti najviše odgovara — piši mi direktno na email, javi se na Instagram, ili popuni formu. Bez pritiska.' },
     {
       type: 'collapsible',
