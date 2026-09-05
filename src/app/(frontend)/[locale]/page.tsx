@@ -11,7 +11,6 @@ import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
 import HeroFlow from '@/components/animations/HeroFlow'
 import ContourArt from '@/components/animations/ContourArt'
-import ThreadStudy from '@/components/animations/ThreadStudy'
 import PathGlyph from '@/components/PathGlyph'
 import { CtaBand } from '@/components/sections'
 import { ArrowRight } from '@/components/icons'
@@ -143,9 +142,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </li>
             ))}
           </ul>
-        </div>
-        <div className="wrap thread-interlude" data-reveal>
-          <ThreadStudy />
         </div>
       </section>
 
