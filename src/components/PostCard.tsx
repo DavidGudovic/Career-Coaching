@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { MediaImage } from './MediaImage'
+import NoteArtwork from './NoteArtwork'
+import { ArrowRight } from './icons'
 import type { Locale } from '@/lib/i18n'
 import { t } from '@/lib/i18n'
 import { postHref } from '@/lib/routes'
@@ -29,13 +31,14 @@ export default function PostCard({
       style={{ textDecoration: 'none', display: 'block', transition: 'transform .4s cubic-bezier(.2,.7,.2,1)' }}
       className="post-card"
     >
-      <MediaImage
-        media={post.coverImage}
-        ratio="3 / 2"
-        sizes="(max-width: 700px) 100vw, 380px"
-        placeholderLabel="Naslovna — placeholder"
-        style={{ marginBottom: 18 }}
-      />
+      <div className="post-cover">
+        {post.coverImage && typeof post.coverImage === 'object' && post.coverImage.url ? (
+          <MediaImage media={post.coverImage} ratio="3 / 2" sizes="(max-width: 700px) 100vw, 380px" />
+        ) : (
+          <NoteArtwork seed={post.slug || post.title} />
+        )}
+        <span className="post-cover-arrow" aria-hidden="true"><ArrowRight /></span>
+      </div>
       <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 10 }}>
         <span style={{ fontSize: 12, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--teal)', fontWeight: 600 }}>
           {dateStr}

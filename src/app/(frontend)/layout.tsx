@@ -15,6 +15,8 @@ import { htmlLang, isLocale } from '@/lib/i18n'
 import { SITE_URL } from '@/lib/seo'
 import { getSettings } from '@/lib/payload'
 import './globals.css'
+import './artistry.css'
+import './explorations.css'
 
 // Theme (colors + fonts) is read from the CMS per request, so this layout is dynamic.
 export const dynamic = 'force-dynamic'

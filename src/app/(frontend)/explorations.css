@@ -1,0 +1,75 @@
+/* Further explorations of the original editorial direction. */
+.thread-study { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--teal); overflow: hidden; pointer-events: none; opacity: .7; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 18%, #0002 38%, #0002 62%, #000 82%, #000 92%, transparent); }
+.thread-study svg { display: block; width: 100%; height: 100%; pointer-events: none; }
+
+
+/* An open, editorial list: individual starting points, with room to recognise one. */
+.audience-section { overflow: hidden; }
+.audience-heading { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: clamp(28px, 5vw, 64px); margin-bottom: clamp(30px, 4vw, 48px); }
+.audience-heading h2 { max-width: 12ch; margin: 0; font-family: var(--serif); font-size: clamp(38px, 5vw, 62px); font-weight: 340; line-height: 1.06; text-wrap: balance; }
+.audience-intro { margin: 0; padding-bottom: 4px; font-family: var(--serif); font-style: italic; font-size: clamp(23px, 2.6vw, 30px); color: var(--teal); }
+.audience-body { position: relative; }
+.audience-statements { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(28px, 5vw, 64px); list-style: none; padding: 0; margin: 0; }
+.audience-statements li { display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: start; gap: 18px; padding: 25px 0 28px; border-top: 1px solid color-mix(in srgb, var(--teal), transparent 76%); font-size: clamp(17px, 1.5vw, 19px); line-height: 1.55; }
+.audience-statements li > span:last-child { max-width: 35ch; }
+.audience-mark { display: block; position: relative; width: 26px; height: 28px; color: var(--teal); }
+.audience-mark::before { content: ''; position: absolute; top: 14px; left: 0; width: 22px; height: 1px; background: currentColor; transform: scaleX(.55); transform-origin: left; transition: transform .65s ease; }
+.audience-mark::after { content: ''; position: absolute; top: 11px; left: 0; width: 7px; height: 7px; border: 1px solid currentColor; border-radius: 50%; background: var(--paper); transition: transform .65s ease, background .65s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .audience-statements li:hover .audience-mark::before { transform: scaleX(1); }
+  .audience-statements li:hover .audience-mark::after { transform: translateX(20px); background: var(--teal); }
+}
+.audience-reflection { position: relative; display: grid; place-items: center; min-height: 230px; margin-top: clamp(26px, 4vw, 48px); padding: 36px 0 10px; }
+.audience-reflection p, .audience-prose { position: relative; max-width: 43ch; margin: 0 auto; font-family: var(--serif); font-size: clamp(23px, 2.6vw, 31px); font-weight: 340; line-height: 1.4; text-align: center; text-wrap: pretty; }
+.audience-prose + .audience-prose { margin-top: 1em; }
+.audience-section-prose .audience-heading { display: block; }
+.audience-section-prose .audience-heading h2 { max-width: none; }
+.audience-section-prose .audience-body { padding: 20px 0; }
+.audience-section-prose .audience-prose { max-width: 39ch; }
+@media (max-width: 700px) {
+  .audience-heading { grid-template-columns: 1fr; gap: 24px; margin-bottom: 26px; }
+  .audience-heading h2 { max-width: 12ch; }
+  .audience-statements { grid-template-columns: 1fr; }
+  .audience-statements li { padding: 20px 0; gap: 14px; }
+  .audience-statements li > span:last-child { max-width: none; }
+  .audience-reflection { min-height: 0; padding: 38px 0 24px; margin-top: 14px; }
+  .audience-reflection p, .audience-prose { text-align: left; line-height: 1.45; }
+  .audience-section .thread-study { opacity: .35; mask-image: linear-gradient(180deg, transparent, #0002 20%, #0002 65%, #000); }
+}
+
+/* Each drawing has its own small response, like marks in a sketchbook. */
+.path-glyph-0 circle:nth-of-type(2) { transform-origin: 60px 50px; transition: transform .8s ease; }
+.path-glyph-1 > path { transform-origin: 60px 50px; transition: transform .9s cubic-bezier(.2,.7,.2,1); }
+.path-glyph-2 path[stroke-dasharray] { transition: stroke-dashoffset 1s ease; }
+.path-glyph-3 ellipse { transition: translate .8s ease; }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-0 circle:nth-of-type(2) { transform: scale(1.25); }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-1 > path { transform: rotate(25deg); }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-2 path[stroke-dasharray] { stroke-dashoffset: -24; }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse:first-of-type { translate: 4px 0; }
+.mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse:last-of-type { translate: -4px 0; }
+
+/* Give the personal statement room to read as a statement. */
+.about-pullquote { margin-top: clamp(60px, 8vw, 100px); margin-bottom: 0; padding-top: clamp(44px, 6vw, 72px); text-align: center; border-top: 1px solid color-mix(in srgb, var(--teal), transparent 70%); }
+.about-quote-symbol { display: block; font-family: var(--serif); font-size: 96px; line-height: .8; color: var(--teal); opacity: .45; }
+.about-pullquote p { max-width: 28ch; margin: 0 auto; font-family: var(--serif); font-size: clamp(29px, 4vw, 48px); font-weight: 340; line-height: 1.25; text-wrap: balance; }
+.about-pullquote svg { display: block; width: min(60%, 340px); height: 30px; margin: 24px auto 0; stroke: var(--teal); stroke-width: 1; }
+.js .about-pullquote path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.4s ease .4s; }
+.js .about-pullquote.is-visible path { stroke-dashoffset: 0; }
+
+/* Keep the footer quiet and easy to navigate. */
+.footer-cols { align-items: start; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) minmax(0, 1.6fr) auto; }
+@media (max-width: 1000px) { .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (max-width: 640px) {
+  .footer-cols { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .audience-mark::before, .audience-mark::after { transition: none; }
+  .audience-statements li:hover .audience-mark::before { transform: scaleX(.55); }
+  .audience-statements li:hover .audience-mark::after { transform: none; background: var(--paper); }
+  .path-glyph * { transition: none !important; }
+  .mentoring-card:is(:hover, :focus-visible) .path-glyph-0 circle:nth-of-type(2),
+  .mentoring-card:is(:hover, :focus-visible) .path-glyph-1 > path { transform: none; }
+  .mentoring-card:is(:hover, :focus-visible) .path-glyph-3 ellipse { translate: none; }
+  .js .about-pullquote path { stroke-dashoffset: 0; transition: none; }
+}

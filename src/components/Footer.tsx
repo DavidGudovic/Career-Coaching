@@ -49,9 +49,7 @@ export default function Footer({
           }}
         >
           <div style={{ maxWidth: '30ch' }}>
-            <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 24, display: 'block', marginBottom: 14 }}>
-              {brandName}
-            </span>
+            <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 24, display: 'block', marginBottom: 14 }}>{brandName}</span>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: 'rgba(242,239,232,.72)', margin: 0 }}>{bio}</p>
           </div>
 

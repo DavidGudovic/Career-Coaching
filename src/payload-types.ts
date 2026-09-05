@@ -730,7 +730,7 @@ export interface WorkPage {
   sub?: string | null;
   forWhomHeading?: string | null;
   /**
-   * Enter = novi red; dva puta Enter = novi pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
+   * Stavke piši u zasebnim redovima, bez praznog reda između njih. Dva puta Enter odvaja uvodni ili završni pasus od liste. Možeš upisati i samo običan pasus. _kurziv_ = naglasak, **podebljano** = podebljan tekst.
    */
   forWhomText?: string | null;
   /**

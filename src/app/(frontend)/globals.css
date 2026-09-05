@@ -660,7 +660,6 @@ h3 {
 
 .page-hero { overflow: hidden; }
 .page-hero-content { position: relative; z-index: 1; }
-.audience-layout { display: grid; grid-template-columns: 1fr 2fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
 .formatted-text { font-size: clamp(17px, 1.5vw, 19px); line-height: 1.8; }
 .formatted-text p { margin: 0 0 1.2em; }
 .formatted-text p:last-child { margin-bottom: 0; }
@@ -683,7 +682,6 @@ h3 {
   .journey-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
-  .audience-layout { grid-template-columns: 1fr; }
   .journey-grid { grid-template-columns: 1fr; }
   .webinar-invitation { padding: 24px; }
 }
