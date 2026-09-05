@@ -3,7 +3,7 @@ import { Emphasis } from '@/lib/emphasis'
 import type { Locale } from '@/lib/i18n'
 import { t } from '@/lib/i18n'
 import { ArrowRight } from './icons'
-import Parallax from './Parallax'
+import ContourArt from './animations/ContourArt'
 import HeroFlow from './animations/HeroFlow'
 import { getSettings } from '@/lib/payload'
 import { bookingHref } from '@/lib/links'
@@ -24,6 +24,7 @@ export function PageHero({
       style={{ padding: 'clamp(130px,16vh,190px) var(--pad-x) clamp(56px,8vw,90px)' }}
     >
       <HeroFlow />
+      <ContourArt className="page-contours" />
       <div className="wrap-text page-hero-content">
         <span data-reveal className="eyebrow on-dark" style={{ marginBottom: 24 }}>
           {eyebrow}
@@ -59,21 +60,16 @@ export async function CtaBand({
   const dark = background === 'teal'
   return (
     <section
-      className={dark ? 'bg-teal px' : 'bg-sage px'}
+      className={`conversation-band ${dark ? 'bg-teal px' : 'bg-sage px'}`}
       style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(70px,11vw,140px) var(--pad-x)', textAlign: centered ? 'center' : 'left' }}
     >
-      {dark && (
-        <Parallax
-          speed={0.08}
-          style={{
-            position: 'absolute',
-            inset: '-100%',
-            background:
-              'linear-gradient(180deg, rgba(44,99,106,.55) 0%, rgba(44,99,106,.2) 38%, rgba(44,99,106,0) 72%)',
-          }}
-        />
-      )}
+      <ContourArt className="conversation-contours conversation-contours-left" />
+      <ContourArt className="conversation-contours conversation-contours-right" />
       <div data-reveal style={{ position: 'relative', maxWidth: 760, margin: centered ? '0 auto' : 0 }}>
+        <svg className="conversation-mark" viewBox="0 0 100 70" fill="none" aria-hidden="true" focusable="false" style={{ marginLeft: centered ? 'auto' : 0, marginRight: centered ? 'auto' : 0 }}>
+          <path d="M50 14C27-2 2 17 14 39C22 52 40 47 50 35C60 23 78 18 86 31C98 53 73 72 50 56" />
+          <circle cx="50" cy="35" r="3" fill="currentColor" stroke="none" />
+        </svg>
         <h2 className="display-3" style={{ color: dark ? 'var(--offwhite)' : 'var(--ink)', margin: '0 0 22px' }}>
           <Emphasis text={headline} tone={dark ? 'dark' : 'light'} />
         </h2>
