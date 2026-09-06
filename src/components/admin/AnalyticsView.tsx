@@ -17,7 +17,9 @@ export async function AnalyticsView(props: AdminViewServerProps) {
     catch { failed = true }
   }
   return <DefaultTemplate {...props} req={req} visibleEntities={visibleEntities}>
-    <Gutter className="analytics-view"><h1>Analitika sajta</h1><p className="analytics-intro">Šta se čita, odakle dolaze posjetioci i koliko se zadržavaju.</p>
+    <Gutter className="analytics-view">
+      <div className="analytics-toolbar"><nav aria-label="Administracija"><a href="/admin">← Nazad na administraciju</a></nav></div>
+      <h1>Analitika sajta</h1><p className="analytics-intro">Šta se čita, odakle dolaze posjetioci i koliko se zadržavaju.</p>
       {process.env.ANALYTICS_ENABLED !== 'true' && <div className="analytics-notice">Prikupljanje novih posjeta je trenutno isključeno.</div>}
       {report ? <AnalyticsDashboard report={report} /> : <div className="analytics-notice" role="status"><h2>{failed ? 'Analitika trenutno nije dostupna' : 'Analitika još nije povezana'}</h2><p>{failed ? 'Podaci nijesu izgubljeni. Pokušaj ponovo za nekoliko minuta.' : 'Kada se poveže servis za analitiku, ovdje će se prikazivati stvarne posjete. Istorijski podaci se ne popunjavaju unazad.'}</p></div>}
     </Gutter>
