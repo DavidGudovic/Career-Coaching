@@ -98,6 +98,13 @@
 .conversation-contours { position: absolute; width: clamp(480px, 58vw, 850px); top: 50%; opacity: .25; }
 .conversation-contours-left { left: -30%; transform: translateY(-50%) rotate(-30deg); }
 .conversation-contours-right { right: -30%; transform: translateY(-50%) rotate(150deg); }
+/* Keep a sliver of ink in view after the drawings reach their maximum width. */
+@media (min-width: 1024px) {
+  .story-contours { right: max(-18vw, -260px); }
+  .page-contours { right: max(-53vw, -800px); }
+  .conversation-contours-left { left: max(-26vw, -360px); }
+  .conversation-contours-right { right: max(-26vw, -360px); }
+}
 .bg-teal .conversation-contours { color: var(--mint-light); }
 .conversation-mark { display: block; width: 86px; height: 60px; margin-bottom: 30px; color: var(--teal); stroke: currentColor; stroke-width: 1; }
 .bg-teal .conversation-mark { color: var(--mint-light); }
