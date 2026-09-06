@@ -5,7 +5,7 @@ import { ChatIcon } from './icons'
 // Fixed bottom-right; visibility is controlled by `.mobile-cta` in globals.css.
 export default function MobileCta({ href, label }: { href: string; label: string }) {
   return (
-    <Link href={href} className="mobile-cta" aria-label={label}>
+    <Link href={href} data-analytics-event="booking-click" className="mobile-cta" aria-label={label}>
       <ChatIcon />
       <span>{label}</span>
     </Link>

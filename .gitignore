@@ -26,6 +26,7 @@ yarn-debug.log*
 yarn-error.log*
 .vercel
 *.tsbuildinfo
+__pycache__/
 
 #dev stuff
 .local/

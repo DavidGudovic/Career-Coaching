@@ -30,6 +30,10 @@ export default buildConfig({
     importMap: { baseDir: path.resolve(dirname) },
     theme: 'dark',
     components: {
+      afterNavLinks: ['/components/admin/AnalyticsNav#AnalyticsNav'],
+      views: {
+        analytics: { Component: '/components/admin/AnalyticsView#AnalyticsView', path: '/analytics', exact: true, meta: { title: 'Analitika', robots: { index: false, follow: false } } },
+      },
       graphics: {
         Logo: '/components/admin/Logo#Logo',
         Icon: '/components/admin/Icon#Icon',

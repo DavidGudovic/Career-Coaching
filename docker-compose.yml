@@ -43,11 +43,53 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       SMTP_FROM: ${SMTP_FROM:-}
+      ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-false}
+      ANALYTICS_TRUST_PROXY: ${ANALYTICS_TRUST_PROXY:-false}
+      UMAMI_URL: ${UMAMI_URL:-http://umami:3000}
+      UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID:-}
+      UMAMI_USERNAME: ${UMAMI_USERNAME:-}
+      UMAMI_PASSWORD: ${UMAMI_PASSWORD:-}
     ports:
       # Bind to localhost only; nginx terminates TLS and proxies in.
       - '127.0.0.1:3000:3000'
     volumes:
       - media-data:/app/media
+
+  # Optional free analytics. Enable with COMPOSE_PROFILES=analytics in .env.
+  # Its UI stays private on localhost; the CMS reads the API over the Docker network.
+  umami:
+    profiles: ['analytics']
+    image: ghcr.io/umami-software/umami:3.3.1
+    restart: unless-stopped
+    init: true
+    mem_limit: 768m
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://umami:${UMAMI_DB_PASSWORD:-}@umami-db:5432/umami
+      APP_SECRET: ${UMAMI_APP_SECRET:-}
+      TWO_FACTOR_ENCRYPTION_KEY: ${UMAMI_TWO_FACTOR_KEY:-}
+      DISABLE_TELEMETRY: '1'
+    ports:
+      - '127.0.0.1:3002:3000'
+
+  umami-db:
+    profiles: ['analytics']
+    image: postgres:16-alpine
+    restart: unless-stopped
+    mem_limit: 256m
+    environment:
+      POSTGRES_USER: umami
+      POSTGRES_DB: umami
+      POSTGRES_PASSWORD: ${UMAMI_DB_PASSWORD:-}
+    volumes:
+      - umami-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U umami -d umami']
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # One-off seeding job. Uses the builder image (which has tsx + the seed script
   # + the assets/ photos) and the same DB/volume as the app.
@@ -75,3 +117,4 @@ services:
 volumes:
   db-data:
   media-data:
+  umami-data:

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPageGlobal, getPosts, getSettings } from '@/lib/payload'
-import { buildMetadata, abs, SITE_URL } from '@/lib/seo'
+import { buildMetadata, abs, SITE_URL, jsonLdString } from '@/lib/seo'
 import { Emphasis, plain } from '@/lib/emphasis'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
@@ -58,7 +58,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
 
       {/* HERO */}
       <section className="bg-teal px home-hero" style={{ position: 'relative', overflow: 'hidden', padding: 'clamp(130px,16vh,200px) var(--pad-x) clamp(70px,10vw,120px)' }}>

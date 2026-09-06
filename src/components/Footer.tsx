@@ -3,6 +3,7 @@ import LangToggle from './LangToggle'
 import { MailIcon, InstagramIcon } from './icons'
 import type { Locale } from '@/lib/i18n'
 import { t } from '@/lib/i18n'
+import { href } from '@/lib/routes'
 import type { NavItem } from './Header'
 
 export default function Footer({
@@ -84,6 +85,7 @@ export default function Footer({
           <div>
             <span style={colTitle}>{t(locale, 'foot_lang')}</span>
             <LangToggle locale={locale} ariaLabel={t(locale, 'lang_switch')} variant="dark" />
+            <Link href={href(locale, '/statistika-posjeta')} style={{ ...linkStyle, display: 'block', marginTop: 20 }}>{locale === 'en' ? 'Visitor statistics & privacy' : 'Statistika posjeta i privatnost'}</Link>
           </div>
         </div>
 

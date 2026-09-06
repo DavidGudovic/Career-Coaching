@@ -6,8 +6,8 @@ import { notFound } from 'next/navigation'
 import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
-import { getPostBySlug, getRelatedPosts, getSettings } from '@/lib/payload'
-import { buildMetadata, abs, SITE_URL } from '@/lib/seo'
+import { getPostBySlug, getRelatedPosts, getSettings, getPostLocales } from '@/lib/payload'
+import { buildMetadata, abs, SITE_URL, jsonLdString } from '@/lib/seo'
 import { formatDate } from '@/lib/format'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
@@ -45,10 +45,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const post = await getPostBySlug(slug, l)
   if (!post) return {}
   const meta = (post as { meta?: { title?: string; description?: string; image?: Media | number } }).meta
-  const ogImage =
-    meta?.image && typeof meta.image === 'object' && meta.image.sizes?.og?.url
-      ? abs(meta.image.sizes.og.url)
-      : undefined
+  const image = meta?.image && typeof meta.image === 'object' ? meta.image
+    : typeof post.coverImage === 'object' ? post.coverImage : null
+  const ogImage = image?.sizes?.og?.url || image?.url || undefined
   return buildMetadata({
     locale: l,
     path: `${ROUTES.blog}/${slug}`,
@@ -56,6 +55,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     description: meta?.description || post.excerpt || undefined,
     image: ogImage,
     type: 'article',
+    availableLocales: await getPostLocales(slug),
+    publishedTime: post.publishedAt,
+    modifiedTime: post.updatedAt,
   })
 }
 
@@ -80,6 +82,8 @@ export default async function ArticlePage({ params }: Params) {
     '@type': 'BlogPosting',
     headline: post.title,
     datePublished: post.publishedAt || undefined,
+    dateModified: post.updatedAt,
+    description: post.excerpt || undefined,
     inLanguage: l === 'en' ? 'en' : 'sr-ME',
     author: { '@type': 'Person', name: 'Jelena Rajković' },
     image: cover?.sizes?.og?.url ? abs(cover.sizes.og.url) : `${SITE_URL}/og-default.jpg`,
@@ -89,7 +93,7 @@ export default async function ArticlePage({ params }: Params) {
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }} />
 
       <section className="bg-teal px page-hero" style={{ padding: 'clamp(120px,15vh,180px) var(--pad-x) clamp(50px,7vw,80px)' }}>
         <HeroFlow />

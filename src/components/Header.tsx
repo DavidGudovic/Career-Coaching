@@ -109,7 +109,7 @@ export default function Header({
 
         <div className="site-header-controls" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <LangToggle locale={locale} ariaLabel={langAria} variant={scrolled ? 'light' : 'dark'} />
-          <Link href={ctaHref} className="btn btn-solid head-cta" style={{ padding: '11px 20px', fontSize: 14 }}>
+          <Link href={ctaHref} data-analytics-event="booking-click" className="btn btn-solid head-cta" style={{ padding: '11px 20px', fontSize: 14 }}>
             {ctaLabel}
           </Link>
           <button
@@ -189,7 +189,7 @@ export default function Header({
           ))}
         </nav>
         <Link
-          href={ctaHref}
+          href={ctaHref} data-analytics-event="booking-click"
           onClick={() => setOpen(false)}
           className="btn btn-paper"
           style={{ marginTop: 'auto', justifyContent: 'center' }}

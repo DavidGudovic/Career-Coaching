@@ -79,7 +79,7 @@ export async function CtaBand({
           </p>
         )}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: centered ? 'center' : 'flex-start' }}>
-          <Link href={bookingHref(locale, settings?.bookingUrl)} className={dark ? 'btn btn-paper' : 'btn btn-solid'}>
+          <Link href={bookingHref(locale, settings?.bookingUrl)} data-analytics-event="booking-click" className={dark ? 'btn btn-paper' : 'btn btn-solid'}>
             {t(locale, 'cta_book')}
             <ArrowRight />
           </Link>

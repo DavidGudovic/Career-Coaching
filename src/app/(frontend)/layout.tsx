@@ -14,6 +14,7 @@ import { headers } from 'next/headers'
 import { htmlLang, isLocale } from '@/lib/i18n'
 import { SITE_URL } from '@/lib/seo'
 import { getSettings } from '@/lib/payload'
+import AnalyticsTracker from '@/components/AnalyticsTracker'
 import './globals.css'
 import './artistry.css'
 import './explorations.css'
@@ -25,15 +26,15 @@ export const dynamic = 'force-dynamic'
 // candidate is declared statically; each serif maps onto --font-fraunces and each sans onto
 // --font-hanken (the existing slots in globals.css), so only the chosen pair is applied and
 // downstream CSS (--serif / --sans) needs no changes. All include latin-ext for č/ć/š/ž/đ.
-const fraunces = Fraunces({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], axes: ['opsz'], variable: '--font-fraunces', display: 'swap' })
-const hanken = Hanken_Grotesk({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
-const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap' })
-const montserrat = Montserrat({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-hanken', display: 'swap' })
-const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
-const lora = Lora({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap' })
-const sourceSans = Source_Sans_3({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
-const cormorant = Cormorant({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap' })
-const workSans = Work_Sans({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap' })
+const fraunces = Fraunces({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], axes: ['opsz'], variable: '--font-fraunces', display: 'swap', preload: false })
+const hanken = Hanken_Grotesk({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap', preload: false })
+const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap', preload: false })
+const montserrat = Montserrat({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-hanken', display: 'swap', preload: false })
+const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap', preload: false })
+const lora = Lora({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap', preload: false })
+const sourceSans = Source_Sans_3({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap', preload: false })
+const cormorant = Cormorant({ subsets: ['latin', 'latin-ext'], style: ['normal', 'italic'], variable: '--font-fraunces', display: 'swap', preload: false })
+const workSans = Work_Sans({ subsets: ['latin', 'latin-ext'], variable: '--font-hanken', display: 'swap', preload: false })
 
 const PAIRINGS: Record<string, { serif: { variable: string }; sans: { variable: string } }> = {
   'fraunces-hanken': { serif: fraunces, sans: hanken },
@@ -81,6 +82,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
       </head>
       <body>
         {children}
+        {process.env.ANALYTICS_ENABLED === 'true' && process.env.UMAMI_WEBSITE_ID && <AnalyticsTracker />}
       </body>
     </html>
   )

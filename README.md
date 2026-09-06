@@ -56,6 +56,9 @@ Edit both via the locale switcher at the top of the admin.
 
 ## Client editing and mail setup
 
+See [the SEO audit and analytics guide](docs/seo-analytics.md) for the technical SEO
+fixes, the private `/admin/analytics` dashboard, and optional free self-hosted Umami setup.
+
 See [the editing guide](docs/client-feedback.md) for resources, webinar invitations,
 booking links, text formatting, photos, and the newsletter switch.
 

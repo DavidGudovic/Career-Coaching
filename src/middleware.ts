@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // English (en) is prefixed: /en/o-meni
 // The [locale] route segment is fed via internal rewrite so URLs stay clean.
 
-const STRIP = ['/admin', '/api', '/_next', '/media', '/favicon', '/robots', '/sitemap']
+const STRIP = ['/admin', '/api', '/_next', '/media', '/favicon', '/robots', '/sitemap', '/telemetry']
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -26,7 +26,7 @@ export function middleware(req: NextRequest) {
   if (first === 'me') {
     const url = req.nextUrl.clone()
     url.pathname = pathname.replace(/^\/me/, '') || '/'
-    return NextResponse.redirect(url)
+    return NextResponse.redirect(url, 308)
   }
 
   // Montenegrin: rewrite clean root path to the /me segment internally
