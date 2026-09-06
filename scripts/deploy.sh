@@ -15,16 +15,10 @@ echo "==> Pulling latest image from registry"
 # build: section with a warning). Pull the image ref directly so a real registry
 # failure aborts the deploy instead of silently running a stale image.
 #
-# NOTE: `docker compose config --images app` does NOT honor the service-name filter
-# on Compose v5 — it lists every service image, so `head -1` used to grab
-# postgres:16-alpine and we'd pull the DB instead of the app, leaving the running
-# app image stale on a "green" deploy. Match the GHCR ref explicitly instead.
-APP_IMAGE="$(docker compose config --images 2>/dev/null | grep '^ghcr.io/' | head -1)"
-if [ -n "$APP_IMAGE" ]; then
-  docker pull "$APP_IMAGE"
-else
-  docker compose pull app
-fi
+# Select the app service explicitly: optional analytics also has a GHCR image,
+# and Compose's --images output is not reliably filtered by service name.
+APP_IMAGE="$(docker compose config --format json | python3 -c 'import json, sys; print(json.load(sys.stdin)["services"]["app"]["image"])')"
+docker pull "${APP_IMAGE:?app image missing from compose configuration}"
 
 echo "==> Recreating containers (no build)"
 # --no-build guarantees we use the pulled image even though compose has a build: section.
