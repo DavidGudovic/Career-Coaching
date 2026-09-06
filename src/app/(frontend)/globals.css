@@ -69,6 +69,10 @@ h3 {
 }
 
 /* ---------- layout ---------- */
+.site-shell { min-height: 100svh; display: flex; flex-direction: column; }
+.site-shell > main { flex: 1; }
+.site-shell > main:has(> .statistics-page) { display: flex; flex-direction: column; }
+.statistics-page { flex: 1; }
 .wrap {
   max-width: 1200px;
   margin: 0 auto;

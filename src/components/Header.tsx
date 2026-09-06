@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import LangToggle from './LangToggle'
 import { htmlLang, type Locale } from '@/lib/i18n'
 
@@ -31,6 +32,8 @@ export default function Header({
 }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  const darkInk = scrolled || pathname === '/statistika-posjeta' || pathname === '/en/statistika-posjeta' || pathname === '/me/statistika-posjeta'
 
   // The root layout persists during client navigation between languages.
   useEffect(() => {
@@ -80,7 +83,7 @@ export default function Header({
           href={nav[0]?.href || '/'}
           style={{ display: 'flex', flexDirection: 'column', textDecoration: 'none', lineHeight: 1 }}
         >
-          <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 21, whiteSpace: 'nowrap', color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', transition: 'color .4s ease' }}>
+          <span style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 21, whiteSpace: 'nowrap', color: darkInk ? 'var(--ink)' : 'rgba(255,255,255,.85)', transition: 'color .4s ease' }}>
             {brandName}
           </span>
           <span
@@ -89,7 +92,7 @@ export default function Header({
               whiteSpace: 'nowrap',
               letterSpacing: '.22em',
               textTransform: 'uppercase',
-              color: scrolled ? 'var(--teal)' : 'rgba(255,255,255,.65)',
+              color: darkInk ? 'var(--teal)' : 'rgba(255,255,255,.65)',
               marginTop: 5,
               fontWeight: 600,
               transition: 'color .4s ease',
@@ -101,14 +104,14 @@ export default function Header({
 
         <nav className="desk-nav" style={{ alignItems: 'center', gap: 18 }}>
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="link-underline" style={{ color: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', fontSize: 13.5, whiteSpace: 'nowrap', transition: 'color .4s ease' }}>
+            <Link key={item.href} href={item.href} className="link-underline" style={{ color: darkInk ? 'var(--ink)' : 'rgba(255,255,255,.85)', fontSize: 13.5, whiteSpace: 'nowrap', transition: 'color .4s ease' }}>
               {item.label}
             </Link>
           ))}
         </nav>
 
         <div className="site-header-controls" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <LangToggle locale={locale} ariaLabel={langAria} variant={scrolled ? 'light' : 'dark'} />
+          <LangToggle locale={locale} ariaLabel={langAria} variant={darkInk ? 'light' : 'dark'} />
           <Link href={ctaHref} data-analytics-event="booking-click" className="btn btn-solid head-cta" style={{ padding: '11px 20px', fontSize: 14 }}>
             {ctaLabel}
           </Link>
@@ -127,8 +130,8 @@ export default function Header({
               padding: '8px 4px',
             }}
           >
-            <span style={{ width: 24, height: 2, background: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', display: 'block', borderRadius: 2, transition: 'background .4s ease' }} />
-            <span style={{ width: 24, height: 2, background: scrolled ? 'var(--ink)' : 'rgba(255,255,255,.85)', display: 'block', borderRadius: 2, transition: 'background .4s ease' }} />
+            <span style={{ width: 24, height: 2, background: darkInk ? 'var(--ink)' : 'rgba(255,255,255,.85)', display: 'block', borderRadius: 2, transition: 'background .4s ease' }} />
+            <span style={{ width: 24, height: 2, background: darkInk ? 'var(--ink)' : 'rgba(255,255,255,.85)', display: 'block', borderRadius: 2, transition: 'background .4s ease' }} />
           </button>
         </div>
         </div>

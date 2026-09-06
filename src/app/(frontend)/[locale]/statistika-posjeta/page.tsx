@@ -13,7 +13,7 @@ export default async function StatisticsPrivacy({ params }: { params: Promise<{ 
   const { locale } = await params
   if (!isLocale(locale)) notFound()
   const english = locale === 'en'
-  return <section className="bg-paper section px" style={{ paddingTop: 150 }}><div className="wrap-read">
+  return <section className="statistics-page bg-paper section px" style={{ paddingTop: 150 }}><div className="wrap-read">
     <h1 className="display-2">{english ? 'Visitor statistics' : 'Statistika posjeta'}</h1>
     {english ? <>
       <p>Anonymous statistics help us understand which pages are useful, where visits come from and whether the website works well on phones and computers. We use Umami on our own server.</p>

@@ -35,7 +35,7 @@ export default async function LocaleLayout({
   const webinarUrl = externalUrl(settings?.webinarUrl)
 
   return (
-    <>
+    <div className="site-shell">
       <a href="#main" className="skip-link">
         {t(locale, 'skip')}
       </a>
@@ -79,6 +79,6 @@ export default async function LocaleLayout({
       <Suspense fallback={null}>
         <RevealManager />
       </Suspense>
-    </>
+    </div>
   )
 }
