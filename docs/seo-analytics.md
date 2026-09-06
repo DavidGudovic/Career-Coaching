@@ -63,7 +63,9 @@ Sources: [Umami features](https://docs.umami.is/docs),
 
 Open **Analitika** in the existing admin navigation, at `/admin/analytics`.
 Existing CMS authentication protects it; anonymous requests redirect to login.
-The server reads Umami with a dedicated view-only account. Credentials and
+The server reads Umami with a dedicated view-only account in an admin-owned
+private team. Team-level viewer permissions are necessary because personal website
+ownership bypasses Umami’s global view-only role; a write-denial check verifies this. Credentials and
 Umami authentication tokens are never sent to the browser, and no public share
 dashboard is enabled.
 
@@ -116,13 +118,12 @@ Normal code releases still use the existing GitHub Actions deployment. No extra
 CMS migration is required. Analytics is off unless `ANALYTICS_ENABLED=true` and a
 website ID are configured. The dashboard can be released in that disabled state.
 
-The first setup requires approval to initialize the server-side accounts and save
-their credentials. The implementation is reviewable in `scripts/setup-analytics.py`.
-At the end of this work, the analytics image/database were provisioned but stopped;
-account initialization was blocked by automatic approval review. Tracking was never
-enabled on the live site.
+The owner explicitly approved account initialization and activation on 6 September
+2026. **Collection is now enabled**, with the real reporting API and live tracker
+verified. Credentials are stored privately on the server, and the default Umami
+password has been replaced. The setup is reproducible in `scripts/setup-analytics.py`.
 
-After that setup is approved, as the existing deployment owner:
+For a fresh installation, as the existing deployment owner:
 
 1. Ensure `.env` contains independent random `UMAMI_DB_PASSWORD`, `UMAMI_APP_SECRET`
    and a 64-character hex `UMAMI_TWO_FACTOR_KEY`. These were prepared on this server;
@@ -130,11 +131,12 @@ After that setup is approved, as the existing deployment owner:
 2. `docker compose --profile analytics up -d --no-build umami umami-db`
 3. Wait for `curl -fsS http://127.0.0.1:3002/api/heartbeat` to return healthy.
 4. `python3 scripts/setup-analytics.py`. It replaces the default admin password,
-   creates the website and `cms-analytics` view-only account, and writes runtime
-   configuration. It keeps generated credentials in the ignored, mode-600 file
+   creates the private team, website and `cms-analytics` viewer account, verifies
+   write denial, and writes runtime configuration. It keeps generated credentials in the ignored, mode-600 file
    `.local/analytics/setup.json`. Do not commit or share that file.
 5. Verify the actual API with a separate temporary test website before enabling
-   real visitors. Local UI tests so far used synthetic API fixtures, not live traffic.
+   real visitors. The production integration passed this check; temporary test
+   websites and their events were deleted afterward.
 6. Set `ANALYTICS_ENABLED=true` in `.env`, then
    `docker compose up -d --no-build app`. No rebuild is needed for this runtime flag.
 7. Verify a real anonymous visit appears in `/admin/analytics`, and confirm that a
@@ -176,5 +178,15 @@ The report's 90-day selector is a viewing range, not a retention limit.
   already been materialized. The three missing production translations were therefore
   verified separately against the live read-only API with `fallback-locale=none`.
 
-The full real-Umami integration and live collection verification remain pending
-the account-initialization approval above.
+Real Umami verification passed all eight report endpoints, session grouping,
+pageviews, a 60-second visit duration, the daily series, expanded page metrics,
+device/referral/language data, reading-event counts, and a page filter. PostgreSQL
+expanded pageview counts arrive as strings and are normalized by the adapter.
+The reporting account can read its website but cannot modify it.
+
+A live anonymous browser visit to `/o-meni` and its 30-second reading milestone
+were acknowledged by the collector and verified in the private report. This one
+verification visit remains in the live totals. Opt-out and DNT prevented browser
+requests; DNT, GPC and the CMS-cookie exclusion also returned 204 at the live
+collector. Admin layout/authentication tests used the isolated local CMS preview;
+no production CMS account was created or changed for testing.

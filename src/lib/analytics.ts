@@ -42,7 +42,7 @@ export async function getAnalyticsReport(days: unknown, requestedPath: unknown):
   const [stats, series, pages, devices, countries, referrers, languages, events] = await Promise.all([
     get<AnalyticsReport['stats']>('stats'),
     get<AnalyticsReport['series']>('pageviews', { unit: 'day', timezone: 'Europe/Podgorica' }),
-    get<PageMetric[]>('metrics/expanded', { type: 'path', limit: '20' }),
+    get<Array<Omit<PageMetric, 'pageviews'> & { pageviews: number | string }>>('metrics/expanded', { type: 'path', limit: '20' }),
     get<Metric[]>('metrics', { type: 'device', limit: '10' }),
     get<Metric[]>('metrics', { type: 'country', limit: '15' }),
     get<Metric[]>('metrics', { type: 'referrer', limit: '15' }),
@@ -50,5 +50,8 @@ export async function getAnalyticsReport(days: unknown, requestedPath: unknown):
     get<Metric[]>('metrics', { type: 'event', limit: '20' }),
   ])
   if (!Number.isFinite(stats.pageviews) || !Array.isArray(series.pageviews) || ![pages, devices, countries, referrers, languages, events].every(Array.isArray)) throw new Error('Unsupported analytics response')
-  return { ...range, path, stats, series, pages, devices, countries, referrers, languages, events }
+  // PostgreSQL-backed Umami returns expanded pageview counts as numeric strings.
+  const normalizedPages = pages.map((page) => ({ ...page, pageviews: Number(page.pageviews) }))
+  if (normalizedPages.some((page) => !Number.isFinite(page.pageviews))) throw new Error('Unsupported analytics page count')
+  return { ...range, path, stats, series, pages: normalizedPages, devices, countries, referrers, languages, events }
 }

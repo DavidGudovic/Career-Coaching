@@ -60,21 +60,54 @@ except urllib.error.HTTPError as error:
     if error.code not in (400, 401):
         raise
     api('/users', {'id': state['reportUserId'], 'username': 'cms-analytics',
-                   'password': state['reportPassword'], 'role': 'user'}, admin)
+                   'password': state['reportPassword'], 'role': 'view-only'}, admin)
     reporter = login('cms-analytics', state['reportPassword'])
 
-try:
-    api('/websites/' + state['websiteId'], token=reporter)
-except urllib.error.HTTPError as error:
-    if error.code not in (403, 404):
-        raise
-    api('/websites', {'id': state['websiteId'], 'name': 'Jelena Rajković',
-                      'domain': 'jelena.rajkovic.coach'}, reporter)
+# Personal website ownership bypasses Umami's global view-only role. Keep the
+# website in an admin-owned team and give the reporter only team-view-only access.
+if 'teamId' not in state:
+    # Reconcile an interrupted creation before retrying (the API chooses the ID).
+    matches = [team for team in api('/teams?pageSize=100', token=admin)['data']
+               if team['name'] == 'Private site analytics']
+    if len(matches) > 1:
+        raise RuntimeError('Multiple private analytics teams; refusing ambiguous setup')
+    team = matches[0] if matches else api('/teams', {'name': 'Private site analytics'}, admin)[0]
+    state['teamId'] = team['id']
+    temporary = state_path.with_suffix('.tmp')
+    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, 'w') as f:
+        json.dump(state, f)
+    temporary.replace(state_path)
+team_path = '/teams/' + state['teamId']
+member_path = team_path + '/users/' + state['reportUserId']
+member = api(member_path, token=admin)
+if member:
+    api(member_path, {'role': 'team-view-only'}, admin)
+else:
+    api(team_path + '/users', {'userId': state['reportUserId'],
+                             'role': 'team-view-only'}, admin)
+
+website_path = '/websites/' + state['websiteId']
+website = api(website_path, token=admin)
+if not website:
+    website = api('/websites', {'id': state['websiteId'], 'name': 'Jelena Rajković',
+                               'domain': 'jelena.rajkovic.coach',
+                               'teamId': state['teamId']}, admin)
+if website.get('teamId') != state['teamId'] or website.get('userId'):
+    api(website_path + '/transfer', {'teamId': state['teamId']}, admin)
 
 # The CMS can only read reports. Its credential never reaches a browser.
 api('/users/' + state['reportUserId'], {'role': 'view-only'}, admin)
 reporter = login('cms-analytics', state['reportPassword'])
-api('/websites/' + state['websiteId'], token=reporter)
+api(website_path, token=reporter)
+try:
+    # A harmless, name-preserving write verifies enforcement, not just role labels.
+    api(website_path, {'name': website['name']}, reporter)
+except urllib.error.HTTPError as error:
+    if error.code not in (401, 403):
+        raise
+else:
+    raise RuntimeError('Reporting account unexpectedly has write access')
 
 env = root / '.env'
 lines = env.read_text().splitlines()
