@@ -111,13 +111,17 @@
 .conversation-band .display-3 { font-size: clamp(34px, 4.4vw, 56px); text-wrap: balance; }
 .js .conversation-mark path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.8s ease .2s; }
 .js .is-visible .conversation-mark path { stroke-dashoffset: 0; }
-.journey-path { gap: 0; grid-template-columns: repeat(var(--journey-columns, 4), minmax(0, 1fr)); }
+.journey-path { gap: 0; padding-top: 80px; grid-template-columns: repeat(var(--journey-columns, 4), minmax(0, 1fr)); }
+.journey-approach { position: absolute; left: 0; top: -80px; width: 176px; height: 80px; pointer-events: none; color: var(--teal); }
+.journey-approach path { stroke: currentColor; stroke-width: 1.25; stroke-linecap: round; stroke-dasharray: .1 5; opacity: .6; }
 .journey-step { position: relative; padding: 0 26px 22px 0; }
 .journey-step::before { content: ''; position: absolute; top: 26px; left: 52px; right: 0; height: 1px; background: color-mix(in srgb, var(--teal), transparent 60%); transform-origin: left; }
-.journey-step:last-child::before { display: none; }
+.journey-step:last-child::before { right: 26px; }
+.journey-step:last-child::after { content: ''; position: absolute; right: 26px; top: 22px; width: 8px; height: 8px; border-top: 1px solid color-mix(in srgb, var(--teal), transparent 60%); border-right: 1px solid color-mix(in srgb, var(--teal), transparent 60%); transform: rotate(45deg); }
 .journey-step-number { position: relative; display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 30px; border: 1px solid color-mix(in srgb, var(--teal), transparent 40%); border-radius: 50%; font-family: var(--serif); font-style: italic; font-size: 19px; color: var(--teal-deep); background: var(--sage); transition: background .4s ease, color .4s ease; }
 .journey-step:hover .journey-step-number { background: var(--teal-deep); color: var(--paper); }
 @media (min-width: 641px) and (max-width: 950px) { .journey-path { grid-template-columns: repeat(2, minmax(0, 1fr)); } .journey-step:nth-child(2n)::before { display: none; } .journey-step { padding-bottom: 36px; } }
+@media (min-width: 641px) { .journey-step:last-child::before { display: block; } }
 @media (max-width: 640px) {
   .page-contours { right: -270px; opacity: .15; }
   .conversation-contours { opacity: .16; }
@@ -127,6 +131,8 @@
   .journey-step { padding: 0 0 36px 76px; }
   .journey-step-number { position: absolute; left: 0; top: 0; }
   .journey-step::before { left: 26px; top: 52px; bottom: 0; width: 1px; height: auto; }
+  .journey-step:last-child::before { bottom: 6px; }
+  .journey-step:last-child::after { left: 22px; right: auto; top: auto; bottom: 6px; transform: rotate(135deg); }
   .journey-step h3 { margin-top: 0 !important; }
 }
 @media (prefers-reduced-motion: reduce) {

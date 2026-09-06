@@ -58,6 +58,11 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
           <div className="journey-grid journey-path" style={{ '--journey-columns': Math.min(page?.journeySteps?.length || 1, 4) } as CSSProperties}>
             {(page?.journeySteps || []).map((step, i) => (
               <div key={step.id || i} className="journey-step" data-reveal data-reveal-delay={i * 90}>
+                {i === 0 && (
+                  <svg className="journey-approach" viewBox="0 0 176 80" fill="none" aria-hidden="true" focusable="false">
+                    <path d="M166 6C144 28 115 4 87 12S43 47 66 49S94 23 62 25S13 36 17 53S26 65 26 80" />
+                  </svg>
+                )}
                 <span className="journey-step-number">{String(i + 1).padStart(2, '0')}</span>
                 <h3 style={{ fontFamily: 'var(--serif)', fontWeight: 500, fontSize: 22, margin: '14px 0 10px' }}>{step.title}</h3>
                 <p style={{ fontSize: 15.5, lineHeight: 1.65, color: 'rgba(20,41,43,.72)', margin: 0 }}><Emphasis text={step.text} /></p>
