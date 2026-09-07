@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { validateExternalUrl } from '../lib/links'
 
 // Validacija hex boje (#rrggbb) — sprječava da pogrešan unos pokvari stil sajta.
@@ -11,6 +12,7 @@ export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Podešavanja sajta',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   admin: { description: 'Kontakt podaci, brend i footer — mijenja se bez programera.' },
   fields: [
     {

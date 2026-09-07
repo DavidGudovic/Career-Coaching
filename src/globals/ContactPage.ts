@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { emphasisDescription } from '../fields/emphasis'
 
 // Contact channels are Instagram + email + a contact form only.
@@ -7,6 +8,7 @@ export const ContactPage: GlobalConfig = {
   slug: 'contact-page',
   label: 'Kontakt',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'Kontakt' },
     { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Počnimo sa _jednim razgovorom_.', admin: { description: emphasisDescription } },

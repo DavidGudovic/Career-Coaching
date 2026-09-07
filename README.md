@@ -54,6 +54,19 @@ Headlines use a light markup instead of HTML:
 Every text field is per-language (MNE default, EN under the `/en` URL prefix).
 Edit both via the locale switcher at the top of the admin.
 
+### Rendering and caching
+Public pages are rendered once and cached by Next.js, then served from that cache
+(`src/app/(frontend)/[locale]/layout.tsx`). Saving in the admin purges exactly the
+pages the change can reach, addressed by public URL — a page global purges its page, a published post purges
+its article, the blog index and the home page, site settings and media purge everything
+(`src/hooks/revalidate.ts`) — so edits are live on the next request. A one-hour
+time-based revalidation is the safety net. Pages are generated on first request rather
+than at image build time because the content lives in the database, which the build
+does not have. Only the blog index (`?kategorija=` filter), 404s, the admin, the API
+and the sitemap are rendered per request. The clean-URL scheme (Montenegrin at the root,
+English under `/en`) is declared as rewrites and redirects in `next.config.mjs`; there is
+no middleware, because middleware rewrites bypass the page cache.
+
 ## Client editing and mail setup
 
 See [the SEO audit and analytics guide](docs/seo-analytics.md) for the technical SEO

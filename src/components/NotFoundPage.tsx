@@ -1,11 +1,18 @@
+'use client'
+
 import Link from 'next/link'
-import { headers } from 'next/headers'
+import { usePathname } from 'next/navigation'
 import { href } from '@/lib/routes'
 import { ArrowRight } from './icons'
 import '@/app/(frontend)/not-found.css'
 
-export default async function NotFoundPage() {
-  const locale = (await headers()).get('x-locale') === 'en' ? 'en' : 'me'
+// Next.js embeds a segment's not-found component in every page it renders, so this must not
+// touch request data such as headers(): that would make every cached page dynamic. The
+// language comes from the URL instead (English lives under /en), which is known on the client
+// and during server rendering alike.
+export default function NotFoundPage() {
+  const pathname = usePathname() ?? ''
+  const locale = pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'me'
   const english = locale === 'en'
 
   return (

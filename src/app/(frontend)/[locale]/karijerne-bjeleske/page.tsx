@@ -21,6 +21,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   })
 }
 
+// The category filter lives in the query string (?kategorija=), so this page is rendered per
+// request; it cannot share the page cache used by the rest of the site.
+export const dynamic = 'force-dynamic'
+
 export default async function BlogIndex({
   params,
   searchParams,

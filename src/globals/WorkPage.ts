@@ -1,10 +1,12 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { emphasisDescription } from '../fields/emphasis'
 
 export const WorkPage: GlobalConfig = {
   slug: 'work-page',
   label: 'Rad sa mnom',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'Rad sa mnom · 1:1 mentorstvo' },
     { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Zajedno do tvog _sljedećeg realnog_ koraka.', admin: { description: emphasisDescription } },

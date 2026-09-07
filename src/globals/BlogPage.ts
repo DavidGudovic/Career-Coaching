@@ -1,10 +1,12 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { emphasisDescription } from '../fields/emphasis'
 
 export const BlogPage: GlobalConfig = {
   slug: 'blog-page',
   label: 'Bilješke (naslov)',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'Karijerne bilješke' },
     { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Karijerno, _iskreno_.', admin: { description: emphasisDescription } },

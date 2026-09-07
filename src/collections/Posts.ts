@@ -2,6 +2,7 @@ import { imageField } from '../fields/image'
 import type { CollectionConfig } from 'payload'
 import { lexicalEditor, HeadingFeature, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
 import { slugField } from '../fields/slug'
+import { revalidatePost, revalidatePostDelete } from '../hooks/revalidate'
 
 export const Posts: CollectionConfig = {
   slug: 'posts',
@@ -17,6 +18,7 @@ export const Posts: CollectionConfig = {
     defaultColumns: ['title', 'category', 'publishedAt', 'source', '_status'],
     description: 'Karijerne bilješke — blog. Svaki tekst postoji na oba jezika.',
   },
+  hooks: { afterChange: [revalidatePost], afterDelete: [revalidatePostDelete] },
   versions: {
     drafts: { autosave: false },
     maxPerDoc: 20,

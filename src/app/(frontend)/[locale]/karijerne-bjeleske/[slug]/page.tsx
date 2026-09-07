@@ -16,6 +16,11 @@ import type { Category, Media } from '@/payload-types'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
 
+// Articles are generated on first request and cached; see the note in the locale layout.
+export function generateStaticParams(): { slug: string }[] {
+  return []
+}
+
 // Inline photos use the same original-aware responsive rendering as page portraits.
 // The shared media library also contains downloadable PDF resources.
 const contentConverters: JSXConvertersFunction = ({ defaultConverters }) => ({

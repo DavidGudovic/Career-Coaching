@@ -1,11 +1,13 @@
 import { imageField } from '../fields/image'
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { emphasisDescription } from '../fields/emphasis'
 
 export const AboutPage: GlobalConfig = {
   slug: 'about-page',
   label: 'O meni',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'O meni' },
     { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Mijenjala sam karijeru _i preživjela_ to.', admin: { description: emphasisDescription } },

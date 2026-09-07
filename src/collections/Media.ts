@@ -1,9 +1,11 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateSite, revalidateSiteOnDelete } from '../hooks/revalidate'
 
 // Preserve originals and create high-quality responsive variants. PDFs pass through unchanged.
 export const Media: CollectionConfig = {
   slug: 'media',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateSite], afterDelete: [revalidateSiteOnDelete] },
   admin: { useAsTitle: 'filename', defaultColumns: ['filename', 'alt', 'mimeType'], description: 'Fotografije i PDF resursi. Već otpremljene fajlove možeš ponovo koristiti na stranicama.' },
   upload: {
     staticDir: process.env.MEDIA_DIR || 'media',

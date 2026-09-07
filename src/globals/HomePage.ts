@@ -1,11 +1,13 @@
 import { imageField } from '../fields/image'
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { emphasisDescription } from '../fields/emphasis'
 
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
   label: 'Početna',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     {
       type: 'collapsible',

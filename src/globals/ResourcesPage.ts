@@ -1,10 +1,12 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../hooks/revalidate'
 import { emphasisDescription } from '../fields/emphasis'
 
 export const ResourcesPage: GlobalConfig = {
   slug: 'resources-page',
   label: 'Besplatni resursi',
   access: { read: () => true },
+  hooks: { afterChange: [revalidateGlobal] },
   fields: [
     { name: 'eyebrow', type: 'text', localized: true, defaultValue: 'Besplatni resursi' },
     { name: 'headline', type: 'textarea', localized: true, defaultValue: 'Mali koraci za _tvoju_ karijeru.', admin: { description: emphasisDescription } },
