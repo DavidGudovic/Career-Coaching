@@ -75,7 +75,17 @@ export const metadata: Metadata = {
   },
   description:
     'Karijerno iskreno. Individualno mentorstvo za žene koje žele promjenu karijere — od jasnoće do tvog sljedećeg realnog koraka.',
-  icons: { icon: '/favicon.svg' },
+  // favicon.ico on the default path is what Google's favicon crawler and older clients
+  // request; the SVG serves modern browsers, the PNGs and Apple touch icon cover phones.
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
 }
 
 export default async function LocaleLayout({
