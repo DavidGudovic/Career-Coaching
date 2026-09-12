@@ -3,6 +3,7 @@ import type { Locale } from './i18n'
 import { htmlLang } from './i18n'
 import { href } from './routes'
 import { plain } from './emphasis'
+import type { Media, Post } from '@/payload-types'
 
 export const SITE_URL = (
   process.env.NEXT_PUBLIC_SERVER_URL || 'https://jelena.rajkovic.coach'
@@ -11,6 +12,44 @@ export const SITE_URL = (
 export const abs = (path: string): string => new URL(path, `${SITE_URL}/`).toString()
 
 export const jsonLdString = (value: unknown): string => JSON.stringify(value).replace(/</g, '\\u003c')
+
+export function mediaSeoUrl(media: Media | number | null | undefined): string | undefined {
+  if (!media || typeof media !== 'object') return undefined
+  return media.sizes?.og?.url || media.url || undefined
+}
+
+// `localized` must be read with fallbackLocale:false: otherwise an empty English
+// SEO field silently overrides the English article with Montenegrin metadata.
+export function articleSeo(post: Post, localized: Post) {
+  return {
+    title: plain(localized.meta?.title) || plain(localized.title) || plain(post.title),
+    description: plain(localized.meta?.description) || plain(localized.excerpt) || undefined,
+    image: mediaSeoUrl(localized.meta?.image) || mediaSeoUrl(post.coverImage),
+  }
+}
+
+export function articleStructuredData(post: Post, locale: Locale, available: Locale[]) {
+  const contentLocale = available.includes(locale) ? locale : 'me'
+  const url = abs(href(contentLocale, `/karijerne-bjeleske/${post.slug}`))
+  const image = mediaSeoUrl(post.coverImage)
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    url,
+    headline: post.title,
+    datePublished: post.publishedAt || undefined,
+    dateModified: post.updatedAt,
+    description: post.excerpt || undefined,
+    inLanguage: htmlLang[contentLocale],
+    author: { '@type': 'Person', name: 'Jelena Rajković', url: abs(href(contentLocale, '/o-meni')) },
+    // Only advertise an article image when one exists; a generic brand card is
+    // useful for sharing, but does not illustrate the article's visible content.
+    image: image ? abs(image) : undefined,
+    mainEntityOfPage: url,
+    isBasedOn: post.source === 'ljepota-i-zdravlje' && post.sourceUrl ? post.sourceUrl : undefined,
+  }
+}
 
 export function hasArticleTranslation(post: { title?: string | null; content?: unknown } | undefined): boolean {
   const hasContent = (node: unknown): boolean => {

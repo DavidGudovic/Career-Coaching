@@ -7,7 +7,7 @@ import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexic
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPostBySlug, getRelatedPosts, getSettings, getPostLocales } from '@/lib/payload'
-import { buildMetadata, abs, SITE_URL, jsonLdString } from '@/lib/seo'
+import { buildMetadata, articleSeo, articleStructuredData, jsonLdString } from '@/lib/seo'
 import { formatDate } from '@/lib/format'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
@@ -49,16 +49,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const l: Locale = isLocale(locale) ? locale : 'me'
   const post = await getPostBySlug(slug, l)
   if (!post) return {}
-  const meta = (post as { meta?: { title?: string; description?: string; image?: Media | number } }).meta
-  const image = meta?.image && typeof meta.image === 'object' ? meta.image
-    : typeof post.coverImage === 'object' ? post.coverImage : null
-  const ogImage = image?.sizes?.og?.url || image?.url || undefined
+  const localized = l === 'en' ? await getPostBySlug(slug, l, false) : post
   return buildMetadata({
     locale: l,
     path: `${ROUTES.blog}/${slug}`,
-    title: meta?.title || post.title,
-    description: meta?.description || post.excerpt || undefined,
-    image: ogImage,
+    ...articleSeo(post, localized || post),
     type: 'article',
     availableLocales: await getPostLocales(slug),
     publishedTime: post.publishedAt,
@@ -73,7 +68,7 @@ export default async function ArticlePage({ params }: Params) {
   const post = await getPostBySlug(slug, l)
   if (!post) notFound()
 
-  const [related, settings] = await Promise.all([getRelatedPosts(l, post.id, 3), getSettings(l)])
+  const [related, settings, availableLocales] = await Promise.all([getRelatedPosts(l, post.id, 3), getSettings(l), getPostLocales(slug)])
   const category = typeof post.category === 'object' ? (post.category as Category) : null
   const fromLZ = post.source === 'ljepota-i-zdravlje'
   const dateStr = formatDate(post.publishedAt, l)
@@ -82,19 +77,7 @@ export default async function ArticlePage({ params }: Params) {
   const metaLine = [dateStr, category?.title, readStr].filter(Boolean).join(' · ')
 
   const cover = typeof post.coverImage === 'object' ? (post.coverImage as Media) : null
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    datePublished: post.publishedAt || undefined,
-    dateModified: post.updatedAt,
-    description: post.excerpt || undefined,
-    inLanguage: l === 'en' ? 'en' : 'sr-ME',
-    author: { '@type': 'Person', name: 'Jelena Rajković' },
-    image: cover?.sizes?.og?.url ? abs(cover.sizes.og.url) : `${SITE_URL}/og-default.jpg`,
-    mainEntityOfPage: abs(href(l, `${ROUTES.blog}/${slug}`)),
-    isBasedOn: fromLZ && post.sourceUrl ? post.sourceUrl : undefined,
-  }
+  const jsonLd = articleStructuredData(post, l, availableLocales)
 
   return (
     <>

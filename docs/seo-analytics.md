@@ -2,6 +2,11 @@
 
 Audit date: 6 September 2026. Site: https://jelena.rajkovic.coach.
 
+For the 12 September follow-up, keyword-focused titles, current translation status,
+branch cleanup and optional copy recommendations, see [SEO optimization](seo-optimization.md).
+The translation gaps and expected sitemap count below describe the original audit;
+all six articles now have English bodies and the live sitemap has 26 URLs.
+
 ## SEO findings and fixes
 
 | Finding in production | Change |

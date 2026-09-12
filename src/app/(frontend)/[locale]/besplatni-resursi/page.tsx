@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   const l = isLocale(locale) ? locale : 'me'
   const page = await getPageGlobal('resources-page', l)
-  return buildMetadata({ locale: l, path: ROUTES.resources, title: t(l, 'nav_resources'), description: plain(page?.sub) })
+  return buildMetadata({ locale: l, path: ROUTES.resources, title: l === 'en' ? t(l, 'nav_resources') : 'Besplatni resursi za promjenu karijere', description: plain(page?.sub) })
 }
 
 export default async function ResourcesPage({ params }: { params: Promise<{ locale: string }> }) {

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPageGlobal, getPosts, getSettings } from '@/lib/payload'
-import { buildMetadata, abs, SITE_URL, jsonLdString } from '@/lib/seo'
+import { buildMetadata, abs, jsonLdString } from '@/lib/seo'
 import { Emphasis, plain } from '@/lib/emphasis'
 import { MediaImage } from '@/components/MediaImage'
 import PostCard from '@/components/PostCard'
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({
     locale: l,
     path: ROUTES.home,
-    title: l === 'en' ? 'Jelena Rajković — Career-change mentor' : 'Jelena Rajković — Mentor za karijernu promjenu',
+    title: l === 'en' ? 'Jelena Rajković — Career-change mentor' : 'Mentor za promjenu karijere · Jelena Rajković',
     description: plain(home?.heroSub),
   })
 }
@@ -41,19 +41,33 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    name: 'Jelena Rajković — Mentor za karijernu promjenu',
-    description: plain(home?.heroSub),
-    url: abs(href(l, ROUTES.home)),
-    image: `${SITE_URL}/og-default.jpg`,
-    areaServed: 'ME',
-    founder: {
-      '@type': 'Person',
-      name: 'Jelena Rajković',
-      jobTitle: settings?.brandRole || 'Mentor za karijernu promjenu',
-      email: settings?.email,
-      sameAs: settings?.instagramUrl ? [settings.instagramUrl] : undefined,
-    },
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${abs('/')}#website`,
+        name: 'Jelena Rajković',
+        alternateName: 'Karijerno iskreno',
+        url: abs('/'),
+        inLanguage: ['sr-ME', 'en'],
+        publisher: { '@id': `${abs('/')}#jelena` },
+      },
+      {
+        '@type': 'Person',
+        '@id': `${abs('/')}#jelena`,
+        name: 'Jelena Rajković',
+        url: abs(href(l, ROUTES.about)),
+        jobTitle: plain(settings?.brandRole) || (l === 'en' ? 'Career-change mentor' : 'Mentor za karijernu promjenu'),
+        email: settings?.email || undefined,
+        sameAs: settings?.instagramUrl ? [settings.instagramUrl] : undefined,
+      },
+      {
+        '@type': 'Service',
+        name: l === 'en' ? 'Individual career mentoring' : 'Individualno karijerno mentorstvo',
+        description: plain(home?.heroSub),
+        url: abs(href(l, ROUTES.work)),
+        provider: { '@id': `${abs('/')}#jelena` },
+      },
+    ],
   }
 
   return (

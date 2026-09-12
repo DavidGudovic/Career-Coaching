@@ -70,7 +70,7 @@ const PAIRINGS: Record<string, { serif: { variable: string }; sans: { variable: 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Jelena Rajković — Mentor za karijernu promjenu',
+    default: 'Mentor za promjenu karijere · Jelena Rajković',
     template: '%s · Jelena Rajković',
   },
   description:

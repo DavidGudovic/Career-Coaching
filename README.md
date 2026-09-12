@@ -71,6 +71,8 @@ no middleware, because middleware rewrites bypass the page cache.
 
 See [the SEO audit and analytics guide](docs/seo-analytics.md) for the technical SEO
 fixes, the private `/admin/analytics` dashboard, and optional free self-hosted Umami setup.
+See [the SEO optimization report](docs/seo-optimization.md) for Montenegrin search
+targets, page title tags, verification, and optional copy recommendations.
 
 See [the editing guide](docs/client-feedback.md) for resources, webinar invitations,
 booking links, text formatting, photos, and the newsletter switch.

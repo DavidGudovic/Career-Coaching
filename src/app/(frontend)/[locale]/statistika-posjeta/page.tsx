@@ -6,7 +6,13 @@ import AnalyticsPreference from '@/components/AnalyticsPreference'
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
-  return buildMetadata({ locale, path: '/statistika-posjeta', title: locale === 'en' ? 'Visitor statistics and privacy' : 'Statistika posjeta i privatnost' })
+  return buildMetadata({
+    locale, path: '/statistika-posjeta',
+    title: locale === 'en' ? 'Visitor statistics and privacy' : 'Statistika posjeta i privatnost',
+    description: locale === 'en'
+      ? 'Learn how anonymous visitor statistics work, which data is collected and how to opt out of analytics on this website.'
+      : 'Saznaj kako radi anonimna statistika posjeta, koje podatke prikupljamo i kako možeš isključiti analitiku na ovom sajtu.',
+  })
 }
 
 export default async function StatisticsPrivacy({ params }: { params: Promise<{ locale: string }> }) {

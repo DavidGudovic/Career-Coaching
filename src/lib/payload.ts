@@ -31,7 +31,8 @@ export const getPosts = cache(
       page: opts?.page ?? 1,
       depth: 2,
       limit: opts?.limit ?? 50,
-      sort: '-publishedAt',
+      // A stable tie-breaker keeps posts with the same date on the same page.
+      sort: ['-publishedAt', '-id'],
       where,
     })
   },
@@ -54,11 +55,12 @@ export async function getTranslatedPostIds(ids: number[]): Promise<Set<number>> 
   return new Set(posts.docs.filter(hasArticleTranslation).map((p) => p.id))
 }
 
-export const getPostBySlug = cache(async (slug: string, locale: Locale) => {
+export const getPostBySlug = cache(async (slug: string, locale: Locale, fallbackLocale?: false) => {
   const payload = await client()
   const res = await payload.find({
     collection: 'posts',
     locale,
+    fallbackLocale,
     depth: 2,
     limit: 1,
     where: { slug: { equals: slug }, _status: { equals: 'published' } },

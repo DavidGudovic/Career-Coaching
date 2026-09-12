@@ -15,12 +15,22 @@ class Page(HTMLParser):
         super().__init__()
         self.result = {'h1': 0, 'images_missing_alt': 0, 'font_preloads': 0, 'alternates': {}}
         self.in_title = False
+        self.in_json_ld = False
+        self.json_ld = ''
+        self.result['structured_data'] = []
+        self.result['structured_data_errors'] = []
+        self.result['pagination'] = {}
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == 'html': self.result['lang'] = a.get('lang')
         if tag == 'h1': self.result['h1'] += 1
         if tag == 'title': self.in_title = True
+        if tag == 'script' and a.get('type') == 'application/ld+json':
+            self.in_json_ld = True
+            self.json_ld = ''
+        if tag == 'a' and a.get('rel') in ['prev', 'next']:
+            self.result['pagination'][a['rel']] = a.get('href')
         if tag == 'img' and 'alt' not in a: self.result['images_missing_alt'] += 1
         if tag == 'meta' and a.get('name') in ['description', 'robots']:
             self.result[a['name']] = a.get('content')
@@ -32,9 +42,16 @@ class Page(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == 'title': self.in_title = False
+        if tag == 'script' and self.in_json_ld:
+            self.in_json_ld = False
+            try:
+                self.result['structured_data'].append(json.loads(self.json_ld))
+            except json.JSONDecodeError as error:
+                self.result['structured_data_errors'].append(str(error))
 
     def handle_data(self, data):
         if self.in_title: self.result['title'] = self.result.get('title', '') + data
+        if self.in_json_ld: self.json_ld += data
 
 
 def fetch(url):

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPageGlobal } from '@/lib/payload'
-import { buildMetadata, abs } from '@/lib/seo'
+import { buildMetadata, jsonLdString } from '@/lib/seo'
 import { Emphasis, plain } from '@/lib/emphasis'
 import { CtaBand, PageHero } from '@/components/sections'
 import AudienceSection from '@/components/AudienceSection'
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({
     locale: l,
     path: ROUTES.work,
-    title: l === 'en' ? 'Work with me — 1:1 mentoring' : 'Rad sa mnom — 1:1 mentorstvo',
+    title: l === 'en' ? 'Work with me — 1:1 mentoring' : 'Karijerno mentorstvo 1:1 za promjenu karijere',
     description: plain(page?.sub),
   })
 }
@@ -34,15 +34,15 @@ export default async function WorkPage({ params }: { params: Promise<{ locale: s
         '@type': 'FAQPage',
         mainEntity: page.faq.map((f) => ({
           '@type': 'Question',
-          name: f.question,
-          acceptedAnswer: { '@type': 'Answer', text: f.answer },
+          name: plain(f.question),
+          acceptedAnswer: { '@type': 'Answer', text: plain(f.answer) },
         })),
       }
     : null
 
   return (
     <>
-      {faqJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />}
+      {faqJsonLd && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(faqJsonLd) }} />}
 
       <PageHero eyebrow={page?.eyebrow} headline={page?.headline} sub={page?.sub} />
 
