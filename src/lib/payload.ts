@@ -31,8 +31,7 @@ export const getPosts = cache(
       page: opts?.page ?? 1,
       depth: 2,
       limit: opts?.limit ?? 50,
-      // A stable tie-breaker keeps posts with the same date on the same page.
-      sort: ['-publishedAt', '-id'],
+      sort: '-publishedAt',
       where,
     })
   },

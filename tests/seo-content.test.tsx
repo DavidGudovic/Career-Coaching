@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { articleSeo, articleStructuredData, buildMetadata, abs, jsonLdString } from '../src/lib/seo'
-import { blogQuery, blogListingPath } from '../src/lib/blog'
 import type { Post, Media } from '../src/payload-types'
 
 const post = {
@@ -48,17 +47,4 @@ test('JSON-LD survives CMS script delimiters without breaking out of its script 
     assert.ok(!serialized.includes('<'))
     assert.deepEqual(JSON.parse(serialized), value)
   }
-})
-
-test('blog pagination has distinct canonical URLs and preserves an encoded category', () => {
-  assert.deepEqual(blogQuery({}), { page: 1, category: undefined })
-  assert.deepEqual(blogQuery({ page: '2', kategorija: 'career' }), { page: 2, category: 'career' })
-  for (const page of ['0', '-1', '1.5', '2x', '01', '9007199254740992', '']) assert.equal(blogQuery({ page }), null)
-  assert.equal(blogQuery({ page: ['1', '2'] }), null)
-  assert.equal(blogQuery({ kategorija: ['a', 'b'] }), null)
-  assert.equal(blogListingPath(1), '/karijerne-bjeleske')
-  assert.equal(blogListingPath(2, 'a&b'), '/karijerne-bjeleske?kategorija=a%26b&page=2')
-  const meta = buildMetadata({ locale: 'en', path: blogListingPath(2), title: 'Career notes — Page 2' })
-  assert.equal(meta.alternates?.canonical, abs('/en/karijerne-bjeleske?page=2'))
-  assert.equal(meta.alternates?.languages?.['sr-ME'], abs('/karijerne-bjeleske?page=2'))
 })

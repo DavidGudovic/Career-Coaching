@@ -6,29 +6,19 @@ import { isLocale, t, type Locale } from '@/lib/i18n'
 import { href, ROUTES } from '@/lib/routes'
 import { getPageGlobal, getPosts, getCategories } from '@/lib/payload'
 import { buildMetadata, abs, jsonLdString } from '@/lib/seo'
-import { BLOG_PAGE_SIZE, blogQuery, blogListingPath, type BlogSearch } from '@/lib/blog'
-import { plain } from '@/lib/emphasis'
+import { Emphasis, plain } from '@/lib/emphasis'
 import PostCard from '@/components/PostCard'
 
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<BlogSearch> }
-
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const l: Locale = isLocale(locale) ? locale : 'me'
-  const query = blogQuery(await searchParams)
-  if (!query) notFound()
   const page = await getPageGlobal('blog-page', l)
-  const title = l === 'en' ? 'Career notes' : 'Savjeti za karijeru i promjenu posla'
-  const pageLabel = l === 'en' ? 'Page' : 'Stranica'
-  const metadata = buildMetadata({
+  return buildMetadata({
     locale: l,
-    path: blogListingPath(query.page, query.category),
-    title: query.page > 1 ? `${title} — ${pageLabel} ${query.page}` : `${title} — Jelena Rajković`,
+    path: ROUTES.blog,
+    title: l === 'en' ? 'Career notes — Jelena Rajković' : 'Savjeti za karijeru i promjenu posla — Jelena Rajković',
     description: plain(page?.sub),
   })
-  // Category filters are useful navigation, but do not need separate search results.
-  if (query.category) metadata.robots = { index: false, follow: true }
-  return metadata
 }
 
 // The category filter lives in the query string (?kategorija=), so this page is rendered per
@@ -38,22 +28,21 @@ export const dynamic = 'force-dynamic'
 export default async function BlogIndex({
   params,
   searchParams,
-}: Props) {
+}: {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ kategorija?: string }>
+}) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
   const l = locale
-  const query = blogQuery(await searchParams)
-  if (!query) notFound()
-  const { category: kategorija, page: pageNumber } = query
+  const { kategorija } = await searchParams
 
   const [page, postsRes, categories] = await Promise.all([
     getPageGlobal('blog-page', l),
-    getPosts(l, { category: kategorija, page: pageNumber, limit: BLOG_PAGE_SIZE }),
+    getPosts(l, { category: kategorija }),
     getCategories(l),
   ])
   const posts = postsRes.docs
-  if (pageNumber > Math.max(1, postsRes.totalPages)) notFound()
-  if (kategorija && !categories.some((c) => c.slug === kategorija)) notFound()
 
   const chip = (active: boolean) => ({
     padding: '9px 18px',
@@ -72,7 +61,7 @@ export default async function BlogIndex({
     '@type': 'ItemList',
     itemListElement: posts.map((p, i) => ({
       '@type': 'ListItem',
-      position: (pageNumber - 1) * BLOG_PAGE_SIZE + i + 1,
+      position: i + 1,
       url: abs(href(l, `${ROUTES.blog}/${p.slug}`)),
       name: p.title,
     })),
@@ -91,7 +80,7 @@ export default async function BlogIndex({
               {t(l, 'filter_all')}
             </Link>
             {categories.map((c) => (
-              <Link key={c.id} href={href(l, blogListingPath(1, c.slug))} style={chip(kategorija === c.slug)}>
+              <Link key={c.id} href={`${href(l, ROUTES.blog)}?kategorija=${c.slug}`} style={chip(kategorija === c.slug)}>
                 {c.title}
               </Link>
             ))}
@@ -105,17 +94,6 @@ export default async function BlogIndex({
             </div>
           ) : (
             <p style={{ color: 'rgba(20,41,43,.6)' }}>{t(l, 'no_posts')}</p>
-          )}
-          {postsRes.totalPages > 1 && (
-            <nav aria-label={l === 'en' ? 'Career notes pages' : 'Stranice karijernih bilješki'} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', gap: 20, marginTop: 40 }}>
-              {postsRes.hasPrevPage && <Link rel="prev" className="btn btn-solid" href={href(l, blogListingPath(pageNumber - 1, kategorija))}>
-                {l === 'en' ? '← Previous' : '← Prethodna'}
-              </Link>}
-              <span aria-current="page">{l === 'en' ? `Page ${pageNumber} of ${postsRes.totalPages}` : `Stranica ${pageNumber} od ${postsRes.totalPages}`}</span>
-              {postsRes.hasNextPage && <Link rel="next" className="btn btn-solid" href={href(l, blogListingPath(pageNumber + 1, kategorija))}>
-                {l === 'en' ? 'Next →' : 'Sljedeća →'}
-              </Link>}
-            </nav>
           )}
         </div>
       </section>

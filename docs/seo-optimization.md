@@ -2,8 +2,8 @@
 
 Primary audience: Montenegrin/Serbian speakers looking for career-change mentoring,
 career advice, or help changing jobs. Visible page copy, article text, CMS content,
-URLs and the design are unchanged. New pagination controls appear only when the
-blog has more than 12 posts.
+URLs, navigation, article ordering and the design are unchanged. The release contains
+metadata and structured-data changes; pagination was excluded from the final release.
 
 ## Search intent and title tags
 
@@ -55,17 +55,11 @@ other spelling variants. Google does not use the `meta keywords` tag for ranking
   actual fallback content language, and uses a real cover image—including an original
   without an OG crop—when available. A generic brand card remains the social-sharing
   fallback, but is not claimed to illustrate every article.
-- **Crawlable archive.** The blog previously stopped after 50 posts. It now provides
-  12-post pages with ordinary previous/next links and a distinct canonical URL for
-  each page. Category filters retain their category while paging and are `noindex,
-  follow`; invalid and out-of-range pages return 404. The sitemap continues to include
-  all published article URLs and real language variants.
 - **Repeatable audit.** The existing crawler now records parsed JSON-LD, JSON parsing
   errors and previous/next links alongside titles, descriptions, canonicals, language
   alternates, robots rules and image-alt checks.
 
-References: [pagination](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading),
-[article markup](https://developers.google.com/search/docs/appearance/structured-data/article),
+References: [article markup](https://developers.google.com/search/docs/appearance/structured-data/article),
 [structured-data policies](https://developers.google.com/search/docs/appearance/structured-data/sd-policies).
 
 ## Optional copy recommendations — not applied
@@ -110,16 +104,17 @@ production CMS content or database schema was changed during this work.
 
 ## Verification
 
-- 25 tests across five files, including five new SEO/pagination regression tests.
+- 24 tests across five files, including four new SEO regression tests.
 - TypeScript check and production build.
 - Read-only live crawl before changes: 26 sitemap URLs; the existing public routes,
   permanent `/me` redirect, admin `noindex`, default social image and 404 response work.
 - Local production crawl: all 26 sitemap pages passed status, title/description,
   self-canonical, language-alternate, one-H1, image-alt and JSON-LD parsing checks.
   The three affected English titles now match their English article fields.
-- Thirteen disposable local articles exercised second-page and category navigation
-  in both languages, self-canonicals, filter `noindex`, and malformed/out-of-range
-  404 responses. Browser navigation and a 390px phone layout were also checked.
+- The final release excludes the previously tested pagination and sorting changes,
+  preserving the existing navigation and listing behavior under the release constraint.
+- Production deployment verification compares the visible page text before and after
+  release and checks the live metadata and deployed image revision.
 
 Run the audit with `python3 scripts/audit-seo.py https://jelena.rajkovic.coach`.
 After release, use Search Console to submit/refresh `sitemap.xml`, inspect the main
