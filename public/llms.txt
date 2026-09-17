@@ -1,0 +1,30 @@
+# Jelena Rajković — Career Mentoring
+
+> Jelena Rajković is a career-change mentor supporting women in mid-career who want clarity and a realistic next step. Her website presents individual mentoring, career articles, free resources, and ways to get in touch.
+
+The website is bilingual: Montenegrin is the default language at the root, and English pages use the `/en` prefix with the same path segments. Some articles are available only in Montenegrin.
+
+Use the linked pages for current mentoring details, resource availability, and contact information. The sitemap lists published articles and their available language versions.
+
+## Montenegrin pages
+
+- [Početna](https://jelena.rajkovic.coach/): Introduction to Jelena and her career mentoring approach.
+- [O meni](https://jelena.rajkovic.coach/o-meni): Jelena's background and experience of changing careers.
+- [Rad sa mnom](https://jelena.rajkovic.coach/rad-sa-mnom): Individual career mentoring and how to work with Jelena.
+- [Karijerne bjeleške](https://jelena.rajkovic.coach/karijerne-bjeleske): Articles and reflections on careers and career change.
+- [Besplatni resursi](https://jelena.rajkovic.coach/besplatni-resursi): Available free career resources and downloads.
+- [Kontakt](https://jelena.rajkovic.coach/kontakt): Contact information and enquiry form.
+
+## English pages
+
+- [Home](https://jelena.rajkovic.coach/en): Introduction to Jelena and her career mentoring approach.
+- [About](https://jelena.rajkovic.coach/en/o-meni): Jelena's background and career-change story.
+- [Work with me](https://jelena.rajkovic.coach/en/rad-sa-mnom): Individual career mentoring and ways to work together.
+- [Career notes](https://jelena.rajkovic.coach/en/karijerne-bjeleske): Career articles; English translations are available for some posts.
+- [Free resources](https://jelena.rajkovic.coach/en/besplatni-resursi): Available free career resources and downloads.
+- [Contact](https://jelena.rajkovic.coach/en/kontakt): Contact information and enquiry form.
+
+## Optional
+
+- [Sitemap](https://jelena.rajkovic.coach/sitemap.xml): Public pages, published articles, and language alternatives.
+- [Robots](https://jelena.rajkovic.coach/robots.txt): Crawler access rules.
