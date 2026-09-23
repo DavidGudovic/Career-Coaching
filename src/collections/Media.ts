@@ -10,6 +10,13 @@ export const Media: CollectionConfig = {
   upload: {
     staticDir: process.env.MEDIA_DIR || 'media',
     mimeTypes: ['image/*', 'application/pdf'],
+    // Files were served without any caching header (and no ETag), so every page view
+    // downloaded every photo again. A day keeps repeat visits fast; a replaced file gets a
+    // new name from Payload, and stale-while-revalidate refreshes anything else quietly.
+    modifyResponseHeaders: ({ headers }) => {
+      headers.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800')
+      return headers
+    },
     imageSizes: [
       { name: 'thumbnail', width: 480, withoutEnlargement: true, formatOptions: { format: 'webp', options: { quality: 90 } } },
       { name: 'card', width: 800, withoutEnlargement: true, formatOptions: { format: 'webp', options: { quality: 90 } } },

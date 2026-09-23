@@ -67,6 +67,8 @@ const PAIRINGS: Record<string, { serif: { variable: string }; sans: { variable: 
   'cormorant-worksans': { serif: cormorant, sans: workSans },
 }
 
+const REVEAL_ON_LOAD = `(function(){try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var h=innerHeight*.92;document.querySelectorAll('#main [data-reveal]').forEach(function(el){if(el.getBoundingClientRect().top<h){var d=el.getAttribute('data-reveal-delay');if(d)el.style.animationDelay=d+'ms';el.classList.add('reveal-now')}})}catch(e){}})()`
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -142,6 +144,10 @@ export default async function LocaleLayout({
             menuCloseLabel={t(locale, 'menu_close')}
           />
           <main id="main">{children}</main>
+          {/* Start the entrance of whatever is already on screen with the first paint instead of
+              after hydration, which kept the hero headline and portrait (the LCP element)
+              invisible until all JS had loaded. RevealManager handles the rest on scroll. */}
+          <script dangerouslySetInnerHTML={{ __html: REVEAL_ON_LOAD }} />
           {settings?.newsletterEnabled && newsletterUrl && (
             <section className="bg-sage section-sm">
               <div className="wrap-read" style={{ textAlign: 'center' }}>

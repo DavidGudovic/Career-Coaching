@@ -12,9 +12,17 @@ import { withPayload } from '@payloadcms/next/withPayload'
 // of the root rule below must not be rewritten a second time.
 const PASS_THROUGH = 'me(?:/.*)?|en(?:/.*)?|admin(?:/.*)?|api(?:/.*)?|_next(?:/.*)?|media(?:/.*)?|telemetry(?:/.*)?|.*\\..*'
 
+// Any other path with a dot (scanner probes such as /wp-login.php or /.env) would otherwise
+// fall through to the [locale] route with the "locale" wp-login.php and be stored in the page
+// cache as a 404, one entry per probed path. afterFiles runs after public files and static
+// routes (robots.txt, sitemap.xml) are matched, so only unknown paths are sent to the uncached
+// catch-all 404 instead.
+const KNOWN_TREES = '(?:me|en|admin|api|_next|media|telemetry)(?:/|$)'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
   },
@@ -24,6 +32,7 @@ const nextConfig = {
         { source: '/', destination: '/me' },
         { source: `/:path((?!${PASS_THROUGH}$).*)`, destination: '/me/:path' },
       ],
+      afterFiles: [{ source: `/:path((?!${KNOWN_TREES}).*\\..*)`, destination: '/me/:path' }],
     }
   },
   async redirects() {

@@ -48,10 +48,22 @@ test('missing or placeholder SMTP settings cannot enable contact delivery', () =
   }
 })
 
-test('story images retain their natural ratio and expose originals for high-DPI screens', () => {
-  const media = { id: 1, url: '/original.jpg', width: 3600, height: 5400, focalX: 40, focalY: 20, sizes: { feature: { url: '/feature.webp', width: 1600 } } } as Media
+test('story images retain their natural ratio and expose light originals for high-DPI screens', () => {
+  const media = { id: 1, url: '/original.jpg', filesize: 900_000, width: 3600, height: 5400, focalX: 40, focalY: 20, sizes: { feature: { url: '/feature.webp', width: 1600 } } } as Media
   const html = renderToStaticMarkup(<MediaImage media={media} ratio="4 / 5" natural />)
   assert.match(html, /aspect-ratio:3600 \/ 5400/)
   assert.match(html, /original.jpg 3600w/)
   assert.match(html, /object-position:40% 20%/)
+})
+
+test('camera-size originals are never offered once responsive variants exist', () => {
+  // A ~10 MB JPEG would be picked by any screen needing more than the 1600px variant.
+  const media = { id: 2, url: '/camera.jpg', filesize: 10_000_000, width: 3648, height: 5472, sizes: { thumbnail: { url: '/t.webp', width: 480 }, feature: { url: '/f.webp', width: 1600 } } } as Media
+  const html = renderToStaticMarkup(<MediaImage media={media} ratio="4 / 5" />)
+  assert.doesNotMatch(html, /camera\.jpg/)
+  assert.match(html, /src="\/f\.webp"/)
+  assert.match(html, /\/t\.webp 480w, \/f\.webp 1600w/)
+  // Without variants the original is still the only source.
+  const bare = renderToStaticMarkup(<MediaImage media={{ ...media, sizes: {} } as Media} ratio="4 / 5" />)
+  assert.match(bare, /src="\/camera\.jpg"/)
 })

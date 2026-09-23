@@ -481,6 +481,21 @@ h3 {
   opacity: 1;
   transform: none;
 }
+/* Tagged before hydration by the inline script in the locale layout: content that is on
+   screen at load plays the same entrance straight away. */
+.js [data-reveal].reveal-now {
+  animation: reveal-in 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -490,6 +505,7 @@ h3 {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    animation: none !important;
   }
 }
 

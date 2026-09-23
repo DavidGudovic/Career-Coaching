@@ -115,7 +115,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <MediaImage
               media={home?.heroPortrait}
               ratio="4 / 5"
-              sizes="(max-width: 800px) 100vw, 480px"
+              sizes="(max-width: 800px) 100vw, 540px"
               priority
               className="hero-portrait-image"
               placeholderLabel="Portret — zamijeni fotografijom"
