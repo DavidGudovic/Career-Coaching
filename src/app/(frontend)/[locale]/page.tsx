@@ -38,6 +38,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     getSettings(l),
   ])
   const posts = postsRes.docs
+  // A portrait crop (not the landscape social card) identifies Jelena in search results.
+  const portrait = typeof home?.heroPortrait === 'object' ? home.heroPortrait : null
+  const personImage = portrait?.sizes?.card?.url || portrait?.url
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -57,6 +60,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         name: 'Jelena Rajković',
         url: abs(href(l, ROUTES.about)),
         jobTitle: plain(settings?.brandRole) || (l === 'en' ? 'Career-change mentor' : 'Mentor za karijernu promjenu'),
+        image: personImage ? abs(personImage) : undefined,
         email: settings?.email || undefined,
         sameAs: settings?.instagramUrl ? [settings.instagramUrl] : undefined,
       },
