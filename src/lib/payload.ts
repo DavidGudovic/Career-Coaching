@@ -7,9 +7,18 @@ import { hasArticleTranslation } from './seo'
 
 export const client = cache(async () => getPayload({ config }))
 
+// These fields override built-in UI strings that already exist in both languages. Payload's
+// locale fallback would hand an English page the Montenegrin override (a menu item renamed only
+// in Montenegrin), so English reads them without fallback and keeps its own default.
+const UI_OVERRIDES = ['navBlogLabel', 'navResourcesLabel', 'blogAllLabel', 'newsletterTitle', 'newsletterText', 'newsletterButtonLabel', 'webinarButtonLabel'] as const
+
 export const getSettings = cache(async (locale: Locale) => {
   const payload = await client()
-  return payload.findGlobal({ slug: 'site-settings', locale, depth: 1 })
+  const settings = await payload.findGlobal({ slug: 'site-settings', locale, depth: 1 })
+  if (locale === 'me') return settings
+  const own = await payload.findGlobal({ slug: 'site-settings', locale, depth: 0, fallbackLocale: false })
+  for (const key of UI_OVERRIDES) settings[key] = own[key] ?? null
+  return settings
 })
 
 type PageSlug = 'home-page' | 'about-page' | 'work-page' | 'blog-page' | 'contact-page' | 'resources-page'

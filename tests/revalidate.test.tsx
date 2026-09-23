@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import type { PayloadRequest } from 'payload'
-import { pathsForGlobal, pathsForPost, purge, cachePath, revalidatePost, revalidateGlobal } from '../src/hooks/revalidate'
+import { existsSync } from 'node:fs'
+import { pathsForGlobal, pathsForPost, purge, purgeRoute, cachePath, revalidatePost, revalidateGlobal, ARTICLE_ROUTE } from '../src/hooks/revalidate'
 
 const req = (context: Record<string, unknown> = {}) => ({ context, payload: { logger: { warn() {} } } }) as unknown as PayloadRequest
 
@@ -62,4 +63,16 @@ test('hooks return the document unchanged and only react to published content', 
   assert.equal(out, doc)
   const g = { title: 'Home' }
   assert.equal(revalidateGlobal({ doc: g, previousDoc: g, req: req(), global: { slug: 'home-page' } as never, context: {} } as never), g)
+})
+
+test('publishing refreshes every article, whose "read more" lists show the latest posts', () => {
+  // The route tag Next assigns includes the route group, so it must match the file layout.
+  assert.ok(existsSync(`src/app${ARTICLE_ROUTE}/page.tsx`), 'ARTICLE_ROUTE must point at the article page')
+  process.env.NEXT_RUNTIME = 'nodejs'
+  const calls: [string, string?][] = []
+  const spy = (path: string, type?: 'page' | 'layout') => { calls.push([path, type]) }
+  assert.equal(purgeRoute(ARTICLE_ROUTE, req(), spy), true)
+  assert.deepEqual(calls, [[ARTICLE_ROUTE, 'page']])
+  assert.equal(purgeRoute(ARTICLE_ROUTE, req({ disableRevalidate: true }), spy), false)
+  assert.equal(calls.length, 1)
 })

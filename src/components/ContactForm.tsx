@@ -3,12 +3,14 @@ import { useActionState } from 'react'
 import { sendContact, type ContactState } from '@/app/(frontend)/actions'
 import type { Locale } from '@/lib/i18n'
 import { t } from '@/lib/i18n'
+import { EMAIL_PATTERN } from '@/lib/contact'
 import { ArrowRight } from './icons'
 
 const initial: ContactState = { status: 'idle' }
 
 export default function ContactForm({ locale }: { locale: Locale }) {
   const [state, action, pending] = useActionState(sendContact, initial)
+  const values = state.values
 
   const label = { fontSize: 13, fontWeight: 600, letterSpacing: '.04em', textTransform: 'uppercase' as const, color: 'var(--teal)' }
   const input = {
@@ -45,19 +47,19 @@ export default function ContactForm({ locale }: { locale: Locale }) {
     <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <input type="hidden" name="locale" value={locale} />
       {/* honeypot */}
-      <input type="text" name="company" tabIndex={-1} autoComplete="off" style={{ position: 'absolute', left: '-9999px' }} aria-hidden />
+      <input type="text" name="leave_empty" tabIndex={-1} autoComplete="off" style={{ position: 'absolute', left: '-9999px' }} aria-hidden />
 
       <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={label}>{t(locale, 'form_name')}</span>
-        <input type="text" name="name" maxLength={120} autoComplete="name" required placeholder={t(locale, 'form_name_ph')} style={input} />
+        <input type="text" name="name" maxLength={120} autoComplete="name" required defaultValue={values?.name} placeholder={t(locale, 'form_name_ph')} style={input} />
       </label>
       <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={label}>{t(locale, 'form_email')}</span>
-        <input type="email" name="email" maxLength={254} autoComplete="email" required placeholder={t(locale, 'form_email_ph')} style={input} />
+        <input type="email" name="email" maxLength={254} autoComplete="email" required pattern={EMAIL_PATTERN} defaultValue={values?.email} placeholder={t(locale, 'form_email_ph')} style={input} />
       </label>
       <label style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <span style={label}>{t(locale, 'form_msg')}</span>
-        <textarea name="message" maxLength={10000} required rows={5} placeholder={t(locale, 'form_msg_ph')} style={{ ...input, resize: 'vertical' }} />
+        <textarea name="message" maxLength={10000} required rows={5} defaultValue={values?.message} placeholder={t(locale, 'form_msg_ph')} style={{ ...input, resize: 'vertical' }} />
       </label>
 
       {state.status === 'error' && (

@@ -1,6 +1,6 @@
 import { imageField } from '../fields/image'
 import type { CollectionConfig } from 'payload'
-import { lexicalEditor, HeadingFeature, FixedToolbarFeature } from '@payloadcms/richtext-lexical'
+import { lexicalEditor, HeadingFeature, FixedToolbarFeature, LinkFeature } from '@payloadcms/richtext-lexical'
 import { slugField } from '../fields/slug'
 import { revalidatePost, revalidatePostDelete } from '../hooks/revalidate'
 
@@ -42,10 +42,14 @@ export const Posts: CollectionConfig = {
               // markdown typing shortcuts (## , **bold**, - , > , ---). We only tweak it for
               // blogging: a persistent toolbar (easier for a non-technical writer) and limit
               // headings to h2–h4 (h1 is reserved for the post title).
+              // Internal links may only target other articles (the article page renders those),
+              // and the Relationship block is dropped: the site has no renderer for it, so it
+              // would show "unknown node" to readers.
               editor: lexicalEditor({
                 features: ({ defaultFeatures }) => [
-                  ...defaultFeatures,
+                  ...defaultFeatures.filter((feature) => feature.key !== 'relationship'),
                   HeadingFeature({ enabledHeadingSizes: ['h2', 'h3', 'h4'] }),
+                  LinkFeature({ enabledCollections: ['posts'] }),
                   FixedToolbarFeature(),
                 ],
               }),

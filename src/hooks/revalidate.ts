@@ -67,6 +67,22 @@ export function purge(paths: string[] | 'all', req: PayloadRequest, revalidate: 
   return purged
 }
 
+/** Every article lists the latest other posts, so publishing one also refreshes all articles.
+ *  Next tags each cached page with its route (route group included), so one purge of the
+ *  article route covers every article in both languages. */
+export const ARTICLE_ROUTE = '/(frontend)/[locale]/karijerne-bjeleske/[slug]'
+
+export function purgeRoute(route: string, req: PayloadRequest, revalidate: Revalidate = revalidatePath): boolean {
+  if (req.context?.disableRevalidate || !process.env.NEXT_RUNTIME) return false
+  try {
+    revalidate(route, 'page')
+    return true
+  } catch (err) {
+    req.payload.logger.warn({ err, route }, 'Could not revalidate cached pages')
+    return false
+  }
+}
+
 export const revalidateGlobal: GlobalAfterChangeHook = ({ doc, global, req }) => {
   purge(pathsForGlobal(global.slug), req)
   return doc
@@ -76,12 +92,16 @@ const isPublished = (doc?: { _status?: string | null }) => doc?._status === 'pub
 
 export const revalidatePost: CollectionAfterChangeHook<Post> = ({ doc, previousDoc, req }) => {
   // Draft saves do not change the public site; publishing and unpublishing do.
-  if (isPublished(doc) || isPublished(previousDoc)) purge(pathsForPost(doc, previousDoc), req)
+  if (isPublished(doc) || isPublished(previousDoc)) {
+    purge(pathsForPost(doc, previousDoc), req)
+    purgeRoute(ARTICLE_ROUTE, req)
+  }
   return doc
 }
 
 export const revalidatePostDelete: CollectionAfterDeleteHook<Post> = ({ doc, req }) => {
   purge(pathsForPost(doc), req)
+  purgeRoute(ARTICLE_ROUTE, req)
   return doc
 }
 

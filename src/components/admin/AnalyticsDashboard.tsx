@@ -42,7 +42,7 @@ export function AnalyticsDashboard({ report }: { report: AnalyticsReport }) {
       <div className="analytics-reading">{ANALYTICS_EVENTS.filter((event) => event.startsWith('reading-')).map((event) => <div key={event}><strong>{number(report.events.find((r) => r.x === event)?.y || 0)}</strong><span>{eventNames[event]}</span></div>)}</div>
     </section>
     <div className="analytics-grid">
-      <Breakdown title="Uređaji" rows={report.devices} label={(v) => deviceNames[v.toLowerCase()] || v || 'Nepoznato'} />
+      <Breakdown title="Uređaji" rows={report.devices} label={(v) => (v && deviceNames[v.toLowerCase()]) || v || 'Nepoznato'} />
       <Breakdown title="Države" rows={report.countries} label={(v) => { try { return v ? countryNames.of(v.toUpperCase()) || v : 'Nepoznato' } catch { return v || 'Nepoznato' } }} />
       <Breakdown title="Odakle dolaze" rows={report.referrers} label={(v) => v || 'Direktno / izvor nije dostupan'} />
       <Breakdown title="Jezici pregledača" rows={report.languages} />

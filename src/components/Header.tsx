@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import LangToggle from './LangToggle'
@@ -32,6 +32,9 @@ export default function Header({
 }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const burgerRef = useRef<HTMLButtonElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
   const pathname = usePathname()
   const darkInk = scrolled || pathname === '/statistika-posjeta' || pathname === '/en/statistika-posjeta' || pathname === '/me/statistika-posjeta'
 
@@ -52,6 +55,33 @@ export default function Header({
     return () => {
       document.body.style.overflow = ''
     }
+  }, [open])
+
+  // The open menu behaves as a modal dialog: focus moves into it, Escape closes it and returns
+  // focus to the burger, and Tab cycles inside it instead of reaching the page underneath.
+  useEffect(() => {
+    if (!open) return
+    closeRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+        burgerRef.current?.focus()
+        return
+      }
+      if (e.key !== 'Tab' || !overlayRef.current) return
+      const focusable = overlayRef.current.querySelectorAll<HTMLElement>('a[href], button')
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last?.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first?.focus()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
   }, [open])
 
   return (
@@ -116,10 +146,12 @@ export default function Header({
             {ctaLabel}
           </Link>
           <button
+            ref={burgerRef}
             type="button"
             className="burger"
             aria-label={open ? menuCloseLabel : menuOpenLabel}
             aria-expanded={open}
+            aria-controls="mobile-menu"
             onClick={() => setOpen((v) => !v)}
             style={{
               flexDirection: 'column',
@@ -139,6 +171,11 @@ export default function Header({
 
       {/* mobile overlay */}
       <div
+        id="mobile-menu"
+        ref={overlayRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={brandName}
         style={{
           display: open ? 'flex' : 'none',
           position: 'fixed',
@@ -155,8 +192,12 @@ export default function Header({
             {brandName}
           </span>
           <button
+            ref={closeRef}
             type="button"
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false)
+              burgerRef.current?.focus()
+            }}
             aria-label={menuCloseLabel}
             style={{
               background: 'transparent',

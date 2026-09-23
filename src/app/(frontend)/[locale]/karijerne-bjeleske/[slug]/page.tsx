@@ -3,9 +3,9 @@ import { bookingHref } from '@/lib/links'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
+import { LinkJSXConverter, RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import { isLocale, t, type Locale } from '@/lib/i18n'
-import { href, ROUTES } from '@/lib/routes'
+import { href, postHref, ROUTES } from '@/lib/routes'
 import { getPostBySlug, getRelatedPosts, getSettings, getPostLocales } from '@/lib/payload'
 import { buildMetadata, articleSeo, articleStructuredData, jsonLdString } from '@/lib/seo'
 import { formatDate } from '@/lib/format'
@@ -23,8 +23,16 @@ export function generateStaticParams(): { slug: string }[] {
 
 // Inline photos use the same original-aware responsive rendering as page portraits.
 // The shared media library also contains downloadable PDF resources.
-const contentConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
+// Internal links point at other articles (see Posts.ts) and stay in the reader's language.
+const contentConverters = (locale: Locale): JSXConvertersFunction => ({ defaultConverters }) => ({
   ...defaultConverters,
+  ...LinkJSXConverter({
+    internalDocToHref: ({ linkNode }) => {
+      const value = linkNode.fields.doc?.value
+      const slug = value && typeof value === 'object' && 'slug' in value ? value.slug : null
+      return typeof slug === 'string' && slug ? postHref(locale, slug) : href(locale, ROUTES.blog)
+    },
+  }),
   upload: ({ node }) => {
     const m = node.value as Media
     if (!m || typeof m !== 'object' || !m.url) return null
@@ -118,7 +126,7 @@ export default async function ArticlePage({ params }: Params) {
             </div>
           )}
           <div data-reveal className="prose" style={{ paddingTop: cover ? 0 : 'clamp(40px,6vw,60px)' }}>
-            {post.content ? <RichText data={post.content as never} converters={contentConverters} /> : null}
+            {post.content ? <RichText data={post.content as never} converters={contentConverters(l)} /> : null}
           </div>
 
           {fromLZ && post.sourceUrl && (
