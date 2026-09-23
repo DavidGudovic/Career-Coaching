@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({
     locale: l,
     path: ROUTES.home,
-    title: l === 'en' ? 'Jelena Rajković — Career-change mentor' : 'Mentor za promjenu karijere · Jelena Rajković',
+    title: l === 'en' ? 'Career-change mentor · Jelena Rajković' : 'Mentor za promjenu karijere · Jelena Rajković',
     description: plain(home?.heroSub),
   })
 }

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({
     locale: l,
     path: ROUTES.work,
-    title: l === 'en' ? 'Work with me — 1:1 mentoring' : 'Karijerno mentorstvo 1:1 za promjenu karijere',
+    title: l === 'en' ? '1:1 career mentoring for a career change' : 'Karijerno mentorstvo 1:1 za promjenu karijere',
     description: plain(page?.sub),
   })
 }

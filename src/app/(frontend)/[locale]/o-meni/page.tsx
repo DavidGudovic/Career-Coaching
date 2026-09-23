@@ -4,19 +4,21 @@ import { isLocale, type Locale } from '@/lib/i18n'
 import { ROUTES } from '@/lib/routes'
 import { getPageGlobal } from '@/lib/payload'
 import { buildMetadata } from '@/lib/seo'
-import { Emphasis, plain } from '@/lib/emphasis'
+import { Emphasis } from '@/lib/emphasis'
 import { MediaImage } from '@/components/MediaImage'
 import { CtaBand, PageHero } from '@/components/sections'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const l: Locale = isLocale(locale) ? locale : 'me'
-  const page = await getPageGlobal('about-page', l)
   return buildMetadata({
     locale: l,
     path: ROUTES.about,
-    title: l === 'en' ? 'About — Jelena Rajković' : 'O meni — Jelena Rajković, karijerna mentorka',
-    description: plain(page?.body?.[0]?.text),
+    title: l === 'en' ? 'About Jelena Rajković, career-change mentor' : 'O meni — Jelena Rajković, karijerna mentorka',
+    // The page opens with a greeting, which made a poor search snippet: describe the page instead.
+    description: l === 'en'
+      ? 'From biology to IT: Jelena Rajković, a career-change mentor, helps women who want a career change find a clearer direction and their next realistic step.'
+      : 'Iz biologije u IT: Jelena Rajković, karijerna mentorka, pomaže ženama koje žele promjenu karijere da pronađu jasniji pravac i svoj sljedeći realan korak.',
   })
 }
 

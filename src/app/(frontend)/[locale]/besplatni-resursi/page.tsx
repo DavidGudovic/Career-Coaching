@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { PageHero } from '@/components/sections'
 import { plain } from '@/lib/emphasis'
-import { isLocale, t } from '@/lib/i18n'
+import { isLocale } from '@/lib/i18n'
 import { getPageGlobal } from '@/lib/payload'
 import { ROUTES } from '@/lib/routes'
 import { buildMetadata } from '@/lib/seo'
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params
   const l = isLocale(locale) ? locale : 'me'
   const page = await getPageGlobal('resources-page', l)
-  return buildMetadata({ locale: l, path: ROUTES.resources, title: l === 'en' ? t(l, 'nav_resources') : 'Besplatni resursi za promjenu karijere', description: plain(page?.sub) })
+  return buildMetadata({ locale: l, path: ROUTES.resources, title: l === 'en' ? 'Free career change resources' : 'Besplatni resursi za promjenu karijere', description: plain(page?.sub) })
 }
 
 export default async function ResourcesPage({ params }: { params: Promise<{ locale: string }> }) {
